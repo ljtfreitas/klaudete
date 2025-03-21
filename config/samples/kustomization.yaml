@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- klaudete_v1alpha1_resourcetype.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
