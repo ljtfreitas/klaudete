@@ -32,20 +32,28 @@ type ResourceTypeSpec struct {
 	Description *string `json:"description,omitempty"`
 }
 
+type ResourceTypeStatusDescription string
+
+const (
+	ResourceTypeStatusPending = ResourceTypeStatusDescription("Pending")
+	ResourceTypeStatusInSync  = ResourceTypeStatusDescription("InSync")
+)
+
 // ResourceTypeStatus defines the observed state of ResourceType
 type ResourceTypeStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Status ResourceTypeStatusDescription `json:"status"`
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Cluster
 
 // ResourceType is the Schema for the resourcetypes API
 type ResourceType struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec ResourceTypeSpec `json:"spec,omitempty"`
+	Spec   ResourceTypeSpec   `json:"spec,omitempty"`
+	Status ResourceTypeStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

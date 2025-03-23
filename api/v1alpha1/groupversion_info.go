@@ -24,6 +24,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
 
+const (
+	Group = "klaudete.nubank.com.br"
+)
+
 var (
 	// GroupVersion is group version used to register these objects
 	GroupVersion = schema.GroupVersion{Group: "klaudete.nubank.com.br", Version: "v1alpha1"}

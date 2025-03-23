@@ -1,0 +1,10 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: ResourceType
+metadata:
+  labels:
+    app.kubernetes.io/name: klaudete
+    app.kubernetes.io/managed-by: kustomize
+  name: random-pet
+spec:
+  name: random-pet
+  description: I'm just a random Pet

@@ -10,11 +10,18 @@ repo: github.com/nubank/klaudete
 resources:
 - api:
     crdVersion: v1
-    namespaced: false
-  controller: true
   domain: nubank.com.br
   group: klaudete
   kind: ResourceType
+  path: github.com/nubank/klaudete/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: nubank.com.br
+  group: klaudete
+  kind: Resource
   path: github.com/nubank/klaudete/api/v1alpha1
   version: v1alpha1
 version: "3"

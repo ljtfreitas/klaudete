@@ -20,12 +20,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/gobuffalo/flect"
 	kro "github.com/kro-run/kro/api/v1alpha1"
-	kroSchema "github.com/kro-run/kro/pkg/simpleschema"
-	extv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -55,31 +55,58 @@ type ResourceTypeReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.19.0/pkg/reconcile
-func (r *ResourceTypeReconciler) Reconcile(ctx context.Context, resourceType *api.ResourceType) (ctrl.Result, error) {
+func (reconciler *ResourceTypeReconciler) Reconcile(ctx context.Context, resourceType *api.ResourceType) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
 	kroResourceGraphDefinition := kro.ResourceGraphDefinition{}
-	if err := r.Get(ctx, types.NamespacedName{Name: resourceType.Name}, &kroResourceGraphDefinition); err != nil {
+	if err := reconciler.Get(ctx, types.NamespacedName{Name: resourceType.Name}, &kroResourceGraphDefinition); err != nil {
 		if !apierrors.IsNotFound(err) {
-			return ctrl.Result{}, fmt.Errorf("failure to find Kro's ResourceGraphDefinition from ResourceType %s: %w", resourceType.Name, err)
+			return ctrl.Result{}, fmt.Errorf("failure to find Kro's ResourceGraphDefinition: %w", err)
 		}
 
 		resourceName := flect.Pascalize(newResourceName(resourceType.Spec.Name, resourceType.Name))
 		resourceSpec, err := newResourceSpec()
 		if err != nil {
-			fmt.Errorf("failure to generate a custom schema from ResourceType %s: %w", resourceType.Name, err)
+			return ctrl.Result{}, fmt.Errorf("failure to generate a Kro custom schema: %w", err)
 		}
-		resources := newResources()
+		resources, err := newResources(resourceName)
+		if err != nil {
+			return ctrl.Result{}, fmt.Errorf("failure to generate Kro resources: %w", err)
+		}
 
 		kroResourceGraphDefinition = kro.ResourceGraphDefinition{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: kro.GroupVersion.String(),
+				Kind:       "ResourceGraphDefinition",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name: resourceType.Name,
+				Labels: map[string]string{
+					api.Group + "/owned":             "true",
+					api.Group + "/managedBy.group":   resourceType.GroupVersionKind().Group,
+					api.Group + "/managedBy.version": resourceType.GroupVersionKind().Version,
+					api.Group + "/managedBy.kind":    resourceType.GroupVersionKind().Kind,
+					api.Group + "/managedBy.name":    resourceType.Name,
+					api.Group + "/managedBy.id":      string(resourceType.UID),
+				},
+			},
 			Spec: kro.ResourceGraphDefinitionSpec{
 				Schema: &kro.Schema{
 					Kind:       resourceName,
-					APIVersion: resourceType.APIVersion,
+					Group:      api.GroupVersion.Group,
+					APIVersion: api.GroupVersion.Version,
 					Spec:       *resourceSpec,
 				},
 				Resources: resources,
 			},
+		}
+
+		if err := ctrl.SetControllerReference(resourceType, &kroResourceGraphDefinition, reconciler.Scheme); err != nil {
+			return ctrl.Result{}, fmt.Errorf("unable to set Kro's ResourceGraphDefinition ownerReference: %w", err)
+		}
+
+		if err := reconciler.Create(ctx, &kroResourceGraphDefinition); err != nil {
+			return ctrl.Result{}, fmt.Errorf("failure to generate Kro's ResourceGraphDefinition: %w", err)
 		}
 	}
 
@@ -101,24 +128,12 @@ func newResourceName(name *string, resourceTypeName string) string {
 }
 
 func newResourceSpec() (*runtime.RawExtension, error) {
-	jsonSchemaProps := &extv1.JSONSchemaProps{
-		Type: "object",
-		Required: []string{
-			"name",
-		},
-		Properties: map[string]extv1.JSONSchemaProps{
-			"name": {
-				Type: "string",
-			},
-			"description": {
-				Type: "string",
-			},
-		},
-	}
-
-	simpleSchema, err := kroSchema.FromOpenAPISpec(jsonSchemaProps)
-	if err != nil {
-		return nil, err
+	simpleSchema := map[string]any{
+		"name":        "string | required=true",
+		"description": "string | default={}",
+		"alias":       "string | default={}",
+		"properties":  "map[string]string | default={}",
+		"provisioner": "map[string]string | default={}",
 	}
 
 	simpleSchemaAsBytes, err := json.Marshal(simpleSchema)
@@ -131,6 +146,37 @@ func newResourceSpec() (*runtime.RawExtension, error) {
 	return rawExtension, nil
 }
 
-func newResources() []*kro.Resource {
-	return make([]*kro.Resource, 0)
+func newResources(resourceTypeName string) ([]*kro.Resource, error) {
+	resource := newResource(resourceTypeName)
+
+	resourceAsBytes, err := json.Marshal(resource)
+	if err != nil {
+		return nil, err
+	}
+
+	kroResource := &kro.Resource{
+		ID:          strings.ToLower(resourceTypeName),
+		Template:    runtime.RawExtension{Raw: resourceAsBytes},
+		ReadyWhen:   []string{},
+		IncludeWhen: []string{},
+	}
+	return []*kro.Resource{kroResource}, nil
+}
+
+func newResource(resourceTypeName string) map[string]any {
+	return map[string]any{
+		"apiVersion": api.GroupVersion.String(),
+		"kind":       "Resource",
+		"metadata": map[string]any{
+			"name": "${schema.spec.name}",
+		},
+		"spec": map[string]any{
+			"name":            "${schema.spec.name}",
+			"alias":           "${schema.spec.alias}",
+			"description":     "${schema.spec.description}",
+			"resourceTypeRef": resourceTypeName,
+			"properties":      "${schema.spec.properties}",
+			"provisioner":     "${schema.spec.provisioner}",
+		},
+	}
 }

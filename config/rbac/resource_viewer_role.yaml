@@ -1,35 +1,23 @@
----
+# permissions for end users to view resources.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: manager-role
+  labels:
+    app.kubernetes.io/name: klaudete
+    app.kubernetes.io/managed-by: kustomize
+  name: resource-viewer-role
 rules:
 - apiGroups:
   - klaudete.nubank.com.br
   resources:
   - resources
-  - resourcetypes
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - klaudete.nubank.com.br
   resources:
-  - resources/finalizers
-  - resourcetypes/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - klaudete.nubank.com.br
-  resources:
   - resources/status
-  - resourcetypes/status
   verbs:
   - get
-  - patch
-  - update
