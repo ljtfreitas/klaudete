@@ -148,18 +148,31 @@ func main() {
 	}
 
 	resourceTypeReconciler := &controller.ResourceTypeReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Recorder: mgr.GetEventRecorderFor("resource-type-controller"),
 	}
 	if err = resourceTypeReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceType")
 		os.Exit(1)
 	}
-	if err = (&controller.ResourceReconciler{
+
+	resourceReconciler := &controller.ResourceReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Recorder: mgr.GetEventRecorderFor("resource-controller"),
+	}
+	if err = resourceReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Resource")
+		os.Exit(1)
+	}
+
+	resourceDefinitionReconciler := &controller.ResourceDefinitionReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Resource")
+	}
+	if err = resourceDefinitionReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ResourceDefinition")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

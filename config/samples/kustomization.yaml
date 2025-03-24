@@ -2,4 +2,5 @@
 resources:
 - klaudete_v1alpha1_resourcetype.yaml
 - klaudete_v1alpha1_resource.yaml
+- klaudete_v1alpha1_resourcedefinition.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

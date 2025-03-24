@@ -6,4 +6,31 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: resource-sample
 spec:
-  # TODO(user): Add fields here
+  name: tiago
+  alias: tiago
+  description: Just a random pet called Tiago
+  resourceTypeRef: random-pet
+  properties:
+    prefix:
+      string_value: tiago
+  connections:
+    - via: belongs-to
+      target:
+        nurn:
+          value: abc123
+        ref:
+          apiVersion: klaudete.nubank.com.br/v1alpha1
+          kind: PetOwner
+          name: tiago
+  provisioner:
+    ref:
+      apiVersion: klaudete.nubank.com.br/v1alpha1
+      kind: PulumiProvisioner
+      spec:
+        repo: pulumi-sample-project
+        branch: main
+        repoDir: just-a-pet/
+        resyncFrequencySeconds: 60
+        stack: random-pet-stack-name
+        config: 
+          prefix: tiago

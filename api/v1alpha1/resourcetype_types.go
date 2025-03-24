@@ -41,11 +41,13 @@ const (
 
 // ResourceTypeStatus defines the observed state of ResourceType
 type ResourceTypeStatus struct {
-	Status ResourceTypeStatusDescription `json:"status"`
+	Status     ResourceTypeStatusDescription `json:"status"`
+	Conditions []metav1.Condition            `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Cluster
+// +kubebuilder:subresource:status
 
 // ResourceType is the Schema for the resourcetypes API
 type ResourceType struct {

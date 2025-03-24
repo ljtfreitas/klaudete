@@ -4,20 +4,21 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.1
-  name: resources.klaudete.nubank.com.br
+  name: resourcedefinitions.klaudete.nubank.com.br
 spec:
   group: klaudete.nubank.com.br
   names:
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
-  scope: Namespaced
+    kind: ResourceDefinition
+    listKind: ResourceDefinitionList
+    plural: resourcedefinitions
+    singular: resourcedefinition
+  scope: Cluster
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the resources API
+        description: ResourceDefinition is the Schema for the resourcedefinitions
+          API
         properties:
           apiVersion:
             description: |-
@@ -37,58 +38,16 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: ResourceDefinitionSpec defines the desired state of ResourceDefinition
             properties:
-              alias:
-                type: string
-              connections:
-                items:
-                  properties:
-                    target:
-                      properties:
-                        nurn:
-                          properties:
-                            value:
-                              type: string
-                          required:
-                          - value
-                          type: object
-                        ref:
-                          properties:
-                            apiVersion:
-                              type: string
-                            kind:
-                              type: string
-                            name:
-                              type: string
-                          required:
-                          - apiVersion
-                          - kind
-                          - name
-                          type: object
-                      type: object
-                    via:
-                      type: string
-                  required:
-                  - target
-                  - via
+              generators:
+                additionalProperties:
                   type: object
-                type: array
-              description:
-                type: string
-              name:
-                type: string
-              properties:
+                  x-kubernetes-preserve-unknown-fields: true
                 type: object
-                x-kubernetes-preserve-unknown-fields: true
-              resourceTypeRef:
-                type: string
-            required:
-            - name
-            - resourceTypeRef
             type: object
           status:
-            description: ResourceStatus defines the observed state of Resource
+            description: ResourceDefinitionStatus defines the observed state of ResourceDefinition
             properties:
               conditions:
                 items:
@@ -148,8 +107,6 @@ spec:
                 type: array
               status:
                 type: string
-            required:
-            - status
             type: object
         type: object
     served: true

@@ -34,8 +34,8 @@ type ResourceSpec struct {
 	Description     string                `json:"description,omitempty"`
 	ResourceTypeRef string                `json:"resourceTypeRef"`
 	Properties      *runtime.RawExtension `json:"properties,omitempty"`
-	Provisioner     ResourceProvisioner   `json:"provisioner,omitempty"`
 	Connections     ResourceConnections   `json:"connections,omitempty"`
+	Provisioner     *ResourceProvisioner  `json:"provisioner,omitempty"`
 }
 
 type ResourcePropertyType string
@@ -44,22 +44,37 @@ const (
 	ResourcePropertyStringType = ResourcePropertyType("stringValue")
 )
 
-type ResourceProperties map[string]any
-
 type ResourceProvisioner struct {
-	Ref ResourceProvisionerRef `json:"ref,omitempty"`
+	Name string                  `json:"name,omitempty"`
+	Ref  *ResourceProvisionerRef `json:"ref,omitempty"`
 }
 
 type ResourceProvisionerRef struct {
-	Name string               `json:"name"`
-	Spec runtime.RawExtension `json:"spec,omitempty"`
+	ApiVersion string                `json:"apiVersion"`
+	Kind       string                `json:"kind"`
+	Spec       *runtime.RawExtension `json:"spec,omitempty"`
 }
 
 type ResourceConnections []ResourceConnection
 
 type ResourceConnection struct {
-	Via    string `json:"via"`
-	Target string `json:"target"`
+	Via    string                   `json:"via"`
+	Target ResourceConnectionTarget `json:"target"`
+}
+
+type ResourceConnectionTarget struct {
+	Ref  *ResourceConnectionTargetRef  `json:"ref,omitempty"`
+	Nurn *ResourceConnectionTargetNurn `json:"nurn,omitempty"`
+}
+
+type ResourceConnectionTargetRef struct {
+	ApiVersion string `json:"apiVersion"`
+	Kind       string `json:"kind"`
+	Name       string `json:"name"`
+}
+
+type ResourceConnectionTargetNurn struct {
+	Value string `json:"value"`
 }
 
 // ResourceStatus defines the observed state of Resource
@@ -67,13 +82,16 @@ type ResourceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Status ResourceStatusDescription `json:"status"`
+	Status     ResourceStatusDescription `json:"status"`
+	Conditions []metav1.Condition        `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
 type ResourceStatusDescription string
 
 const (
-	ResourceStatusReady = ResourceStatusDescription("RESOURCE_STATUS_READY")
+	ResourceStatusPending                = ResourceStatusDescription("Pending")
+	ResourceStatusProvisioningInProgress = ResourceStatusDescription("ProvisioningInProgress")
+	ResourceStatusReady                  = ResourceStatusDescription("Ready")
 )
 
 // +kubebuilder:object:root=true

@@ -24,4 +24,12 @@ resources:
   kind: Resource
   path: github.com/nubank/klaudete/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+  controller: true
+  domain: nubank.com.br
+  group: klaudete
+  kind: ResourceDefinition
+  path: github.com/nubank/klaudete/api/v1alpha1
+  version: v1alpha1
 version: "3"
