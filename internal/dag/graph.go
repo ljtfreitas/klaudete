@@ -1,12 +1,10 @@
 package dag
 
 import (
-	"encoding/json"
 	"fmt"
 	"regexp"
 
 	"github.com/gobuffalo/flect"
-	"k8s.io/apimachinery/pkg/runtime"
 )
 
 var (
@@ -58,11 +56,16 @@ func (r *Element[T]) Evaluate(args *Args) (ExpandedProperties, error) {
 
 type ExpandedProperties map[string]any
 
+func (properties ExpandedProperties) With(name string, value any) ExpandedProperties {
+	properties[name] = value
+	return properties
+}
+
 func NewGraph[T any]() *Graph[T] {
 	return &Graph[T]{all: make(map[string]*Element[T])}
 }
 
-func (r *Graph[T]) NewElement(name string, properties *runtime.RawExtension) (*Element[T], error) {
+func (r *Graph[T]) NewElement(name string, properties map[string]any) (*Element[T], error) {
 	if _, ok := r.all[name]; ok {
 		return nil, fmt.Errorf("resource '%s' is duplicated; check the spec", name)
 	}
@@ -76,16 +79,11 @@ func (r *Graph[T]) NewElement(name string, properties *runtime.RawExtension) (*E
 	return element, nil
 }
 
-func NewElement[T any](name string, properties *runtime.RawExtension) (*Element[T], error) {
-	element := &Element[T]{Name: name}
+func NewElement[T any](name string, properties map[string]any) (*Element[T], error) {
+	element := &Element[T]{Name: name, properties: &Properties{}}
 
-	if properties != nil {
-		rawProperties := make(map[string]any)
-		if err := json.Unmarshal(properties.Raw, &rawProperties); err != nil {
-			return nil, fmt.Errorf("unable to unmarshall properties: %w", err)
-		}
-
-		resourcePropertiesAsExpressions, err := newProperties(rawProperties)
+	if properties != nil && len(properties) != 0 {
+		resourcePropertiesAsExpressions, err := newProperties(properties)
 		if err != nil {
 			return nil, fmt.Errorf("unable to read resource properties from %s: %w", name, err)
 		}

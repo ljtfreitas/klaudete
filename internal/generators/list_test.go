@@ -24,9 +24,11 @@ func Test_ListGenerator(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, "parameter", name)
-		assert.Equal(t, variables, Variables{
+
+		expectedVariables := Variables{
 			Variable("one"),
 			Variable("two"),
-		})
+		}
+		assert.Equal(t, expectedVariables, variables)
 	})
 }

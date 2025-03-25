@@ -78,9 +78,39 @@ spec:
                 type: string
               name:
                 type: string
+              patches:
+                items:
+                  properties:
+                    from:
+                      type: string
+                    to:
+                      type: string
+                  required:
+                  - from
+                  - to
+                  type: object
+                type: array
               properties:
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              provisioner:
+                properties:
+                  name:
+                    type: string
+                  ref:
+                    properties:
+                      apiVersion:
+                        type: string
+                      kind:
+                        type: string
+                      spec:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                    required:
+                    - apiVersion
+                    - kind
+                    type: object
+                type: object
               resourceTypeRef:
                 type: string
             required:

@@ -8,12 +8,12 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-type GeneratorName string
+type GeneratorType string
 
 var (
-	knownGenerators = map[GeneratorName]Generator{
-		ListGeneratorName: newListGenerator(),
-		DataGeneratorName: newDataGenerator(),
+	knownGenerators = map[GeneratorType]Generator{
+		ListGeneratorType: newListGenerator(),
+		DataGeneratorType: newDataGenerator(),
 	}
 )
 
@@ -22,26 +22,20 @@ type GeneratorList struct {
 	Variables Variables
 }
 
-func NewGeneratorList(ctx context.Context, spec map[string]*runtime.RawExtension) (*GeneratorList, error) {
-	if len(spec) > 1 {
-		return nil, fmt.Errorf("invalid spec; just one generator is allowed.")
+func NewGeneratorList(ctx context.Context, generatorType string, spec GeneratorSpec) (*GeneratorList, error) {
+	generator, found := knownGenerators[GeneratorType(generatorType)]
+	if !found {
+		return nil, fmt.Errorf("unsupported generator: %s", generatorType)
 	}
-	for candidate, raw := range spec {
-		generator, found := knownGenerators[GeneratorName(candidate)]
-		if !found {
-			return nil, fmt.Errorf("unsupported generator: %s", candidate)
-		}
-		name, variables, err := generator.Resolve(ctx, GeneratorSpec(raw))
-		if err != nil {
-			return nil, err
-		}
-		generatorList := &GeneratorList{
-			Name:      name,
-			Variables: variables,
-		}
-		return generatorList, nil
+	name, variables, err := generator.Resolve(ctx, spec)
+	if err != nil {
+		return nil, err
 	}
-	return nil, nil
+	generatorList := &GeneratorList{
+		Name:      name,
+		Variables: variables,
+	}
+	return generatorList, nil
 }
 
 type Generator interface {
@@ -54,10 +48,18 @@ type Variables []Variable
 
 type Variable any
 
-func unmarshallSpec[T any](spec GeneratorSpec, target *T) (*T, error) {
+func UnmarshallSpec[T any](spec GeneratorSpec, target *T) (*T, error) {
 	err := json.Unmarshal(spec.Raw, target)
 	if err != nil {
 		return nil, err
 	}
 	return target, nil
+}
+
+func marshallSpec(spec any) (GeneratorSpec, error) {
+	specAsBytes, err := json.Marshal(spec)
+	if err != nil {
+		return nil, err
+	}
+	return GeneratorSpec(&runtime.RawExtension{Raw: specAsBytes}), nil
 }

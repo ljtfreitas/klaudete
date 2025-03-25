@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	exprExpressionRe       = regexp.MustCompile(`\$\{([^}]+)\}`)
-	resourcesExpressionRe  = regexp.MustCompile(`(resources\.[^.]+)\.`)
-	generatorsExpressionRe = regexp.MustCompile(`(generators\.[^.]+)\.`)
+	exprExpressionRe      = regexp.MustCompile(`\$\{([^}]+)\}`)
+	resourcesExpressionRe = regexp.MustCompile(`(resources\.[^.]+)\.`)
+	generatorExpressionRe = regexp.MustCompile(`(generator\.[^.]+)\.`)
 
-	resourcesEscapedExpressionRe  = regexp.MustCompile(`(resources)\["([^"]+)"\]`)
-	generatorsEscapedExpressionRe = regexp.MustCompile(`(generators)\["([^"]+)"\]`)
+	resourcesEscapedExpressionRe = regexp.MustCompile(`(resources)\["([^"]+)"\]`)
+	generatorEscapedExpressionRe = regexp.MustCompile(`(generator)\["([^"]+)"\]`)
 )
 
 type ExprFn func(...any) (any, error)
@@ -55,7 +55,7 @@ func (e ExprExpression) Dependencies() []string {
 		dependencies = append(dependencies, matches[1])
 	}
 
-	matches = generatorsExpressionRe.FindStringSubmatch(e.Source())
+	matches = generatorExpressionRe.FindStringSubmatch(e.Source())
 	if len(matches) != 0 {
 		dependencies = append(dependencies, matches[1])
 	}
@@ -65,7 +65,7 @@ func (e ExprExpression) Dependencies() []string {
 		dependencies = append(dependencies, fmt.Sprintf("%s.%s", matches[1], matches[2]))
 	}
 
-	matches = generatorsEscapedExpressionRe.FindStringSubmatch(e.Source())
+	matches = generatorEscapedExpressionRe.FindStringSubmatch(e.Source())
 	if len(matches) > 2 {
 		dependencies = append(dependencies, fmt.Sprintf("%s.%s", matches[1], matches[2]))
 	}

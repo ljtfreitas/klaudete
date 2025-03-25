@@ -48,7 +48,7 @@ var _ = Describe("ResourceDefinition Controller", func() {
 		}
 
 		When("using a List generator", func() {
-			listGeneratorSpec, err := generators.MarshallSpec(generators.NewListGeneratorSpec("parameter", "one", "two"))
+			listGeneratorSpec, err := generators.NewListGeneratorSpec("parameter", "one", "two")
 			if err != nil {
 				Fail(fmt.Sprintf("Failure to generate a list generator spec: %v", err))
 			}
@@ -74,7 +74,7 @@ var _ = Describe("ResourceDefinition Controller", func() {
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Generator: map[string]*runtime.RawExtension{
-							string(generators.ListGeneratorName): listGeneratorSpec,
+							string(generators.ListGeneratorType): listGeneratorSpec,
 						},
 						Resource: api.ResourceSpec{
 							Name:            "just-a-pet-called-${generator.parameter}",
@@ -131,10 +131,10 @@ var _ = Describe("ResourceDefinition Controller", func() {
 				})
 
 				By("we are expecting to create one Resource for each generator element", func() {
-					spec, err := generators.UnmarshallSpec(listGeneratorSpec, &generators.ListGeneratorSpec{})
+					listGeneratorSpec, err := generators.UnmarshallSpec(listGeneratorSpec, &generators.ListGeneratorSpec{})
 					Expect(err).NotTo(HaveOccurred())
 
-					for _, value := range spec.Values {
+					for _, value := range listGeneratorSpec.Values {
 						namespacedName := types.NamespacedName{
 							Name:      fmt.Sprintf("just-a-pet-called-%s", value),
 							Namespace: resourceDefinitionName,
@@ -170,14 +170,14 @@ var _ = Describe("ResourceDefinition Controller", func() {
 		})
 
 		When("using a Data generator", func() {
-			dataGeneratorSpec, err := generators.MarshallSpec(generators.NewDataGeneratorSpec("parameters",
+			dataGeneratorSpec, err := generators.NewDataGeneratorSpec("parameters",
 				map[string]any{
 					"value": "one",
 				},
 				map[string]any{
 					"value": "two",
 				},
-			))
+			)
 			if err != nil {
 				Fail(fmt.Sprintf("Failure to generate a data generator spec: %v", err))
 			}
@@ -203,7 +203,7 @@ var _ = Describe("ResourceDefinition Controller", func() {
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Generator: map[string]*runtime.RawExtension{
-							string(generators.DataGeneratorName): dataGeneratorSpec,
+							string(generators.DataGeneratorType): dataGeneratorSpec,
 						},
 						Resource: api.ResourceSpec{
 							Name:            "just-a-pet-called-${generator.parameters.value}",
@@ -260,10 +260,10 @@ var _ = Describe("ResourceDefinition Controller", func() {
 				})
 
 				By("we are expecting to create one Resource for each generator element", func() {
-					spec, err := generators.UnmarshallSpec(dataGeneratorSpec, &generators.DataGeneratorSpec{})
+					dataGeneratorSpec, err := generators.UnmarshallSpec(dataGeneratorSpec, &generators.DataGeneratorSpec{})
 					Expect(err).NotTo(HaveOccurred())
 
-					for _, obj := range spec.Values {
+					for _, obj := range dataGeneratorSpec.Values {
 						namespacedName := types.NamespacedName{
 							Name:      fmt.Sprintf("just-a-pet-called-%s", obj["value"]),
 							Namespace: resourceDefinitionName,

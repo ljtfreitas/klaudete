@@ -36,6 +36,7 @@ type ResourceSpec struct {
 	Properties      *runtime.RawExtension `json:"properties,omitempty"`
 	Connections     ResourceConnections   `json:"connections,omitempty"`
 	Provisioner     *ResourceProvisioner  `json:"provisioner,omitempty"`
+	Patches         ResourcePatches       `json:"patches,omitempty"`
 }
 
 type ResourcePropertyType string
@@ -75,6 +76,13 @@ type ResourceConnectionTargetRef struct {
 
 type ResourceConnectionTargetNurn struct {
 	Value string `json:"value"`
+}
+
+type ResourcePatches []ResourcePatch
+
+type ResourcePatch struct {
+	From string `json:"from"`
+	To   string `json:"to"`
 }
 
 // ResourceStatus defines the observed state of Resource

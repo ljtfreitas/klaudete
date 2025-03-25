@@ -5,6 +5,8 @@ go 1.24.0
 toolchain go1.24.1
 
 require (
+	github.com/expr-lang/expr v1.17.1
+	github.com/gobuffalo/flect v1.0.2
 	github.com/kro-run/kro v0.2.2
 	github.com/onsi/ginkgo/v2 v2.20.0
 	github.com/onsi/gomega v1.34.1
@@ -25,7 +27,6 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
-	github.com/expr-lang/expr v1.17.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect

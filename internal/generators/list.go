@@ -3,7 +3,7 @@ package generators
 import "context"
 
 const (
-	ListGeneratorName = GeneratorName("list")
+	ListGeneratorType = GeneratorType("list")
 )
 
 type ListGenerator struct{}
@@ -13,7 +13,7 @@ func newListGenerator() *ListGenerator {
 }
 
 func (g *ListGenerator) Resolve(_ context.Context, spec GeneratorSpec) (string, Variables, error) {
-	listGeneratorSpec, err := unmarshallSpec(spec, &ListGeneratorSpec{})
+	listGeneratorSpec, err := UnmarshallSpec(spec, &ListGeneratorSpec{})
 	if err != nil {
 		return "", nil, err
 	}
@@ -29,4 +29,11 @@ func (g *ListGenerator) Resolve(_ context.Context, spec GeneratorSpec) (string, 
 type ListGeneratorSpec struct {
 	Name   string `json:"name"`
 	Values []any  `json:"values"`
+}
+
+func NewListGeneratorSpec(name string, values ...any) (GeneratorSpec, error) {
+	return marshallSpec(ListGeneratorSpec{
+		Name:   name,
+		Values: values,
+	})
 }

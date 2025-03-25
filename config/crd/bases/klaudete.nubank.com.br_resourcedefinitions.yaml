@@ -40,10 +40,91 @@ spec:
           spec:
             description: ResourceDefinitionSpec defines the desired state of ResourceDefinition
             properties:
-              generators:
+              generator:
                 additionalProperties:
                   type: object
                   x-kubernetes-preserve-unknown-fields: true
+                type: object
+              resource:
+                description: ResourceSpec defines the desired state of Resource
+                properties:
+                  alias:
+                    type: string
+                  connections:
+                    items:
+                      properties:
+                        target:
+                          properties:
+                            nurn:
+                              properties:
+                                value:
+                                  type: string
+                              required:
+                              - value
+                              type: object
+                            ref:
+                              properties:
+                                apiVersion:
+                                  type: string
+                                kind:
+                                  type: string
+                                name:
+                                  type: string
+                              required:
+                              - apiVersion
+                              - kind
+                              - name
+                              type: object
+                          type: object
+                        via:
+                          type: string
+                      required:
+                      - target
+                      - via
+                      type: object
+                    type: array
+                  description:
+                    type: string
+                  name:
+                    type: string
+                  patches:
+                    items:
+                      properties:
+                        from:
+                          type: string
+                        to:
+                          type: string
+                      required:
+                      - from
+                      - to
+                      type: object
+                    type: array
+                  properties:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  provisioner:
+                    properties:
+                      name:
+                        type: string
+                      ref:
+                        properties:
+                          apiVersion:
+                            type: string
+                          kind:
+                            type: string
+                          spec:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                        required:
+                        - apiVersion
+                        - kind
+                        type: object
+                    type: object
+                  resourceTypeRef:
+                    type: string
+                required:
+                - name
+                - resourceTypeRef
                 type: object
             type: object
           status:

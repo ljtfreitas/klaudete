@@ -1,6 +1,8 @@
 package dag
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Args struct {
 	all map[string]any
@@ -19,12 +21,12 @@ type Arg func(*Args) (*Args, error)
 
 func GeneratorArg(name string, variable any) Arg {
 	return func(a *Args) (*Args, error) {
-		generators, found := a.all["generators"].(map[string]any)
+		generator, found := a.all["generator"].(map[string]any)
 		if !found {
-			generators = make(map[string]any)
+			generator = make(map[string]any)
 		}
-		generators[name] = variable
-		a.all["generators"] = generators
+		generator[name] = variable
+		a.all["generator"] = generator
 		return a, nil
 	}
 }
@@ -37,10 +39,20 @@ func EmptyProvisionerArg(name string) Arg {
 	})
 }
 
-func ProvisionerArg(name string, spec map[string]any) Arg {
+func ProvisionerArg(name string, provisioner map[string]any) Arg {
 	return func(a *Args) (*Args, error) {
+		status, found := provisioner["status"].(map[string]any)
+		if !found {
+			status = make(map[string]any)
+		}
+		_, found = status["outputs"]
+		if !found {
+			status["outputs"] = make(map[string]any)
+		}
+		provisioner["status"] = status
+
 		a.all["provisioner"] = map[string]any{
-			name: spec,
+			name: provisioner,
 		}
 		return a, nil
 	}
