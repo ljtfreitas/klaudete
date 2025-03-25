@@ -18,9 +18,9 @@ package controller
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -30,9 +30,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
+	"github.com/gobuffalo/flect"
 	api "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/dag"
 	"github.com/nubank/klaudete/internal/generators"
+	"github.com/nubank/klaudete/internal/serde"
+	"k8s.io/apimachinery/pkg/api/errors"
 )
 
 // ResourceDefinitionReconciler reconciles a ResourceDefinition object
@@ -55,7 +58,7 @@ type ResourceDefinitionReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.18.4/pkg/reconcile
 func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, resourceDefinition *api.ResourceDefinition) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	log := log.FromContext(ctx)
 
 	if resourceDefinition.Status.Status == "" || len(resourceDefinition.Status.Conditions) == 0 {
 		resourceDefinition.Status.Status = api.ResourceDefinitionStatusPending
@@ -71,16 +74,71 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 		resourceDefinition = resourceDefinitionWithCondition
 	}
 
-	// TODO step 1 => resolve generators
+	// TODO step 1 => generate a dedicated namespace
+	// step 1: generate a dedicated namespace to resource group
+	namespace := &corev1.Namespace{}
+	namespaceName := flect.Dasherize(resourceDefinition.Name)
+	if err := reconciler.Get(ctx, types.NamespacedName{Name: namespaceName}, namespace); err != nil {
+		if !errors.IsNotFound(err) {
+			return ctrl.Result{}, fmt.Errorf("unable to fetch ResourceDefinition namespace: %w", err)
+		}
+
+		log.Info(fmt.Sprintf("there is no namespace to ResourceDefinition %s; trying to generate...", resourceDefinition.Name))
+
+		namespace.Name = resourceDefinition.Name
+		namespace.Labels = map[string]string{
+			api.Group + "/managedBy.group":   resourceDefinition.GroupVersionKind().Group,
+			api.Group + "/managedBy.version": resourceDefinition.GroupVersionKind().Version,
+			api.Group + "/managedBy.kind":    resourceDefinition.GroupVersionKind().Kind,
+			api.Group + "/managedBy.name":    resourceDefinition.Name,
+			api.Group + "/managedBy.id":      resourceDefinition.Name,
+		}
+		if err := ctrl.SetControllerReference(resourceDefinition, namespace, reconciler.Scheme); err != nil {
+			return ctrl.Result{}, fmt.Errorf("unable to set namespace's ownerReference: %w", err)
+		}
+
+		if err := reconciler.Create(ctx, namespace); err != nil {
+			log.Error(err, fmt.Sprintf("unable to create namespace %s", namespace.Name), "namespace", namespace.Name)
+
+			_, err = reconciler.newResourceDefinitionCondition(ctx, resourceDefinition, &metav1.Condition{
+				Type:    string(api.ConditionTypeInSync),
+				Status:  metav1.ConditionFalse,
+				Reason:  "ResourceDefinitionNamespaceCreationFailed",
+				Message: fmt.Sprintf("unable to create a namespace to ResourceDefinition %s", resourceDefinition.Name),
+			})
+			if err != nil {
+				return ctrl.Result{}, fmt.Errorf("failed to update ResourceDefinition's status: %w", err)
+			}
+
+			return ctrl.Result{}, err
+		}
+
+		log.Info(fmt.Sprintf("a namespace was created to ResourceDefinition %s", resourceDefinition.Name))
+	}
+
+	// TODO step 2 => resolve generators
 
 	generatorList, err := generators.NewGeneratorList(ctx, resourceDefinition.Spec.Generator)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("failure to expand generators values: %w", err)
 	}
 
-	// TODO step 2 => expand one resource to each generator value
+	// TODO step 3 => expand one resource to each generator value
 
-	element, err := dag.NewElement[api.Resource](resourceDefinition.Name, resourceDefinition.Spec.Resource)
+	// 'patches' field shouldn't be evaluated
+	patches := resourceDefinition.Spec.Resource.Patches
+	patchesAsMap, err := serde.ToArray(patches)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failure to serialize spec.Resource.Patches to a map of properties: %w", err)
+	}
+
+	resourceDefinition.Spec.Resource.Patches = nil
+	resourceAsMap, err := serde.ToMap(resourceDefinition.Spec.Resource)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failure to serialize spec.Resource to a map of properties: %w", err)
+	}
+
+	element, err := dag.NewElement[api.Resource](resourceDefinition.Name, resourceAsMap)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("failure to expand resource template: %w", err)
 	}
@@ -97,16 +155,13 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 				return ctrl.Result{}, fmt.Errorf("unable to initialize generator args: %w", err)
 			}
 
-			resourceSpec := &api.ResourceSpec{}
-			if err := json.Unmarshal(resourceDefinition.Spec.Resource.Raw, element); err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to deserialize resource spec: %w", err)
-			}
+			resourceSpec := resourceDefinition.Spec.Resource
 			if resourceSpec.Provisioner != nil {
-				rawResourceProvisionerAsBytes, err := json.Marshal(resourceSpec.Provisioner)
+				resourceProvisionerAsMap, err := serde.ToMap(resourceSpec.Provisioner)
 				if err != nil {
-					return ctrl.Result{}, fmt.Errorf("failure to serialize resource provisioner spec: %w", err)
+					return ctrl.Result{}, fmt.Errorf("failure to serialize spec.Resource.Provisioner spec to a map of properties: %w", err)
 				}
-				resourceProvisionerElement, err := dag.NewElement[api.ResourceProvisioner](resourceSpec.Provisioner.Name, &runtime.RawExtension{Raw: rawResourceProvisionerAsBytes})
+				resourceProvisionerElement, err := dag.NewElement[api.ResourceProvisioner](resourceSpec.Provisioner.Name, resourceProvisionerAsMap)
 				if err != nil {
 					return ctrl.Result{}, fmt.Errorf("failure to expand resource provisioner: %w", err)
 				}
@@ -121,16 +176,38 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 				}
 			}
 
-			expandedResource, err := element.Evaluate(args)
+			expandedResourceProperties, err := element.Evaluate(args)
 			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("unable to expand resource: %w", err)
+				return ctrl.Result{}, fmt.Errorf("unable to expand resource properties: %w", err)
+			}
+
+			// restore 'patches' content
+			expandedResourceProperties = expandedResourceProperties.With("patches", patchesAsMap)
+
+			expandedResourceSpec, err := serde.FromMap(expandedResourceProperties, &api.ResourceSpec{})
+			if err != nil {
+				return ctrl.Result{}, fmt.Errorf("unable to serialize properties to Resource spec: %w", err)
+			}
+
+			newResource := &api.Resource{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      expandedResourceSpec.Name,
+					Namespace: resourceDefinition.Name,
+				},
+				Spec: resourceSpec,
+			}
+			if err := ctrl.SetControllerReference(resourceDefinition, newResource, reconciler.Scheme); err != nil {
+				return ctrl.Result{}, fmt.Errorf("unable to set Resource's ownerReference: %w", err)
+			}
+			if err := reconciler.Create(ctx, newResource); err != nil {
+				return ctrl.Result{}, fmt.Errorf("unable to create Resource %s: %w", expandedResourceSpec.Name, err)
 			}
 		}
 
 		return ctrl.Result{}, nil
 	}
 
-	expandedResource, err := element.Evaluate(args)
+	_, err = element.Evaluate(args)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("unable to initialize expression args: %w", err)
 	}
