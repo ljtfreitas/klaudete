@@ -26,6 +26,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -42,6 +43,7 @@ import (
 
 var cfg *rest.Config
 var k8sClient client.Client
+var dynamicK8sClient *dynamic.DynamicClient
 var testEnv *envtest.Environment
 var ctx context.Context
 var cancel context.CancelFunc
@@ -83,6 +85,10 @@ var _ = BeforeSuite(func() {
 	// +kubebuilder:scaffold:scheme
 
 	k8sClient, err = client.New(cfg, client.Options{Scheme: scheme.Scheme})
+	Expect(err).NotTo(HaveOccurred())
+	Expect(k8sClient).NotTo(BeNil())
+
+	dynamicK8sClient, err = dynamic.NewForConfig(cfg)
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
 

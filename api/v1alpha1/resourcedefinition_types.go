@@ -32,7 +32,7 @@ type ResourceDefinitionSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Generator ResourceDefinitionGenerator `json:"generator,omitempty"`
-	Resource  ResourceSpec                `json:"resource,omitempty"`
+	Resource  Resource                    `json:"resource,omitempty"`
 }
 
 type ResourceDefinitionGenerator map[string]*runtime.RawExtension
@@ -63,6 +63,7 @@ type ResourceDefinitionStatusDescription string
 
 const (
 	ResourceDefinitionStatusPending                = ResourceDefinitionStatusDescription("Pending")
+	ResourceDefinitionStatusFailed                 = ResourceDefinitionStatusDescription("Failed")
 	ResourceDefinitionStatusProvisioningInProgress = ResourceDefinitionStatusDescription("ProvisioningInProgress")
 	ResourceDefinitionStatusReady                  = ResourceDefinitionStatusDescription("Ready")
 )

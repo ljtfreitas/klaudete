@@ -95,21 +95,25 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               provisioner:
                 properties:
-                  name:
-                    type: string
-                  ref:
-                    properties:
-                      apiVersion:
-                        type: string
-                      kind:
-                        type: string
-                      spec:
-                        type: object
-                        x-kubernetes-preserve-unknown-fields: true
-                    required:
-                    - apiVersion
-                    - kind
-                    type: object
+                  resources:
+                    items:
+                      properties:
+                        failedWhen:
+                          type: string
+                        name:
+                          type: string
+                        outputs:
+                          type: string
+                        readyWhen:
+                          type: string
+                        ref:
+                          description: Ref        ResourceProvisionerObjectRef `json:"ref,omitempty"`
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                      required:
+                      - name
+                      type: object
+                    type: array
                 type: object
               resourceTypeRef:
                 type: string
@@ -120,6 +124,27 @@ spec:
           status:
             description: ResourceStatus defines the observed state of Resource
             properties:
+              atProvisioner:
+                properties:
+                  outputs:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  resources:
+                    items:
+                      properties:
+                        group:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        version:
+                          type: string
+                      type: object
+                    type: array
+                  state:
+                    type: string
+                type: object
               conditions:
                 items:
                   description: Condition contains details for one aspect of the current
@@ -176,10 +201,13 @@ spec:
                   - type
                   type: object
                 type: array
-              status:
+              phase:
                 type: string
+              properties:
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
             required:
-            - status
+            - phase
             type: object
         type: object
     served: true

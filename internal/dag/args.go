@@ -31,29 +31,45 @@ func GeneratorArg(name string, variable any) Arg {
 	}
 }
 
-func EmptyProvisionerArg(name string) Arg {
-	return ProvisionerArg(name, map[string]any{
-		"status": map[string]any{
-			"outputs": make(map[string]any),
-		},
-	})
+func ProvisionerArg(provisioner map[string]any) Arg {
+	return func(a *Args) (*Args, error) {
+		if resources, ok := provisioner["resources"].([]map[string]any); ok {
+			newResources := make(map[string]any)
+			for _, r := range resources {
+				newResources[r["name"].(string)] = r
+			}
+			provisioner["resources"] = newResources
+		}
+		a.all["provisioner"] = provisioner
+		return a, nil
+	}
 }
 
-func ProvisionerArg(name string, provisioner map[string]any) Arg {
+func ProvisionerObjectArg(name string, obj map[string]any) Arg {
 	return func(a *Args) (*Args, error) {
-		status, found := provisioner["status"].(map[string]any)
-		if !found {
-			status = make(map[string]any)
+		if provisioner, ok := a.all["provisioner"].(map[string]any); ok {
+			resources, ok := provisioner["resources"].(map[string]any)
+			if ok {
+				resources[name] = obj
+				return a, nil
+			}
+			provisioner["resources"] = map[string]any{
+				name: obj,
+			}
+			return a, nil
 		}
-		_, found = status["outputs"]
-		if !found {
-			status["outputs"] = make(map[string]any)
-		}
-		provisioner["status"] = status
-
 		a.all["provisioner"] = map[string]any{
-			name: provisioner,
+			"resources": map[string]any{
+				name: obj,
+			},
 		}
+		return a, nil
+	}
+}
+
+func ResourceArg(resource map[string]any) Arg {
+	return func(a *Args) (*Args, error) {
+		a.all["resource"] = resource
 		return a, nil
 	}
 }

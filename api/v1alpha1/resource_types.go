@@ -46,15 +46,21 @@ const (
 )
 
 type ResourceProvisioner struct {
-	Name string                  `json:"name,omitempty"`
-	Ref  *ResourceProvisionerRef `json:"ref,omitempty"`
+	Resources ResourceProvisionerObjects `json:"resources,omitempty"`
 }
 
-type ResourceProvisionerRef struct {
-	ApiVersion string                `json:"apiVersion"`
-	Kind       string                `json:"kind"`
-	Spec       *runtime.RawExtension `json:"spec,omitempty"`
+type ResourceProvisionerObjects []ResourceProvisionerObject
+
+type ResourceProvisionerObject struct {
+	Name string `json:"name"`
+	// Ref        ResourceProvisionerObjectRef `json:"ref,omitempty"`
+	Ref        *runtime.RawExtension `json:"ref,omitempty"`
+	ReadyWhen  *string               `json:"readyWhen,omitempty"`
+	FailedWhen *string               `json:"failedWhen,omitempty"`
+	Outputs    *string               `json:"outputs,omitempty"`
 }
+
+type ResourceProvisionerObjectRef *runtime.RawExtension
 
 type ResourceConnections []ResourceConnection
 
@@ -90,16 +96,33 @@ type ResourceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Status     ResourceStatusDescription `json:"status"`
-	Conditions []metav1.Condition        `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+	Phase         ResourceStatusPhaseDescription `json:"phase"`
+	Properties    *runtime.RawExtension          `json:"properties,omitempty"`
+	AtProvisioner ResourceStatusProvisioner      `json:"atProvisioner,omitempty"`
+	Conditions    []metav1.Condition             `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
-type ResourceStatusDescription string
+type ResourceStatusPhaseDescription string
+
+type ResourceStatusProvisioner struct {
+	Resources []ResourceStatusProvisionerObject `json:"resources,omitempty"`
+	Outputs   *runtime.RawExtension             `json:"outputs,omitempty"`
+	State     string                            `json:"state,omitempty"`
+}
+
+type ResourceStatusProvisionerObject struct {
+	Group   string `json:"group,omitempty"`
+	Version string `json:"version,omitempty"`
+	Kind    string `json:"kind,omitempty"`
+	Name    string `json:"name,omitempty"`
+}
 
 const (
-	ResourceStatusPending                = ResourceStatusDescription("Pending")
-	ResourceStatusProvisioningInProgress = ResourceStatusDescription("ProvisioningInProgress")
-	ResourceStatusReady                  = ResourceStatusDescription("Ready")
+	ResourceStatusPending                = ResourceStatusPhaseDescription("Pending")
+	ResourceStatusFailed                 = ResourceStatusPhaseDescription("Failed")
+	ResourceStatusProvisioningInProgress = ResourceStatusPhaseDescription("ProvisioningInProgress")
+	ResourceStatusProvisioningFailed     = ResourceStatusPhaseDescription("ProvisioningFailed")
+	ResourceStatusReady                  = ResourceStatusPhaseDescription("Ready")
 )
 
 // +kubebuilder:object:root=true

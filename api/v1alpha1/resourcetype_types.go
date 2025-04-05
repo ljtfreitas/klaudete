@@ -28,8 +28,8 @@ type ResourceTypeSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Name        *string `json:"name,omitempty"`
-	Description *string `json:"description,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 type ResourceTypeStatusDescription string

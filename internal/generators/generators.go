@@ -12,8 +12,8 @@ type GeneratorType string
 
 var (
 	knownGenerators = map[GeneratorType]Generator{
-		ListGeneratorType: newListGenerator(),
-		DataGeneratorType: newDataGenerator(),
+		InventoryGeneratorType: newListGenerator(),
+		DataGeneratorType:      newDataGenerator(),
 	}
 )
 

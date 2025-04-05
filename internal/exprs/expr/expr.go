@@ -16,8 +16,6 @@ var (
 	generatorEscapedExpressionRe = regexp.MustCompile(`(generator)\["([^"]+)"\]`)
 )
 
-type ExprFn func(...any) (any, error)
-
 func SearchExpressions(expression string) []string {
 	matches := exprExpressionRe.FindAllStringSubmatch(expression, -1)
 
@@ -99,4 +97,8 @@ func (e ExprExpression) Evaluate(args map[string]any, options ...any) (any, erro
 	}
 
 	return value, nil
+}
+
+func Function(name string, fn func(...any) (any, error)) expr.Option {
+	return expr.Function(name, fn)
 }

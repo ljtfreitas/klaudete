@@ -2,8 +2,10 @@ package dag
 
 import (
 	"fmt"
+	"maps"
 	"regexp"
 
+	"github.com/dominikbraun/graph"
 	"github.com/gobuffalo/flect"
 )
 
@@ -16,12 +18,6 @@ type Graph[T any] struct {
 }
 
 func (r Graph[T]) Get(name string) (*Element[T], error) {
-	matches := resourcesRe.FindStringSubmatch(name)
-
-	if len(matches) != 0 {
-		name = matches[1]
-	}
-
 	resource, ok := r.all[name]
 	if !ok {
 		return nil, fmt.Errorf("resource %s is not registered", name)
@@ -77,6 +73,34 @@ func (r *Graph[T]) NewElement(name string, properties map[string]any) (*Element[
 	r.all[name] = element
 
 	return element, nil
+}
+
+func (r *Graph[T]) Sort() ([]string, error) {
+	dag := graph.New(graph.StringHash, graph.Directed(), graph.PreventCycles())
+
+	vertexNameFn := func(name string) string {
+		return name
+	}
+
+	for name := range maps.Keys(r.all) {
+		err := dag.AddVertex(vertexNameFn(name))
+		if err != nil {
+			return nil, fmt.Errorf("addVertex, name %s: %w", name, err)
+		}
+	}
+
+	for name, resource := range r.all {
+		for _, dependency := range resource.dependencies {
+			err := dag.AddEdge(dependency, vertexNameFn(name))
+			if err != nil {
+				return nil, fmt.Errorf("failure to put graph in topologycal order; unable to add a new edge: name is %s, dependency is %s: %w", name, dependency, err)
+			}
+		}
+	}
+
+	return graph.StableTopologicalSort(dag, func(a, b string) bool {
+		return a < b
+	})
 }
 
 func NewElement[T any](name string, properties map[string]any) (*Element[T], error) {
