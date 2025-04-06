@@ -58,3 +58,8 @@ func FromMap[T any](source map[string]any, from *T) (*T, error) {
 	}
 	return FromBytes(mapAsBytes, from)
 }
+
+func FromJsonString[T any](source string, from *T) (*T, error) {
+	err := json.Unmarshal([]byte(source), from)
+	return from, err
+}

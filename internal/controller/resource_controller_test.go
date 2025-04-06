@@ -93,7 +93,7 @@ var _ = Describe("Resource Controller", Ordered, func() {
 					},
 				})
 				if err != nil {
-					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
+					Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
 				}
 
 				anotherConfigMapProvisionerSpec, err := serde.ToRaw(map[string]any{

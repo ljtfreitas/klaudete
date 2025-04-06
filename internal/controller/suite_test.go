@@ -26,6 +26,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
+	clientv1alpha1 "github.com/nubank/nu-infra-inventory/sdk/pkg/client"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -33,8 +35,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -44,6 +44,7 @@ import (
 var cfg *rest.Config
 var k8sClient client.Client
 var dynamicK8sClient *dynamic.DynamicClient
+var inventoryClient clientv1alpha1.Client
 var testEnv *envtest.Environment
 var ctx context.Context
 var cancel context.CancelFunc
@@ -92,6 +93,9 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
 
+	inventoryClient, err = clientv1alpha1.New(ctx)
+	Expect(err).NotTo(HaveOccurred())
+	Expect(inventoryClient).NotTo(BeNil())
 })
 
 var _ = AfterSuite(func() {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nubank/klaudete/internal/exprs"
+	"github.com/nubank/klaudete/internal/exprs/expr"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
@@ -18,12 +19,12 @@ type Property interface {
 	Evaluate(*Args, ...any) (any, error)
 }
 
-func newProperties(source map[string]any) (*Properties, error) {
+func newProperties(source map[string]any, opts ...expr.ExprOption) (*Properties, error) {
 	propertiesWithExpressions := make(map[string]Property)
 	dependencies := sets.NewString()
 
 	for name, value := range source {
-		elementWithExpressions, err := readProperty(name, value)
+		elementWithExpressions, err := readProperty(name, value, opts...)
 		if err != nil {
 			return nil, fmt.Errorf("unable to read properties from field %s: %w", name, err)
 		}
@@ -41,14 +42,14 @@ func newProperties(source map[string]any) (*Properties, error) {
 	return properties, nil
 }
 
-func readProperty(name string, value any) (Property, error) {
+func readProperty(name string, value any, opts ...expr.ExprOption) (Property, error) {
 	switch value := value.(type) {
 	case map[string]any:
-		return readObjectProperty(name, value)
+		return readObjectProperty(name, value, opts...)
 	case []any:
-		return readArrayProperty(name, value)
+		return readArrayProperty(name, value, opts...)
 	default:
-		e, err := exprs.Parse(value)
+		e, err := exprs.Parse(value, opts...)
 		if err != nil {
 			return nil, err
 		}
@@ -61,11 +62,11 @@ func readProperty(name string, value any) (Property, error) {
 	}
 }
 
-func readObjectProperty(name string, value map[string]any) (Property, error) {
+func readObjectProperty(name string, value map[string]any, opts ...expr.ExprOption) (Property, error) {
 	properties := make(map[string]Property)
 	dependencies := make([]string, 0)
 	for propertyName, element := range value {
-		newElement, err := readProperty(fmt.Sprintf("%s.%s", name, propertyName), element)
+		newElement, err := readProperty(fmt.Sprintf("%s.%s", name, propertyName), element, opts...)
 		if err != nil {
 			return nil, err
 		}
@@ -80,11 +81,11 @@ func readObjectProperty(name string, value map[string]any) (Property, error) {
 	return objectProperty, nil
 }
 
-func readArrayProperty(name string, value []any) (Property, error) {
+func readArrayProperty(name string, value []any, opts ...expr.ExprOption) (Property, error) {
 	values := make([]Property, 0)
 	dependencies := make([]string, 0)
 	for i, element := range value {
-		newElement, err := readProperty(fmt.Sprintf("%s[%d]", name, i), element)
+		newElement, err := readProperty(fmt.Sprintf("%s[%d]", name, i), element, opts...)
 		if err != nil {
 			return nil, err
 		}

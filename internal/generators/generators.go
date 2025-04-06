@@ -12,14 +12,18 @@ type GeneratorType string
 
 var (
 	knownGenerators = map[GeneratorType]Generator{
-		InventoryGeneratorType: newListGenerator(),
-		DataGeneratorType:      newDataGenerator(),
+		ListGeneratorType: newListGenerator(),
+		DataGeneratorType: newDataGenerator(),
 	}
 )
 
 type GeneratorList struct {
 	Name      string
 	Variables Variables
+}
+
+func Register(generatorType GeneratorType, gen Generator) {
+	knownGenerators[generatorType] = gen
 }
 
 func NewGeneratorList(ctx context.Context, generatorType string, spec GeneratorSpec) (*GeneratorList, error) {

@@ -33,6 +33,7 @@ import (
 	"github.com/gobuffalo/flect"
 	api "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/dag"
+	"github.com/nubank/klaudete/internal/exprs/expr"
 	"github.com/nubank/klaudete/internal/generators"
 	"github.com/nubank/klaudete/internal/serde"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -125,7 +126,7 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 		return ctrl.Result{}, fmt.Errorf("failure to serialize spec.Resource to a map of properties: %w", err)
 	}
 
-	element, err := dag.NewElement[api.Resource](resourceDefinition.Name, resourceAsMap)
+	element, err := dag.NewElement[api.Resource](resourceDefinition.Name, resourceAsMap, expr.Exclude("provisioner"))
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("failure to expand resource template: %w", err)
 	}
@@ -165,7 +166,7 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 					if err != nil {
 						return ctrl.Result{}, fmt.Errorf("failure to serialize spec.Resource.Provisioner field to a map of properties: %w", err)
 					}
-					resourceProvisionerElement, err := dag.NewElement[api.ResourceProvisioner]("provisioner", resourceProvisionerAsMap)
+					resourceProvisionerElement, err := dag.NewElement[api.ResourceProvisioner]("provisioner", resourceProvisionerAsMap, expr.Exclude("provisioner"))
 					if err != nil {
 						return ctrl.Result{}, fmt.Errorf("failure to expand resource provisioner: %w", err)
 					}
@@ -192,24 +193,7 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 				// restore 'patches' content
 				expandedResource.Spec.Patches = patches
 
-				newResource := &api.Resource{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      expandedResource.Spec.Name,
-						Namespace: namespace.Name,
-						Labels: map[string]string{
-							api.Group + "/managedBy.group":   resourceDefinition.GroupVersionKind().Group,
-							api.Group + "/managedBy.version": resourceDefinition.GroupVersionKind().Version,
-							api.Group + "/managedBy.kind":    resourceDefinition.GroupVersionKind().Kind,
-							api.Group + "/managedBy.name":    resourceDefinition.Name,
-							api.Group + "/managedBy.id":      string(resourceDefinition.UID),
-						},
-					},
-					Spec: expandedResource.Spec,
-				}
-				if err := ctrl.SetControllerReference(resourceDefinition, newResource, reconciler.Scheme); err != nil {
-					return ctrl.Result{}, fmt.Errorf("unable to set Resource's ownerReference: %w", err)
-				}
-				if err := reconciler.Create(ctx, newResource); err != nil {
+				if _, err := reconciler.newResource(ctx, resourceDefinition, expandedResource); err != nil {
 					return ctrl.Result{}, fmt.Errorf("unable to create Resource %s: %w", expandedResource.Name, err)
 				}
 			}
@@ -231,21 +215,35 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 	// restore 'patches' content
 	expandedResource.Spec.Patches = patches
 
-	newResource := &api.Resource{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      expandedResource.Spec.Name,
-			Namespace: resourceDefinition.Name,
-		},
-		Spec: expandedResource.Spec,
-	}
-	if err := ctrl.SetControllerReference(resourceDefinition, newResource, reconciler.Scheme); err != nil {
-		return ctrl.Result{}, fmt.Errorf("unable to set Resource's ownerReference: %w", err)
-	}
-	if err := reconciler.Create(ctx, newResource); err != nil {
+	if _, err = reconciler.newResource(ctx, resourceDefinition, expandedResource); err != nil {
 		return ctrl.Result{}, fmt.Errorf("unable to create Resource %s: %w", expandedResource.Name, err)
 	}
 
 	return ctrl.Result{}, nil
+}
+
+func (reconciler *ResourceDefinitionReconciler) newResource(ctx context.Context, resourceDefinition *api.ResourceDefinition, source *api.Resource) (*api.Resource, error) {
+	newResource := &api.Resource{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      source.Spec.Name,
+			Namespace: resourceDefinition.Name,
+			Labels: map[string]string{
+				api.Group + "/managedBy.group":   resourceDefinition.GroupVersionKind().Group,
+				api.Group + "/managedBy.version": resourceDefinition.GroupVersionKind().Version,
+				api.Group + "/managedBy.kind":    resourceDefinition.GroupVersionKind().Kind,
+				api.Group + "/managedBy.name":    resourceDefinition.Name,
+				api.Group + "/managedBy.id":      string(resourceDefinition.UID),
+			},
+		},
+		Spec: source.Spec,
+	}
+	if err := ctrl.SetControllerReference(resourceDefinition, newResource, reconciler.Scheme); err != nil {
+		return nil, fmt.Errorf("unable to set Resource's ownerReference: %w", err)
+	}
+	if err := reconciler.Create(ctx, newResource); err != nil {
+		return nil, fmt.Errorf("unable to create Resource %s: %w", source.Name, err)
+	}
+	return newResource, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

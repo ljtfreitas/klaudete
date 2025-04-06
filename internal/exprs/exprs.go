@@ -17,24 +17,28 @@ type Expression interface {
 	Dependencies() []string
 }
 
-func Parse(expression any) (Expression, error) {
+func Parse(expression any, opts ...expr.ExprOption) (Expression, error) {
 	expressionAsString, ok := expression.(string)
 	if !ok {
 		return ScalarExpression{value: expression}, nil
 	}
 
-	expressions := expr.SearchExpressions(expressionAsString)
+	expressions := expr.SearchExpressions(expressionAsString, opts...)
 
 	if len(expressions) == 0 {
 		return ScalarExpression{value: expression}, nil
 	}
 
-	if len(expressions) == 1 && strings.HasPrefix(expressionAsString, StartToken) && strings.HasSuffix(expressionAsString, EndToken) {
+	if len(expressions) == 1 && isSingleExpression(expressionAsString) {
 		return expr.NewExprExpression(expressionAsString)
 	}
 
 	return newCompositeExpression(expressionAsString, expressions)
 
+}
+
+func isSingleExpression(expr string) bool {
+	return strings.HasPrefix(expr, StartToken) && strings.HasSuffix(expr, EndToken)
 }
 
 func noDependencies() []string {

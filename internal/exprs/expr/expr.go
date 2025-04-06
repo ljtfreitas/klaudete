@@ -16,12 +16,38 @@ var (
 	generatorEscapedExpressionRe = regexp.MustCompile(`(generator)\["([^"]+)"\]`)
 )
 
-func SearchExpressions(expression string) []string {
+type ExprOption func(string) string
+
+func Exclude(variableToExclude string) ExprOption {
+	return func(expr string) string {
+		pattern := fmt.Sprintf(`^%s`, regexp.QuoteMeta(variableToExclude))
+		matched, err := regexp.MatchString(pattern, expr)
+		if err != nil {
+			return expr
+		}
+		if matched {
+			return ""
+		}
+		return expr
+	}
+}
+
+func SearchExpressions(expression string, opts ...ExprOption) []string {
 	matches := exprExpressionRe.FindAllStringSubmatch(expression, -1)
+
+	applyOptions := func(source string) string {
+		for _, o := range opts {
+			source = o(source)
+		}
+		return source
+	}
 
 	expressions := make([]string, 0)
 	for _, m := range matches {
-		expressions = append(expressions, m[1])
+		expression := applyOptions(m[1])
+		if expression != "" {
+			expressions = append(expressions, expression)
+		}
 	}
 
 	return expressions

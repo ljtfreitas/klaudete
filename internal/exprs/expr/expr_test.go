@@ -10,6 +10,32 @@ type ObjectArg struct {
 	Object string
 }
 
+func Test_SearchExprExpressions(t *testing.T) {
+	t.Run("We should be able to detect expressions in a string", func(t *testing.T) {
+		matches := SearchExpressions("${i.am.an.expression}")
+		assert.Len(t, matches, 1)
+		assert.Contains(t, matches, "i.am.an.expression")
+
+		t.Run("...also when we have more than one expression in a single string", func(t *testing.T) {
+			matches := SearchExpressions("${i.am.an.expression} ${i.am.another.expression}")
+			assert.Len(t, matches, 2)
+			assert.Contains(t, matches, "i.am.an.expression")
+			assert.Contains(t, matches, "i.am.another.expression")
+		})
+
+		t.Run("...and we should be able to exclude expressions starting with variables that we don't want to evaluate", func(t *testing.T) {
+			matches := SearchExpressions("${notEvaluatedObject.property}", Exclude("notEvaluatedObject"))
+			assert.Empty(t, matches, 0)
+
+			t.Run("...even when we have composed expressions", func(t *testing.T) {
+				matches := SearchExpressions("${notEvaluatedObject.property} ${evaluatedObject.property}", Exclude("notEvaluatedObject"))
+				assert.Len(t, matches, 1)
+				assert.Contains(t, matches, "evaluatedObject.property")
+			})
+		})
+	})
+}
+
 func Test_ExprExpression(t *testing.T) {
 
 	t.Run("We should be able to eval a constant expression", func(t *testing.T) {
@@ -108,6 +134,5 @@ func Test_ExprExpression(t *testing.T) {
 			assert.NoError(t, err)
 			assert.Equal(t, "i am an object!", r)
 		})
-
 	})
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/dominikbraun/graph"
 	"github.com/gobuffalo/flect"
+	"github.com/nubank/klaudete/internal/exprs/expr"
 )
 
 var (
@@ -103,11 +104,11 @@ func (r *Graph[T]) Sort() ([]string, error) {
 	})
 }
 
-func NewElement[T any](name string, properties map[string]any) (*Element[T], error) {
+func NewElement[T any](name string, properties map[string]any, opts ...expr.ExprOption) (*Element[T], error) {
 	element := &Element[T]{Name: name, properties: &Properties{}}
 
 	if properties != nil && len(properties) != 0 {
-		resourcePropertiesAsExpressions, err := newProperties(properties)
+		resourcePropertiesAsExpressions, err := newProperties(properties, opts...)
 		if err != nil {
 			return nil, fmt.Errorf("unable to read resource properties from %s: %w", name, err)
 		}

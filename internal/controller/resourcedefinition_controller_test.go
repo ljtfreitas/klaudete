@@ -27,6 +27,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/utils/ptr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
@@ -42,9 +43,24 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 		resourceDefinitionName := "just-a-resource-definition"
 
-		resourceDefinitionClusterName := types.NamespacedName{
+		resourceDefinitionNoNamespacedName := types.NamespacedName{
 			Name:      resourceDefinitionName,
 			Namespace: "",
+		}
+
+		configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
+			"apiVersion": "v1",
+			"kind":       "ConfigMap",
+			"metadata": map[string]any{
+				"name":      "${resource.spec.name}-config",
+				"namespace": "${resource.metadata.namespace}",
+			},
+			"data": map[string]string{
+				"name": "${resource.spec.properties.name}",
+			},
+		})
+		if err != nil {
+			Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
 		}
 
 		BeforeAll(func() {
@@ -74,7 +90,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionClusterName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
@@ -92,7 +108,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Generator: map[string]*runtime.RawExtension{
-							string(generators.InventoryGeneratorType): listGeneratorSpec,
+							string(generators.ListGeneratorType): listGeneratorSpec,
 						},
 						Resource: api.Resource{
 							Spec: api.ResourceSpec{
@@ -116,18 +132,17 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 								Provisioner: &api.ResourceProvisioner{
 									Resources: []api.ResourceProvisionerObject{
 										api.ResourceProvisionerObject{
-											// Name: "pulumi",
-											// Ref: &api.ResourceProvisionerObjectRef{
-											// 	ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-											// 	Kind:       "PulumiProvisioner",
-											// },
+											Name:      "configMap",
+											Ref:       configMapProvisionerSpec,
+											ReadyWhen: ptr.To("${provisioner.resources.configMap.data != nil}"),
+											Outputs:   ptr.To("${provisioner.resources.configMap.data}"),
 										},
 									},
 								},
 								Patches: api.ResourcePatches{
 									api.ResourcePatch{
-										From: "${provisioner.pulumi.status.outputs.name}",
-										To:   "spec.properties.name",
+										From: "${provisioner.resources.configMap.data.name}",
+										To:   "status.properties.name",
 									},
 								},
 							},
@@ -144,7 +159,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionClusterName,
+					NamespacedName: resourceDefinitionNoNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
 
@@ -174,7 +189,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionClusterName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
@@ -209,7 +224,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionClusterName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
@@ -250,19 +265,18 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 								},
 								Provisioner: &api.ResourceProvisioner{
 									Resources: []api.ResourceProvisionerObject{
-										// api.ResourceProvisionerObject{
-										// 	Name: resourceDefinitionName,
-										// 	Ref: &api.ResourceProvisionerObjectRef{
-										// 		ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-										// 		Kind:       "PulumiProvisioner",
-										// 	},
-										// },
+										api.ResourceProvisionerObject{
+											Name:      "configMap",
+											Ref:       configMapProvisionerSpec,
+											ReadyWhen: ptr.To("${provisioner.resources.configMap.data != nil}"),
+											Outputs:   ptr.To("${provisioner.resources.configMap.data}"),
+										},
 									},
 								},
 								Patches: api.ResourcePatches{
 									api.ResourcePatch{
-										From: "${provisioner.pulumi.status.outputs.name}",
-										To:   "spec.properties.name",
+										From: "${provisioner.resources.configMap.data.name}",
+										To:   "status.properties.name",
 									},
 								},
 							},
@@ -279,7 +293,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionClusterName,
+					NamespacedName: resourceDefinitionNoNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
 
@@ -309,7 +323,146 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionClusterName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
+				})
+
+				By("Cleanup all generated Resources", func() {
+					resourceList := &api.ResourceList{}
+					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionName))
+					Expect(err).NotTo(HaveOccurred())
+
+					for _, item := range resourceList.Items {
+						err = k8sClient.Delete(ctx, &item)
+						Expect(err).NotTo(HaveOccurred())
+					}
+				})
+			})
+		})
+
+		When("using an Inventory generator", func() {
+			kcl := `import kcl_plugin.inventory
+
+_environments = inventory.list_resources("environment")
+
+environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e in _environments]
+`
+			inventoryGeneratorSpec, err := generators.NewInventoryGeneratorSpec("environments", kcl, "environments")
+			if err != nil {
+				Fail(fmt.Sprintf("Failure to generate a data generator spec: %v", err))
+			}
+
+			BeforeEach(func() {
+				generators.Register(generators.InventoryGeneratorType, generators.NewInventoryGenerator(inventoryClient))
+			})
+
+			BeforeEach(func() {
+				resourceDefinition := &api.ResourceDefinition{}
+
+				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+				if err != nil && !errors.IsNotFound(err) {
+					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
+				}
+
+				properties, err := serde.ToRaw(map[string]string{
+					"name": "",
+				})
+				if err != nil {
+					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
+				}
+
+				resourceDefinition = &api.ResourceDefinition{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: resourceDefinitionName,
+					},
+					Spec: api.ResourceDefinitionSpec{
+						Generator: map[string]*runtime.RawExtension{
+							string(generators.InventoryGeneratorType): inventoryGeneratorSpec,
+						},
+						Resource: api.Resource{
+							Spec: api.ResourceSpec{
+								Name:            "just-a-pet-from-${generator.environments.alias}",
+								Alias:           "just-a-pet-from-${generator.environments.alias}",
+								Description:     "I'm just a pet, and my environment is ${generator.environments.alias}",
+								ResourceTypeRef: "random-pet",
+								Properties:      properties,
+								Connections: []api.ResourceConnection{
+									api.ResourceConnection{
+										Via: "belongs-to",
+										Target: api.ResourceConnectionTarget{
+											Ref: &api.ResourceConnectionTargetRef{
+												ApiVersion: "klaudete.nubank.com.br/v1alpha1",
+												Kind:       "Resource",
+												Name:       "pet-owner",
+											},
+										},
+									},
+								},
+								Provisioner: &api.ResourceProvisioner{
+									Resources: []api.ResourceProvisionerObject{
+										api.ResourceProvisionerObject{
+											Name:      "configMap",
+											Ref:       configMapProvisionerSpec,
+											ReadyWhen: ptr.To("${provisioner.resources.configMap.data != nil}"),
+											Outputs:   ptr.To("${provisioner.resources.configMap.data}"),
+										},
+									},
+								},
+								Patches: api.ResourcePatches{
+									api.ResourcePatch{
+										From: "${provisioner.resources.configMap.data.name}",
+										To:   "status.properties.name",
+									},
+								},
+							},
+						},
+					},
+				}
+				Expect(k8sClient.Create(ctx, resourceDefinition)).To(Succeed())
+			})
+
+			It("should successfully reconcile the resource.", func() {
+				resourceDefinitionReconciler := &ResourceDefinitionReconciler{
+					Client: k8sClient,
+					Scheme: k8sClient.Scheme(),
+				}
+
+				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
+					NamespacedName: resourceDefinitionNoNamespacedName,
+				})
+				Expect(err).NotTo(HaveOccurred())
+
+				By("we are expecting a dedicated namespace to ResourceDefinition objects", func() {
+					namespace := &corev1.Namespace{}
+					err := k8sClient.Get(ctx, types.NamespacedName{Name: resourceDefinitionName}, namespace)
+					Expect(err).NotTo(HaveOccurred())
+				})
+
+				By("we are expecting to create one Resource for each generator element", func() {
+					By("We don't know how many...so we try to find Resources by labels", func() {
+						resourceList := api.ResourceList{}
+						err := k8sClient.List(ctx, &resourceList, client.HasLabels([]string{
+							api.Group + "/managedBy.group",
+							api.Group + "/managedBy.version",
+							api.Group + "/managedBy.kind",
+							api.Group + "/managedBy.name",
+						}))
+						Expect(err).NotTo(HaveOccurred())
+
+						for _, resource := range resourceList.Items {
+							fmt.Fprintf(GinkgoWriter, "Resource is: %s\n", resource.Name)
+						}
+					})
+
+				})
+			})
+
+			AfterEach(func() {
+				By("Cleanup the specific resource instance ResourceDefinition", func() {
+					resourceDefinition := &api.ResourceDefinition{}
+					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
@@ -332,7 +485,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionClusterName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
@@ -370,19 +523,18 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 								},
 								Provisioner: &api.ResourceProvisioner{
 									Resources: []api.ResourceProvisionerObject{
-										// api.ResourceProvisionerObject{
-										// 	Name: "pulumi",
-										// 	Ref: &api.ResourceProvisionerObjectRef{
-										// 		ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-										// 		Kind:       "PulumiProvisioner",
-										// 	},
-										// },
+										api.ResourceProvisionerObject{
+											Name:      "configMap",
+											Ref:       configMapProvisionerSpec,
+											ReadyWhen: ptr.To("${provisioner.resources.configMap.data != nil}"),
+											Outputs:   ptr.To("${provisioner.resources.configMap.data}"),
+										},
 									},
 								},
 								Patches: api.ResourcePatches{
 									api.ResourcePatch{
-										From: "${provisioner.resources.pulumi.status.outputs.name}",
-										To:   "spec.properties.name",
+										From: "${provisioner.resources.configMap.data.name}",
+										To:   "status.properties.name",
 									},
 								},
 							},
@@ -399,7 +551,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionClusterName,
+					NamespacedName: resourceDefinitionNoNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
 
@@ -424,7 +576,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionClusterName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
