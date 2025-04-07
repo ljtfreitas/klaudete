@@ -70,18 +70,14 @@ type ResourceConnection struct {
 }
 
 type ResourceConnectionTarget struct {
-	Ref  *ResourceConnectionTargetRef  `json:"ref,omitempty"`
-	Nurn *ResourceConnectionTargetNurn `json:"nurn,omitempty"`
+	Ref  *ResourceConnectionTargetRef `json:"ref,omitempty"`
+	Nurn *string                      `json:"nurn,omitempty"`
 }
 
 type ResourceConnectionTargetRef struct {
 	ApiVersion string `json:"apiVersion"`
 	Kind       string `json:"kind"`
 	Name       string `json:"name"`
-}
-
-type ResourceConnectionTargetNurn struct {
-	Value string `json:"value"`
 }
 
 type ResourcePatches []ResourcePatch

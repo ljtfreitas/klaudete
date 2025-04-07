@@ -62,12 +62,12 @@ func NewGraph[T any]() *Graph[T] {
 	return &Graph[T]{all: make(map[string]*Element[T])}
 }
 
-func (r *Graph[T]) NewElement(name string, properties map[string]any) (*Element[T], error) {
+func (r *Graph[T]) NewElement(name string, properties map[string]any, opts ...expr.ExprOption) (*Element[T], error) {
 	if _, ok := r.all[name]; ok {
 		return nil, fmt.Errorf("resource '%s' is duplicated; check the spec", name)
 	}
 
-	element, err := NewElement[T](name, properties)
+	element, err := NewElement[T](name, properties, opts...)
 	if err != nil {
 		return nil, err
 	}

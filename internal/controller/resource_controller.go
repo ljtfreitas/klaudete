@@ -226,10 +226,8 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 			}
 
 			for _, patch := range newPatches {
-				log.Info(fmt.Sprint(newResourceStatusAsMap))
 				newResourceStatusAsMap = patches.ApplyTo(patch, newResourceStatusAsMap)
 			}
-			log.Info(fmt.Sprint(newResourceStatusAsMap))
 
 			newResourceStatus, err := serde.FromMap(newResourceStatusAsMap["status"].(map[string]any), &api.ResourceStatus{})
 			if err != nil {
@@ -282,24 +280,24 @@ func (reconciler *ResourceReconciler) newResourceCondition(ctx context.Context, 
 	return resource, nil
 }
 
-func statusToCondition(status *provisioning.ProvisioningStatus, resource *api.Resource) (string, *metav1.Condition) {
+func statusToCondition(status *provisioning.ProvisioningStatus, resource *api.Resource) (api.ResourceStatusPhaseDescription, *metav1.Condition) {
 	switch status.State {
 	case provisioning.ProvisioningSuccessState:
-		return api.DeploymentDonePhase, &metav1.Condition{
+		return api.ResourceStatusReady, &metav1.Condition{
 			Type:    string(api.ConditionTypeReady),
 			Status:  metav1.ConditionTrue,
 			Reason:  string(api.ConditionReasonDone),
 			Message: fmt.Sprintf("Provisioning from Resource %s was successfully done.", resource.Name),
 		}
 	case provisioning.ProvisioningFailedState:
-		return api.DeploymentFailedPhase, &metav1.Condition{
+		return api.ResourceStatusProvisioningFailed, &metav1.Condition{
 			Type:    string(api.ConditionTypeFailure),
 			Status:  metav1.ConditionFalse,
 			Reason:  string(api.ConditionReasonFailed),
 			Message: fmt.Sprintf("Provisioning from Resource %s failed", resource.Name),
 		}
 	default:
-		return api.DeploymentInProgressPhase, &metav1.Condition{
+		return api.ResourceStatusProvisioningInProgress, &metav1.Condition{
 			Type:    string(api.ConditionTypeReady),
 			Status:  metav1.ConditionUnknown,
 			Reason:  string(api.ConditionReasonInProgress),

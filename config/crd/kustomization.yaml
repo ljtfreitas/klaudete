@@ -5,6 +5,7 @@ resources:
 - bases/klaudete.nubank.com.br_resourcetypes.yaml
 - bases/klaudete.nubank.com.br_resources.yaml
 - bases/klaudete.nubank.com.br_resourcedefinitions.yaml
+- bases/klaudete.nubank.com.br_resourcegroups.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:
@@ -17,6 +18,7 @@ patches:
 #- path: patches/cainjection_in_resourcetypes.yaml
 #- path: patches/cainjection_in_resources.yaml
 #- path: patches/cainjection_in_resourcedefinitions.yaml
+#- path: patches/cainjection_in_resourcegroups.yaml
 # +kubebuilder:scaffold:crdkustomizecainjectionpatch
 
 # [WEBHOOK] To enable webhook, uncomment the following section

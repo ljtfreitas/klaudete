@@ -74,6 +74,18 @@ func ResourceArg(resource map[string]any) Arg {
 	}
 }
 
+func ResourcesArg(name string, resource map[string]any) Arg {
+	return func(a *Args) (*Args, error) {
+		resources, ok := a.all["resources"].(map[string]any)
+		if !ok {
+			resources = make(map[string]any)
+		}
+		resources[name] = resource
+		a.all["resources"] = resources
+		return a, nil
+	}
+}
+
 func NewArg(name string, value any) Arg {
 	return func(a *Args) (*Args, error) {
 		a.all[name] = value

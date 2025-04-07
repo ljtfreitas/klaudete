@@ -85,8 +85,7 @@ var _ = Describe("Resource Controller", Ordered, func() {
 					"apiVersion": "v1",
 					"kind":       "ConfigMap",
 					"metadata": map[string]any{
-						"name":      "${resource.spec.name}-config",
-						"namespace": "${resource.metadata.namespace}",
+						"name": "${resource.spec.name}-config",
 					},
 					"data": map[string]string{
 						"name": "${resource.spec.properties.name}",
@@ -100,8 +99,7 @@ var _ = Describe("Resource Controller", Ordered, func() {
 					"apiVersion": "v1",
 					"kind":       "ConfigMap",
 					"metadata": map[string]any{
-						"name":      "${resource.spec.name}-another-config",
-						"namespace": "${resource.metadata.namespace}",
+						"name": "${resource.spec.name}-another-config",
 					},
 					"data": map[string]string{
 						"anotherName": "${provisioner.resources.configMap.data.name}",

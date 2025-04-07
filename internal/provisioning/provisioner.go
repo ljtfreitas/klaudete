@@ -79,7 +79,7 @@ func (provisioner *Provisioner) Run(ctx context.Context, resource *api.Resource)
 			return nil, err
 		}
 
-		log.Info(fmt.Sprintf("ResourceToBeProvisioned: %+v", resourceToBeProvisioned))
+		log.Info(fmt.Sprintf("provisioning resource: %+v", resourceToBeProvisioned))
 
 		logWithResource := log.WithValues("resource", resourceToBeProvisioned.Name)
 

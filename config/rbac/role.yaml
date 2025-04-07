@@ -8,6 +8,7 @@ rules:
   - klaudete.nubank.com.br
   resources:
   - resourcedefinitions
+  - resourcegroups
   - resources
   - resourcetypes
   verbs:
@@ -22,6 +23,7 @@ rules:
   - klaudete.nubank.com.br
   resources:
   - resourcedefinitions/finalizers
+  - resourcegroups/finalizers
   - resources/finalizers
   - resourcetypes/finalizers
   verbs:
@@ -30,6 +32,7 @@ rules:
   - klaudete.nubank.com.br
   resources:
   - resourcedefinitions/status
+  - resourcegroups/status
   - resources/status
   - resourcetypes/status
   verbs:

@@ -52,8 +52,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			"apiVersion": "v1",
 			"kind":       "ConfigMap",
 			"metadata": map[string]any{
-				"name":      "${resource.spec.name}-config",
-				"namespace": "${resource.metadata.namespace}",
+				"name": "${resource.spec.name}-config",
 			},
 			"data": map[string]string{
 				"name": "${resource.spec.properties.name}",
@@ -110,7 +109,8 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 						Generator: map[string]*runtime.RawExtension{
 							string(generators.ListGeneratorType): listGeneratorSpec,
 						},
-						Resource: api.Resource{
+						Resource: api.ResourceDefinitionResource{
+							Name: "just-a-simple-pet",
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-called-${generator.parameter}",
 								Alias:           "just-a-pet-called-${generator.parameter}",
@@ -244,7 +244,8 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 						Generator: map[string]*runtime.RawExtension{
 							string(generators.DataGeneratorType): dataGeneratorSpec,
 						},
-						Resource: api.Resource{
+						Resource: api.ResourceDefinitionResource{
+							Name: "just-a-pet",
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-called-${generator.parameters.value}",
 								Alias:           "just-a-pet-called-${generator.parameters.value}",
@@ -381,7 +382,8 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 						Generator: map[string]*runtime.RawExtension{
 							string(generators.InventoryGeneratorType): inventoryGeneratorSpec,
 						},
-						Resource: api.Resource{
+						Resource: api.ResourceDefinitionResource{
+							Name: "just-a-pet",
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-from-${generator.environments.alias}",
 								Alias:           "just-a-pet-from-${generator.environments.alias}",
@@ -392,11 +394,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 									api.ResourceConnection{
 										Via: "belongs-to",
 										Target: api.ResourceConnectionTarget{
-											Ref: &api.ResourceConnectionTargetRef{
-												ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-												Kind:       "Resource",
-												Name:       "pet-owner",
-											},
+											Nurn: ptr.To("${generator.environments.nurn}"),
 										},
 									},
 								},
@@ -441,7 +439,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 				})
 
 				By("we are expecting to create one Resource for each generator element", func() {
-					By("We don't know how many...so we try to find Resources by labels", func() {
+					By("We don't know how many are...so we try to find Resources by labels", func() {
 						resourceList := api.ResourceList{}
 						err := k8sClient.List(ctx, &resourceList, client.HasLabels([]string{
 							api.Group + "/managedBy.group",
@@ -469,12 +467,17 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 				})
 
 				By("Cleanup all generated Resources", func() {
-					resourceList := &api.ResourceList{}
-					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionName))
+					resourceList := api.ResourceList{}
+					err := k8sClient.List(ctx, &resourceList, client.HasLabels([]string{
+						api.Group + "/managedBy.group",
+						api.Group + "/managedBy.version",
+						api.Group + "/managedBy.kind",
+						api.Group + "/managedBy.name",
+					}))
 					Expect(err).NotTo(HaveOccurred())
 
-					for _, item := range resourceList.Items {
-						err = k8sClient.Delete(ctx, &item)
+					for _, resource := range resourceList.Items {
+						err = k8sClient.Delete(ctx, &resource)
 						Expect(err).NotTo(HaveOccurred())
 					}
 				})
@@ -502,7 +505,8 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 						Name: resourceDefinitionName,
 					},
 					Spec: api.ResourceDefinitionSpec{
-						Resource: api.Resource{
+						Resource: api.ResourceDefinitionResource{
+							Name: "just-a-pet",
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-called-no-name",
 								Alias:           "just-a-pet-called-no-name",

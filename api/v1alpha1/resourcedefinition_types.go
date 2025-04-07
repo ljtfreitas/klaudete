@@ -17,10 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"errors"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -31,23 +28,13 @@ type ResourceDefinitionSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Generator ResourceDefinitionGenerator `json:"generator,omitempty"`
-	Resource  Resource                    `json:"resource,omitempty"`
+	Generator ResourceGenerator          `json:"generator,omitempty"`
+	Resource  ResourceDefinitionResource `json:"resource,omitempty"`
 }
 
-type ResourceDefinitionGenerator map[string]*runtime.RawExtension
-
-func (generator ResourceDefinitionGenerator) Spec() (string, *runtime.RawExtension, error) {
-	if generator == nil || len(generator) == 0 {
-		return "", nil, nil
-	}
-	if len(generator) > 1 {
-		return "", nil, errors.New("just one generator is allowed.")
-	}
-	for generatorType, generatorSpec := range generator {
-		return generatorType, generatorSpec, nil
-	}
-	return "", nil, nil
+type ResourceDefinitionResource struct {
+	Name string       `json:"name"`
+	Spec ResourceSpec `json:"spec"`
 }
 
 // ResourceDefinitionStatus defines the observed state of ResourceDefinition

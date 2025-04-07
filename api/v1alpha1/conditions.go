@@ -19,9 +19,3 @@ const (
 	ConditionReasonInSync     ConditionReason = ConditionReason("InSync")
 	ConditionReasonDone       ConditionReason = ConditionReason("Done")
 )
-
-const (
-	DeploymentInProgressPhase = "DeploymentInProgress"
-	DeploymentDonePhase       = "DeploymentDone"
-	DeploymentFailedPhase     = "DeploymentFailed"
-)
