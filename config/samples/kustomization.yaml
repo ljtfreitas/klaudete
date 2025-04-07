@@ -4,4 +4,5 @@ resources:
 - klaudete_v1alpha1_resource.yaml
 - klaudete_v1alpha1_resourcedefinition.yaml
 - klaudete_v1alpha1_resourcegroup.yaml
+- klaudete_v1alpha1_resourcegroupdefinition.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

@@ -12,7 +12,7 @@ spec:
     listKind: ResourceTypeList
     plural: resourcetypes
     singular: resourcetype
-  scope: Cluster
+  scope: Namespaced
   versions:
   - name: v1alpha1
     schema:

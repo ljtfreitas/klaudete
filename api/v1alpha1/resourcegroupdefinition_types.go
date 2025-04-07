@@ -23,58 +23,55 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// ResourceDefinitionSpec defines the desired state of ResourceDefinition
-type ResourceDefinitionSpec struct {
+// ResourceGroupDefinitionSpec defines the desired state of ResourceGroupDefinition
+type ResourceGroupDefinitionSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Generator ResourceGenerator          `json:"generator,omitempty"`
-	Resource  ResourceDefinitionResource `json:"resource,omitempty"`
+	Generator ResourceGenerator            `json:"generator,omitempty"`
+	Group     ResourceGroupDefinitionGroup `json:"spec,omitempty"`
 }
 
-type ResourceDefinitionResource struct {
-	Name string       `json:"name"`
-	Spec ResourceSpec `json:"spec"`
+type ResourceGroupDefinitionGroup struct {
+	Name      string                  `json:"name,omitempty"`
+	Resources []ResourceGroupResource `json:"resources,omitempty"`
 }
 
-// ResourceDefinitionStatus defines the observed state of ResourceDefinition
-type ResourceDefinitionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+type ResourceGroupDefinitionStatusDescription string
 
+const (
+	ResourceGroupDefinitionStatusPending = ResourceDefinitionStatusDescription("Pending")
+	ResourceGroupDefinitionStatusFailed  = ResourceDefinitionStatusDescription("Failed")
+	ResourceGroupDefinitionStatusReady   = ResourceDefinitionStatusDescription("Ready")
+)
+
+// ResourceGroupDefinitionStatus defines the observed state of ResourceGroupDefinition
+type ResourceGroupDefinitionStatus struct {
 	Status     ResourceDefinitionStatusDescription `json:"status,omitempty"`
 	Conditions []metav1.Condition                  `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
-type ResourceDefinitionStatusDescription string
-
-const (
-	ResourceDefinitionStatusPending = ResourceDefinitionStatusDescription("Pending")
-	ResourceDefinitionStatusFailed  = ResourceDefinitionStatusDescription("Failed")
-	ResourceDefinitionStatusReady   = ResourceDefinitionStatusDescription("Ready")
-)
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// ResourceDefinition is the Schema for the resourcedefinitions API
-type ResourceDefinition struct {
+// ResourceGroupDefinition is the Schema for the resourcegroupdefinitions API
+type ResourceGroupDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ResourceDefinitionSpec   `json:"spec,omitempty"`
-	Status ResourceDefinitionStatus `json:"status,omitempty"`
+	Spec   ResourceGroupDefinitionSpec   `json:"spec"`
+	Status ResourceGroupDefinitionStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// ResourceDefinitionList contains a list of ResourceDefinition
-type ResourceDefinitionList struct {
+// ResourceGroupDefinitionList contains a list of ResourceGroupDefinition
+type ResourceGroupDefinitionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ResourceDefinition `json:"items"`
+	Items           []ResourceGroupDefinition `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&ResourceDefinition{}, &ResourceDefinitionList{})
+	SchemeBuilder.Register(&ResourceGroupDefinition{}, &ResourceGroupDefinitionList{})
 }

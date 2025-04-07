@@ -46,7 +46,6 @@ type ResourceTypeStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:subresource:status
 
 // ResourceType is the Schema for the resourcetypes API

@@ -195,8 +195,8 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 			}
 		}
 
-		newPatches := make(api.ResourcePatches, 0, len(resource.Spec.Patches))
-		for _, patch := range resource.Spec.Patches {
+		newPatches := make(api.ResourcePatches, 0, len(resourcePatches))
+		for _, patch := range resourcePatches {
 			patchAsMap, err := serde.ToMap(patch)
 			if err != nil {
 				return ctrl.Result{}, fmt.Errorf("failure to serialize patch to map: %w", err)

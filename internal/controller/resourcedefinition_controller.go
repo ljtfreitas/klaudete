@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,7 +35,6 @@ import (
 	"github.com/nubank/klaudete/internal/exprs/expr"
 	"github.com/nubank/klaudete/internal/generators"
 	"github.com/nubank/klaudete/internal/serde"
-	"k8s.io/apimachinery/pkg/api/errors"
 )
 
 // ResourceDefinitionReconciler reconciles a ResourceDefinition object
@@ -75,50 +73,9 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 		resourceDefinition = resourceDefinitionWithCondition
 	}
 
-	// TODO step 1 => generate a dedicated namespace
-
-	namespace := &corev1.Namespace{}
-	namespaceName := flect.Dasherize(resourceDefinition.Name)
-	if err := reconciler.Get(ctx, types.NamespacedName{Name: namespaceName}, namespace); err != nil {
-		if !errors.IsNotFound(err) {
-			return ctrl.Result{}, fmt.Errorf("unable to fetch ResourceDefinition namespace: %w", err)
-		}
-
-		log.Info(fmt.Sprintf("there is no namespace to ResourceDefinition %s; trying to generate...", resourceDefinition.Name))
-
-		namespace.Name = resourceDefinition.Name
-		namespace.Labels = map[string]string{
-			api.Group + "/managedBy.group":   resourceDefinition.GroupVersionKind().Group,
-			api.Group + "/managedBy.version": resourceDefinition.GroupVersionKind().Version,
-			api.Group + "/managedBy.kind":    resourceDefinition.GroupVersionKind().Kind,
-			api.Group + "/managedBy.name":    resourceDefinition.Name,
-			api.Group + "/managedBy.id":      string(resourceDefinition.UID),
-		}
-		if err := ctrl.SetControllerReference(resourceDefinition, namespace, reconciler.Scheme); err != nil {
-			return ctrl.Result{}, fmt.Errorf("unable to set namespace's ownerReference: %w", err)
-		}
-
-		if err := reconciler.Create(ctx, namespace); err != nil {
-			log.Error(err, fmt.Sprintf("unable to create namespace %s", namespace.Name), "namespace", namespace.Name)
-
-			_, err = reconciler.newResourceDefinitionCondition(ctx, resourceDefinition, &metav1.Condition{
-				Type:    string(api.ConditionTypeInSync),
-				Status:  metav1.ConditionFalse,
-				Reason:  "ResourceDefinitionNamespaceCreationFailed",
-				Message: fmt.Sprintf("unable to create a namespace to ResourceDefinition %s", resourceDefinition.Name),
-			})
-			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failed to update ResourceDefinition's status: %w", err)
-			}
-
-			return ctrl.Result{}, err
-		}
-
-		log.Info(fmt.Sprintf("a namespace was created to ResourceDefinition %s", resourceDefinition.Name))
-	}
-
 	log.Info("processing resource...", "resource", resourceDefinition.Spec.Resource.Name)
-	// TODO step 2 => initialize Resource expansion
+
+	// TODO step 1 => initialize Resource expansion
 
 	// 'patches' field shouldn't be expanded
 	patches := resourceDefinition.Spec.Resource.Spec.Patches
@@ -135,12 +92,9 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 	}
 
 	// the resource spec itself can be used in expressions as a 'resource' variable (does it make sense?)
-	args, err := dag.NewArgs(dag.ResourceArg(resourceAsMap))
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("failure to initialize args list: %w", err)
-	}
+	args, _ := dag.NewArgs(dag.ResourceArg(resourceAsMap))
 
-	// TODO step 3 => check generator; if present, resolve to a list of values
+	// TODO step 2 => check generator; if present, resolve to a list of values
 
 	generator := resourceDefinition.Spec.Generator
 	if generator != nil {
@@ -155,7 +109,7 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 
 		if generatorList != nil {
 
-			// TODO step 4 => expand one resource to each generator's value
+			// TODO step 2.1 => expand one resource to each generator's value
 
 			for _, variable := range generatorList.Variables {
 				args, err = args.WithArgs(dag.GeneratorArg(generatorList.Name, variable))
@@ -163,9 +117,9 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 					return ctrl.Result{}, fmt.Errorf("unable to initialize generator args: %w", err)
 				}
 
-				resourceSpec := resourceDefinition.Spec.Resource.Spec
-				if resourceSpec.Provisioner != nil {
-					resourceProvisionerAsMap, err := serde.ToMap(resourceSpec.Provisioner)
+				provisioner := resourceDefinition.Spec.Resource.Spec.Provisioner
+				if provisioner != nil {
+					resourceProvisionerAsMap, err := serde.ToMap(provisioner)
 					if err != nil {
 						return ctrl.Result{}, fmt.Errorf("failure to serialize spec.Resource.Provisioner field to a map of properties: %w", err)
 					}
@@ -196,7 +150,7 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 				// restore 'patches' content
 				expandedResource.Spec.Patches = patches
 
-				if _, err := reconciler.newResource(ctx, resourceDefinition, namespace, expandedResource); err != nil {
+				if _, err := reconciler.newResource(ctx, resourceDefinition, expandedResource); err != nil {
 					return ctrl.Result{}, fmt.Errorf("unable to create Resource %s: %w", expandedResource.Name, err)
 				}
 			}
@@ -218,20 +172,31 @@ func (reconciler *ResourceDefinitionReconciler) Reconcile(ctx context.Context, r
 	// restore 'patches' content
 	expandedResource.Spec.Patches = patches
 
-	if _, err = reconciler.newResource(ctx, resourceDefinition, namespace, expandedResource); err != nil {
+	if _, err = reconciler.newResource(ctx, resourceDefinition, expandedResource); err != nil {
 		return ctrl.Result{}, fmt.Errorf("unable to create Resource %s: %w", expandedResource.Name, err)
+	}
+
+	resourceDefinition.Status.Status = api.ResourceDefinitionStatusReady
+	_, err = reconciler.newResourceDefinitionCondition(ctx, resourceDefinition, &metav1.Condition{
+		Type:    string(api.ConditionTypeReady),
+		Status:  metav1.ConditionFalse,
+		Reason:  string(api.ConditionTypeReady),
+		Message: fmt.Sprintf("ResourceDefinition is done. Resource %s expanded and created.", resourceDefinition.Spec.Resource.Name),
+	})
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failed to update ResourceDefinition's status: %w", err)
 	}
 
 	return ctrl.Result{}, nil
 }
 
-func (reconciler *ResourceDefinitionReconciler) newResource(ctx context.Context, resourceDefinition *api.ResourceDefinition, namespace *corev1.Namespace, source *api.ResourceDefinitionResource) (*api.Resource, error) {
+func (reconciler *ResourceDefinitionReconciler) newResource(ctx context.Context, resourceDefinition *api.ResourceDefinition, source *api.ResourceDefinitionResource) (*api.Resource, error) {
 	name := flect.Dasherize(source.Spec.Name)
 
 	newResource := &api.Resource{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
-			Namespace: namespace.Name,
+			Namespace: resourceDefinition.Namespace,
 			Labels: map[string]string{
 				api.Group + "/managedBy.group":   resourceDefinition.GroupVersionKind().Group,
 				api.Group + "/managedBy.version": resourceDefinition.GroupVersionKind().Version,

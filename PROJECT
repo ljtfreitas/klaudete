@@ -26,6 +26,7 @@ resources:
   version: v1alpha1
 - api:
     crdVersion: v1
+    namespaced: true
   controller: true
   domain: nubank.com.br
   group: klaudete
@@ -39,6 +40,15 @@ resources:
   domain: nubank.com.br
   group: klaudete
   kind: ResourceGroup
+  path: github.com/nubank/klaudete/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: nubank.com.br
+  group: klaudete
+  kind: ResourceGroupDefinition
   path: github.com/nubank/klaudete/api/v1alpha1
   version: v1alpha1
 version: "3"

@@ -18,7 +18,6 @@ package controller
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -194,10 +193,6 @@ var _ = Describe("Resource Controller", Ordered, func() {
 				resourceStatus := resource.Status
 				Expect(resourceStatus).ShouldNot(BeNil())
 				Expect(resourceStatus.Phase).Should(Equal(api.ResourceStatusReady))
-
-				content, err := json.Marshal(resource)
-				Expect(err).NotTo(HaveOccurred())
-				fmt.Println(string(content))
 
 				atProvisioner := resource.Status.AtProvisioner
 				Expect(atProvisioner.State).Should(Equal(string(provisioning.ProvisioningSuccessState)))

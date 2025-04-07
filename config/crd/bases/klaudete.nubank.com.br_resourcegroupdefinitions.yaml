@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.1
-  name: resourcedefinitions.klaudete.nubank.com.br
+  name: resourcegroupdefinitions.klaudete.nubank.com.br
 spec:
   group: klaudete.nubank.com.br
   names:
-    kind: ResourceDefinition
-    listKind: ResourceDefinitionList
-    plural: resourcedefinitions
-    singular: resourcedefinition
+    kind: ResourceGroupDefinition
+    listKind: ResourceGroupDefinitionList
+    plural: resourcegroupdefinitions
+    singular: resourcegroupdefinition
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ResourceDefinition is the Schema for the resourcedefinitions
+        description: ResourceGroupDefinition is the Schema for the resourcegroupdefinitions
           API
         properties:
           apiVersion:
@@ -38,105 +38,114 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceDefinitionSpec defines the desired state of ResourceDefinition
+            description: ResourceGroupDefinitionSpec defines the desired state of
+              ResourceGroupDefinition
             properties:
               generator:
                 additionalProperties:
                   type: object
                   x-kubernetes-preserve-unknown-fields: true
                 type: object
-              resource:
+              spec:
                 properties:
                   name:
                     type: string
-                  spec:
-                    description: ResourceSpec defines the desired state of Resource
-                    properties:
-                      alias:
-                        type: string
-                      connections:
-                        items:
-                          properties:
-                            target:
-                              properties:
-                                nurn:
-                                  type: string
-                                ref:
-                                  properties:
-                                    apiVersion:
-                                      type: string
-                                    kind:
-                                      type: string
-                                    name:
-                                      type: string
-                                  required:
-                                  - apiVersion
-                                  - kind
-                                  - name
-                                  type: object
-                              type: object
-                            via:
-                              type: string
-                          required:
-                          - target
-                          - via
-                          type: object
-                        type: array
-                      description:
-                        type: string
-                      name:
-                        type: string
-                      patches:
-                        items:
-                          properties:
-                            from:
-                              type: string
-                            to:
-                              type: string
-                          required:
-                          - from
-                          - to
-                          type: object
-                        type: array
+                  resources:
+                    items:
                       properties:
-                        type: object
-                        x-kubernetes-preserve-unknown-fields: true
-                      provisioner:
-                        properties:
-                          resources:
-                            items:
-                              properties:
-                                failedWhen:
-                                  type: string
-                                name:
-                                  type: string
-                                outputs:
-                                  type: string
-                                readyWhen:
-                                  type: string
-                                ref:
-                                  description: Ref        ResourceProvisionerObjectRef
-                                    `json:"ref,omitempty"`
-                                  type: object
-                                  x-kubernetes-preserve-unknown-fields: true
-                              required:
-                              - name
+                        name:
+                          type: string
+                        spec:
+                          description: ResourceSpec defines the desired state of Resource
+                          properties:
+                            alias:
+                              type: string
+                            connections:
+                              items:
+                                properties:
+                                  target:
+                                    properties:
+                                      nurn:
+                                        type: string
+                                      ref:
+                                        properties:
+                                          apiVersion:
+                                            type: string
+                                          kind:
+                                            type: string
+                                          name:
+                                            type: string
+                                        required:
+                                        - apiVersion
+                                        - kind
+                                        - name
+                                        type: object
+                                    type: object
+                                  via:
+                                    type: string
+                                required:
+                                - target
+                                - via
+                                type: object
+                              type: array
+                            description:
+                              type: string
+                            name:
+                              type: string
+                            patches:
+                              items:
+                                properties:
+                                  from:
+                                    type: string
+                                  to:
+                                    type: string
+                                required:
+                                - from
+                                - to
+                                type: object
+                              type: array
+                            properties:
                               type: object
-                            type: array
-                        type: object
-                      resourceTypeRef:
-                        type: string
-                    required:
-                    - name
-                    - resourceTypeRef
-                    type: object
-                required:
-                - name
-                - spec
+                              x-kubernetes-preserve-unknown-fields: true
+                            provisioner:
+                              properties:
+                                resources:
+                                  items:
+                                    properties:
+                                      failedWhen:
+                                        type: string
+                                      name:
+                                        type: string
+                                      outputs:
+                                        type: string
+                                      readyWhen:
+                                        type: string
+                                      ref:
+                                        description: Ref        ResourceProvisionerObjectRef
+                                          `json:"ref,omitempty"`
+                                        type: object
+                                        x-kubernetes-preserve-unknown-fields: true
+                                    required:
+                                    - name
+                                    type: object
+                                  type: array
+                              type: object
+                            resourceTypeRef:
+                              type: string
+                          required:
+                          - name
+                          - resourceTypeRef
+                          type: object
+                      required:
+                      - name
+                      - spec
+                      type: object
+                    type: array
                 type: object
             type: object
           status:
-            description: ResourceDefinitionStatus defines the observed state of ResourceDefinition
+            description: ResourceGroupDefinitionStatus defines the observed state
+              of ResourceGroupDefinition
             properties:
               conditions:
                 items:
@@ -197,6 +206,8 @@ spec:
               status:
                 type: string
             type: object
+        required:
+        - spec
         type: object
     served: true
     storage: true

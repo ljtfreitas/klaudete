@@ -95,7 +95,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 				}
 
 				properties, err := serde.ToRaw(map[string]string{
-					"name": "",
+					"name": "just-a-name",
 				})
 				if err != nil {
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
@@ -448,6 +448,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 							api.Group + "/managedBy.name",
 						}))
 						Expect(err).NotTo(HaveOccurred())
+						Expect(resourceList).Should(Not(BeEmpty()))
 
 						for _, resource := range resourceList.Items {
 							fmt.Fprintf(GinkgoWriter, "Resource is: %s\n", resource.Name)

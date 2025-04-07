@@ -99,7 +99,7 @@ func (reconciler *ResourceGroupReconciler) Reconcile(ctx context.Context, resour
 		if err != nil {
 			return ctrl.Result{}, fmt.Errorf("failure to serialize resource spec to a map of properties: %w", err)
 		}
-		resourceProvisionerObjElement, err := resourceGroupGraph.NewElement(fmt.Sprintf("resources.%s", resource.Name), resourceAsMap)
+		resourceGraphElement, err := resourceGroupGraph.NewElement(fmt.Sprintf("resources.%s", resource.Name), resourceAsMap)
 		if err != nil {
 			return ctrl.Result{}, fmt.Errorf("failure to process resource properties: %w", err)
 		}
@@ -107,7 +107,7 @@ func (reconciler *ResourceGroupReconciler) Reconcile(ctx context.Context, resour
 		// restore patches content
 		resource.Spec.Patches = patches
 
-		resourceProvisionerObjElement.Ref = &resource
+		resourceGraphElement.Ref = &resource
 	}
 
 	resourcesToBeProcessed, err := resourceGroupGraph.Sort()
