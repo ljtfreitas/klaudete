@@ -24,7 +24,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -36,8 +35,7 @@ import (
 // ResourceTypeReconciler reconciles a ResourceType object
 type ResourceTypeReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
+	Scheme *runtime.Scheme
 }
 
 // +kubebuilder:rbac:groups=klaudete.nubank.com.br,resources=resourcetypes,verbs=get;list;watch;create;update;patch;delete
@@ -83,8 +81,6 @@ func (reconciler *ResourceTypeReconciler) Reconcile(ctx context.Context, resourc
 		return ctrl.Result{}, fmt.Errorf("failure to update resource type status: %w", err)
 	}
 
-	reconciler.Recorder.Eventf(resourceType, "Normal", "Created", "ResourceType %s reconciled/in-sync.", resourceType.Name)
-
 	return ctrl.Result{}, nil
 }
 
@@ -100,7 +96,7 @@ func (reconciler *ResourceTypeReconciler) newResourceTypeCondition(ctx context.C
 	if err := reconciler.Status().Update(ctx, resourceType); err != nil {
 		return nil, err
 	}
-	if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resourceType.Namespace}, resourceType); err != nil {
+	if err := reconciler.Get(ctx, types.NamespacedName{Name: resourceType.Name}, resourceType); err != nil {
 		return nil, err
 	}
 	return resourceType, nil

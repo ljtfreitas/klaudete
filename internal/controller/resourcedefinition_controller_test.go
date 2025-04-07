@@ -22,7 +22,6 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -43,9 +42,9 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 		resourceDefinitionName := "just-a-resource-definition"
 
-		resourceDefinitionNoNamespacedName := types.NamespacedName{
+		resourceDefinitionNamespacedName := types.NamespacedName{
 			Name:      resourceDefinitionName,
-			Namespace: "",
+			Namespace: "default",
 		}
 
 		configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
@@ -62,25 +61,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
 		}
 
-		BeforeAll(func() {
-			By("Creating a ResourceType to be used", func() {
-				resourceType := &api.ResourceType{
-					ObjectMeta: metav1.ObjectMeta{
-						Name: "random-pet",
-					},
-					Spec: api.ResourceTypeSpec{
-						Name:        "random-pet",
-						Description: "Just random pets",
-					},
-				}
-				err := k8sClient.Create(ctx, resourceType)
-				if err != nil && !errors.IsNotFound(err) {
-					Fail(fmt.Sprintf("ResourceType random-pet already exists."))
-				}
-			})
-		})
-
-		When("using a List generator", func() {
+		When("...using a List generator", func() {
 			listGeneratorSpec, err := generators.NewListGeneratorSpec("parameter", "one", "two")
 			if err != nil {
 				Fail(fmt.Sprintf("Failure to generate a list generator spec: %v", err))
@@ -89,7 +70,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
@@ -103,7 +84,8 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: resourceDefinitionName,
+						Name:      resourceDefinitionNamespacedName.Name,
+						Namespace: resourceDefinitionNamespacedName.Namespace,
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Generator: map[string]*runtime.RawExtension{
@@ -152,22 +134,16 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 				Expect(k8sClient.Create(ctx, resourceDefinition)).To(Succeed())
 			})
 
-			It("should successfully reconcile the resource.", func() {
+			It("...should successfully reconcile the resource.", func() {
 				resourceDefinitionReconciler := &ResourceDefinitionReconciler{
 					Client: k8sClient,
 					Scheme: k8sClient.Scheme(),
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionNoNamespacedName,
+					NamespacedName: resourceDefinitionNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
-
-				By("we are expecting a dedicated namespace to ResourceDefinition objects", func() {
-					namespace := &corev1.Namespace{}
-					err := k8sClient.Get(ctx, types.NamespacedName{Name: resourceDefinitionName}, namespace)
-					Expect(err).NotTo(HaveOccurred())
-				})
 
 				By("we are expecting to create one Resource for each generator element", func() {
 					listGeneratorSpec, err := generators.UnmarshallSpec(listGeneratorSpec, &generators.ListGeneratorSpec{})
@@ -176,7 +152,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 					for _, value := range listGeneratorSpec.Values {
 						namespacedName := types.NamespacedName{
 							Name:      fmt.Sprintf("just-a-pet-called-%s", value),
-							Namespace: resourceDefinitionName,
+							Namespace: resourceDefinitionNamespacedName.Namespace,
 						}
 
 						resource := &api.Resource{}
@@ -189,7 +165,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
@@ -197,7 +173,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 				By("Cleanup all generated Resources", func() {
 					resourceList := &api.ResourceList{}
-					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionName))
+					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionNamespacedName.Namespace))
 					Expect(err).NotTo(HaveOccurred())
 
 					for _, item := range resourceList.Items {
@@ -208,7 +184,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			})
 		})
 
-		When("using a Data generator", func() {
+		When("...using a Data generator", func() {
 			dataGeneratorSpec, err := generators.NewDataGeneratorSpec("parameters",
 				map[string]any{
 					"value": "one",
@@ -224,13 +200,13 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
 
 				properties, err := serde.ToRaw(map[string]string{
-					"name": "",
+					"name": "just-a-name",
 				})
 				if err != nil {
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
@@ -238,7 +214,8 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: resourceDefinitionName,
+						Name:      resourceDefinitionNamespacedName.Name,
+						Namespace: resourceDefinitionNamespacedName.Namespace,
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Generator: map[string]*runtime.RawExtension{
@@ -287,22 +264,16 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 				Expect(k8sClient.Create(ctx, resourceDefinition)).To(Succeed())
 			})
 
-			It("should successfully reconcile the resource.", func() {
+			It("...should successfully reconcile the resource.", func() {
 				resourceDefinitionReconciler := &ResourceDefinitionReconciler{
 					Client: k8sClient,
 					Scheme: k8sClient.Scheme(),
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionNoNamespacedName,
+					NamespacedName: resourceDefinitionNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
-
-				By("we are expecting a dedicated namespace to ResourceDefinition objects", func() {
-					namespace := &corev1.Namespace{}
-					err := k8sClient.Get(ctx, types.NamespacedName{Name: resourceDefinitionName}, namespace)
-					Expect(err).NotTo(HaveOccurred())
-				})
 
 				By("we are expecting to create one Resource for each generator element", func() {
 					dataGeneratorSpec, err := generators.UnmarshallSpec(dataGeneratorSpec, &generators.DataGeneratorSpec{})
@@ -311,7 +282,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 					for _, obj := range dataGeneratorSpec.Values {
 						namespacedName := types.NamespacedName{
 							Name:      fmt.Sprintf("just-a-pet-called-%s", obj["value"]),
-							Namespace: resourceDefinitionName,
+							Namespace: resourceDefinitionNamespacedName.Namespace,
 						}
 
 						resource := &api.Resource{}
@@ -324,7 +295,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
@@ -332,7 +303,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 				By("Cleanup all generated Resources", func() {
 					resourceList := &api.ResourceList{}
-					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionName))
+					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionNamespacedName.Namespace))
 					Expect(err).NotTo(HaveOccurred())
 
 					for _, item := range resourceList.Items {
@@ -343,7 +314,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			})
 		})
 
-		When("using an Inventory generator", func() {
+		When("...using an Inventory generator", func() {
 			kcl := `import kcl_plugin.inventory
 
 _environments = inventory.list_resources("environment")
@@ -362,13 +333,13 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
 
 				properties, err := serde.ToRaw(map[string]string{
-					"name": "",
+					"name": "just-a-name",
 				})
 				if err != nil {
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
@@ -376,7 +347,8 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: resourceDefinitionName,
+						Name:      resourceDefinitionNamespacedName.Name,
+						Namespace: resourceDefinitionNamespacedName.Namespace,
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Generator: map[string]*runtime.RawExtension{
@@ -421,22 +393,16 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 				Expect(k8sClient.Create(ctx, resourceDefinition)).To(Succeed())
 			})
 
-			It("should successfully reconcile the resource.", func() {
+			It("...should successfully reconcile the resource.", func() {
 				resourceDefinitionReconciler := &ResourceDefinitionReconciler{
 					Client: k8sClient,
 					Scheme: k8sClient.Scheme(),
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionNoNamespacedName,
+					NamespacedName: resourceDefinitionNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
-
-				By("we are expecting a dedicated namespace to ResourceDefinition objects", func() {
-					namespace := &corev1.Namespace{}
-					err := k8sClient.Get(ctx, types.NamespacedName{Name: resourceDefinitionName}, namespace)
-					Expect(err).NotTo(HaveOccurred())
-				})
 
 				By("we are expecting to create one Resource for each generator element", func() {
 					By("We don't know how many are...so we try to find Resources by labels", func() {
@@ -448,7 +414,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 							api.Group + "/managedBy.name",
 						}))
 						Expect(err).NotTo(HaveOccurred())
-						Expect(resourceList).Should(Not(BeEmpty()))
+						Expect(resourceList.Items).Should(Not(BeEmpty()))
 
 						for _, resource := range resourceList.Items {
 							fmt.Fprintf(GinkgoWriter, "Resource is: %s\n", resource.Name)
@@ -461,7 +427,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
@@ -485,17 +451,17 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 			})
 		})
 
-		When("don't using generator at all", func() {
+		When("...don't using generator at all", func() {
 			BeforeEach(func() {
 				resourceDefinition := &api.ResourceDefinition{}
 
-				err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+				err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("ResourceDefinition %s already exists.", resourceDefinitionName))
 				}
 
 				properties, err := serde.ToRaw(map[string]string{
-					"name": "",
+					"name": "just-a-name",
 				})
 				if err != nil {
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
@@ -503,7 +469,8 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: resourceDefinitionName,
+						Name:      resourceDefinitionNamespacedName.Name,
+						Namespace: resourceDefinitionNamespacedName.Namespace,
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Resource: api.ResourceDefinitionResource{
@@ -549,27 +516,21 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 				Expect(k8sClient.Create(ctx, resourceDefinition)).To(Succeed())
 			})
 
-			It("should successfully reconcile the resource.", func() {
+			It("...should successfully reconcile the resource.", func() {
 				resourceDefinitionReconciler := &ResourceDefinitionReconciler{
 					Client: k8sClient,
 					Scheme: k8sClient.Scheme(),
 				}
 
 				_, err := reconcile.AsReconciler(k8sClient, resourceDefinitionReconciler).Reconcile(ctx, reconcile.Request{
-					NamespacedName: resourceDefinitionNoNamespacedName,
+					NamespacedName: resourceDefinitionNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
-
-				By("we are expecting a dedicated namespace to ResourceDefinition objects", func() {
-					namespace := &corev1.Namespace{}
-					err := k8sClient.Get(ctx, types.NamespacedName{Name: resourceDefinitionName}, namespace)
-					Expect(err).NotTo(HaveOccurred())
-				})
 
 				By("we are expecting to create just one Resource", func() {
 					namespacedName := types.NamespacedName{
 						Name:      "just-a-pet-called-no-name",
-						Namespace: resourceDefinitionName,
+						Namespace: resourceDefinitionNamespacedName.Namespace,
 					}
 
 					resource := &api.Resource{}
@@ -581,7 +542,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 			AfterEach(func() {
 				By("Cleanup the specific resource instance ResourceDefinition", func() {
 					resourceDefinition := &api.ResourceDefinition{}
-					err := k8sClient.Get(ctx, resourceDefinitionNoNamespacedName, resourceDefinition)
+					err := k8sClient.Get(ctx, resourceDefinitionNamespacedName, resourceDefinition)
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(k8sClient.Delete(ctx, resourceDefinition)).To(Succeed())
@@ -589,7 +550,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 
 				By("Cleanup all generated Resources", func() {
 					resourceList := &api.ResourceList{}
-					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionName))
+					err := k8sClient.List(ctx, resourceList, client.InNamespace(resourceDefinitionNamespacedName.Namespace))
 					Expect(err).NotTo(HaveOccurred())
 
 					for _, item := range resourceList.Items {

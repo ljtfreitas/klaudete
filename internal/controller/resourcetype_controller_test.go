@@ -27,58 +27,64 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
+	api "github.com/nubank/klaudete/api/v1alpha1"
 )
 
 var _ = Describe("ResourceType Controller", func() {
 	Context("When reconciling a resource", func() {
-		const resourceName = "test-resource"
+		const resourceTypeName = "my-resource-type"
 
 		ctx := context.Background()
 
-		typeNamespacedName := types.NamespacedName{
-			Name:      resourceName,
-			Namespace: "default", // TODO(user):Modify as needed
+		resourceTypeNamespacedName := types.NamespacedName{
+			Name: resourceTypeName,
 		}
-		resourcetype := &klaudetev1alpha1.ResourceType{}
+		resourcetype := &api.ResourceType{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind ResourceType")
-			err := k8sClient.Get(ctx, typeNamespacedName, resourcetype)
-			if err != nil && errors.IsNotFound(err) {
-				resource := &klaudetev1alpha1.ResourceType{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      resourceName,
-						Namespace: "default",
-					},
-					// TODO(user): Specify other spec details if needed.
+			By("creating the custom resource for the Kind ResourceType", func() {
+				err := k8sClient.Get(ctx, resourceTypeNamespacedName, resourcetype)
+				if err != nil && errors.IsNotFound(err) {
+					resource := &api.ResourceType{
+						ObjectMeta: metav1.ObjectMeta{
+							Name: resourceTypeName,
+						},
+						Spec: api.ResourceTypeSpec{
+							Name:        "my-resource-type",
+							Description: "I'm just a resource type.",
+						},
+					}
+					Expect(k8sClient.Create(ctx, resource)).To(Succeed())
 				}
-				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
-			}
+			})
 		})
 
 		AfterEach(func() {
-			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &klaudetev1alpha1.ResourceType{}
-			err := k8sClient.Get(ctx, typeNamespacedName, resource)
+			resource := &api.ResourceType{}
+			err := k8sClient.Get(ctx, resourceTypeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("Cleanup the specific resource instance ResourceType")
-			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
+			By("Cleanup the specific resource instance ResourceType", func() {
+				Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
+			})
 		})
-		It("should successfully reconcile the resource", func() {
-			By("Reconciling the created resource")
+		It("...should successfully reconcile the resource", func() {
 			controllerReconciler := &ResourceTypeReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}
 
 			_, err := reconcile.AsReconciler(k8sClient, controllerReconciler).Reconcile(ctx, reconcile.Request{
-				NamespacedName: typeNamespacedName,
+				NamespacedName: resourceTypeNamespacedName,
 			})
 			Expect(err).NotTo(HaveOccurred())
-			// TODO(user): Add more specific assertions depending on your controller's reconciliation logic.
-			// Example: If you expect a certain status condition after reconciliation, verify it here.
+
+			resourceType := &api.ResourceType{}
+			err = k8sClient.Get(ctx, resourceTypeNamespacedName, resourceType)
+			Expect(err).NotTo(HaveOccurred())
+
+			resourceTypeStatus := resourceType.Status.Status
+			Expect(resourceTypeStatus).Should(Equal(api.ResourceTypeStatusInSync))
 		})
 	})
 })

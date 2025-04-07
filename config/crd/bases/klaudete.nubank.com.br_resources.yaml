@@ -196,11 +196,18 @@ spec:
                   - type
                   type: object
                 type: array
+              inventory:
+                properties:
+                  nurn:
+                    type: string
+                  properties:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                required:
+                - nurn
+                type: object
               phase:
                 type: string
-              properties:
-                type: object
-                x-kubernetes-preserve-unknown-fields: true
             required:
             - phase
             type: object

@@ -93,9 +93,14 @@ type ResourceStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Phase         ResourceStatusPhaseDescription `json:"phase"`
-	Properties    *runtime.RawExtension          `json:"properties,omitempty"`
 	AtProvisioner ResourceStatusProvisioner      `json:"atProvisioner,omitempty"`
+	Inventory     ResourceStatusInventory        `json:"inventory,omitempty"`
 	Conditions    []metav1.Condition             `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+}
+
+type ResourceStatusInventory struct {
+	Nurn       string                `json:"nurn"`
+	Properties *runtime.RawExtension `json:"properties,omitempty"`
 }
 
 type ResourceStatusPhaseDescription string

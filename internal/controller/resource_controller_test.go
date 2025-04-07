@@ -47,27 +47,27 @@ var _ = Describe("Resource Controller", Ordered, func() {
 			Namespace: "default",
 		}
 		resource := &api.Resource{}
+		resourceType := &api.ResourceType{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: "random-pet",
+			},
+			Spec: api.ResourceTypeSpec{
+				Name:        "random-pet",
+				Description: "Just random pets",
+			},
+		}
 
 		BeforeAll(func() {
-			By("Creating a ResourceType to be used", func() {
-				resourceType := &api.ResourceType{
-					ObjectMeta: metav1.ObjectMeta{
-						Name: "random-pet",
-					},
-					Spec: api.ResourceTypeSpec{
-						Name:        "random-pet",
-						Description: "Just random pets",
-					},
-				}
+			By("...creating a ResourceType to be used", func() {
 				err := k8sClient.Create(ctx, resourceType)
 				if err != nil && !errors.IsNotFound(err) {
-					Fail(fmt.Sprintf("ResourceType random-pet already exists."))
+					Fail(fmt.Sprintf("failure to create ResourceType random-pet: %s", err.Error()))
 				}
 			})
 		})
 
 		BeforeEach(func() {
-			By("creating a Resource object", func() {
+			By("...creating a Resource object", func() {
 				err := k8sClient.Get(ctx, namespacedName, resource)
 				if err != nil && !errors.IsNotFound(err) {
 					Fail(fmt.Sprintf("Resource %s already exists.", resourceName))
@@ -117,7 +117,7 @@ var _ = Describe("Resource Controller", Ordered, func() {
 						Name:            resourceName,
 						Alias:           resourceName,
 						Description:     "I'm just a pet",
-						ResourceTypeRef: "random-pet",
+						ResourceTypeRef: resourceType.Name,
 						Properties:      resourceProperties,
 						Connections: []api.ResourceConnection{
 							api.ResourceConnection{
@@ -150,11 +150,11 @@ var _ = Describe("Resource Controller", Ordered, func() {
 						Patches: []api.ResourcePatch{
 							api.ResourcePatch{
 								From: "${provisioner.resources.configMap.data.name}",
-								To:   "status.properties.name",
+								To:   "status.inventory.properties.name",
 							},
 							api.ResourcePatch{
 								From: "${provisioner.resources.anotherConfigMap.data.anotherName}",
-								To:   "status.properties.anotherName",
+								To:   "status.inventory.properties.anotherName",
 							},
 						},
 					},
@@ -218,7 +218,7 @@ var _ = Describe("Resource Controller", Ordered, func() {
 				Expect(anotherConfigMap.Data).ShouldNot(BeEmpty())
 				Expect(anotherConfigMap.Data).Should(HaveKeyWithValue("anotherName", configMap.Data["name"]))
 
-				rawStatusProperties := resourceStatus.Properties
+				rawStatusProperties := resourceStatus.Inventory.Properties
 				statusProperties, err := serde.FromBytes(rawStatusProperties.Raw, &map[string]any{})
 				Expect(err).NotTo(HaveOccurred())
 

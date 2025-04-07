@@ -228,7 +228,7 @@ func (reconciler *ResourceDefinitionReconciler) newResourceDefinitionCondition(c
 	if err := reconciler.Status().Update(ctx, resourceDefinition); err != nil {
 		return nil, err
 	}
-	if err := reconciler.Get(ctx, types.NamespacedName{Name: resourceDefinition.Name}, resourceDefinition); err != nil {
+	if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resourceDefinition.Namespace, Name: resourceDefinition.Name}, resourceDefinition); err != nil {
 		return nil, err
 	}
 	return resourceDefinition, nil
