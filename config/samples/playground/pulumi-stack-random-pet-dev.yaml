@@ -1,0 +1,15 @@
+apiVersion: pulumi.com/v1
+kind: Stack
+metadata:
+  name: random-pet-dev
+  namespace: playground
+spec:
+  stack: dev
+  projectRepo: https://github.com/ljtfreitas/iac-experiments
+  branch: just-ideas
+  repoDir: pulumi/random-pet-yaml
+  envRefs:
+    PULUMI_CONFIG_PASSPHRASE:
+      type: Literal
+      literal:
+        value: ""

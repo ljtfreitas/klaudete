@@ -136,18 +136,18 @@ func (provisioner *Provisioner) Run(ctx context.Context, resource *api.Resource)
 			if !ready {
 				state = ProvisioningRunningState
 			}
-		}
-		if resourceToBeProvisioned.Ref.Outputs != nil {
-			outputsExpr, err := exprs.Parse(*resourceToBeProvisioned.Ref.Outputs)
-			if err != nil {
-				return nil, fmt.Errorf("unable to parse the Outputs expression: %w", err)
-			}
-			r, err := outputsExpr.Evaluate(args.ToMap(), secretExprFunction)
-			if err != nil {
-				return nil, fmt.Errorf("unable to evaluate the Outputs expression: %w", err)
-			}
-			if r != nil {
-				managedResource.Outputs = r.(map[string]any)
+			if ready && resourceToBeProvisioned.Ref.Outputs != nil {
+				outputsExpr, err := exprs.Parse(*resourceToBeProvisioned.Ref.Outputs)
+				if err != nil {
+					return nil, fmt.Errorf("unable to parse the Outputs expression: %w", err)
+				}
+				r, err := outputsExpr.Evaluate(args.ToMap(), secretExprFunction)
+				if err != nil {
+					return nil, fmt.Errorf("unable to evaluate the Outputs expression: %w", err)
+				}
+				if r != nil {
+					managedResource.Outputs = r.(map[string]any)
+				}
 			}
 		}
 		managedResources = append(managedResources, managedResource)

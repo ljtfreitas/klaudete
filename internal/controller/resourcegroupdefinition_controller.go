@@ -19,11 +19,15 @@ package controller
 import (
 	"context"
 	"fmt"
+	"maps"
+	"time"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -32,7 +36,6 @@ import (
 	"github.com/gobuffalo/flect"
 	api "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/dag"
-	"github.com/nubank/klaudete/internal/exprs"
 	"github.com/nubank/klaudete/internal/exprs/expr"
 	"github.com/nubank/klaudete/internal/generators"
 	"github.com/nubank/klaudete/internal/serde"
@@ -58,7 +61,7 @@ type ResourceGroupDefinitionReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.19.0/pkg/reconcile
 func (reconciler *ResourceGroupDefinitionReconciler) Reconcile(ctx context.Context, resourceGroupDefinition *api.ResourceGroupDefinition) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	log := log.FromContext(ctx)
 
 	if resourceGroupDefinition.Status.Status == "" || len(resourceGroupDefinition.Status.Conditions) == 0 {
 		resourceGroupDefinition.Status.Status = api.ResourceGroupDefinitionStatusPending
@@ -103,21 +106,28 @@ func (reconciler *ResourceGroupDefinitionReconciler) Reconcile(ctx context.Conte
 					return ctrl.Result{}, fmt.Errorf("failure to expand ResourceGroup definition: %w", err)
 				}
 
-				_, err = reconciler.newResourceGroup(ctx, resourceGroupDefinition, expandedResourceGroupDefinitionGroup)
+				_, err = reconciler.newOrUpdateResourceGroup(ctx, resourceGroupDefinition, expandedResourceGroupDefinitionGroup)
 				if err != nil {
 					return ctrl.Result{}, fmt.Errorf("unable to create ResourceGroup %s: %w", expandedResourceGroupDefinitionGroup.Name, err)
 				}
 			}
 
-			resourceGroupDefinition.Status.Status = api.ResourceGroupDefinitionStatusReady
-			_, err = reconciler.newResourceGroupDefinitionCondition(ctx, resourceGroupDefinition, &metav1.Condition{
-				Type:    string(api.ConditionTypeReady),
-				Status:  metav1.ConditionFalse,
-				Reason:  string(api.ConditionTypeReady),
-				Message: fmt.Sprintf("ResourceGroupDefinition is done. ResourceGroup %s expanded and created.", resourceGroupDefinition.Spec.Group.Name),
+			err = retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+				if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resourceGroupDefinition.Namespace, Name: resourceGroupDefinition.Name}, resourceGroupDefinition); err != nil {
+					return fmt.Errorf("failure to refresh ResourceDefinition instance: %w", err)
+				}
+				resourceGroupDefinition.Status.Status = api.ResourceGroupDefinitionStatusReady
+				_, err = reconciler.newResourceGroupDefinitionCondition(ctx, resourceGroupDefinition, &metav1.Condition{
+					Type:    string(api.ConditionTypeReady),
+					Status:  metav1.ConditionTrue,
+					Reason:  string(api.ConditionTypeReady),
+					Message: fmt.Sprintf("ResourceGroupDefinition is done. ResourceGroup %s expanded and created.", resourceGroupDefinition.Spec.Group.Name),
+				})
+				return err
 			})
 			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failed to update ResourceGroupDefinition's status: %w", err)
+				log.Error(err, "failure to update ResourceGroupDefinition status to Ready. Rescheduling...")
+				return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 			}
 
 			return ctrl.Result{}, nil
@@ -129,107 +139,167 @@ func (reconciler *ResourceGroupDefinitionReconciler) Reconcile(ctx context.Conte
 		return ctrl.Result{}, fmt.Errorf("failure to expand ResourceGroup definition: %w", err)
 	}
 
-	_, err = reconciler.newResourceGroup(ctx, resourceGroupDefinition, expandedResourceGroupDefinitionGroup)
+	_, err = reconciler.newOrUpdateResourceGroup(ctx, resourceGroupDefinition, expandedResourceGroupDefinitionGroup)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("unable to create ResourceGroup %s: %w", expandedResourceGroupDefinitionGroup.Name, err)
 	}
 
-	resourceGroupDefinition.Status.Status = api.ResourceGroupDefinitionStatusReady
-	_, err = reconciler.newResourceGroupDefinitionCondition(ctx, resourceGroupDefinition, &metav1.Condition{
-		Type:    string(api.ConditionTypeReady),
-		Status:  metav1.ConditionFalse,
-		Reason:  string(api.ConditionTypeReady),
-		Message: fmt.Sprintf("ResourceGroupDefinition is done. ResourceGroup %s expanded and created.", resourceGroupDefinition.Spec.Group.Name),
+	err = retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+		if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resourceGroupDefinition.Namespace, Name: resourceGroupDefinition.Name}, resourceGroupDefinition); err != nil {
+			return fmt.Errorf("failure to refresh ResourceDefinition instance: %w", err)
+		}
+		resourceGroupDefinition.Status.Status = api.ResourceGroupDefinitionStatusReady
+		_, err = reconciler.newResourceGroupDefinitionCondition(ctx, resourceGroupDefinition, &metav1.Condition{
+			Type:    string(api.ConditionTypeReady),
+			Status:  metav1.ConditionTrue,
+			Reason:  string(api.ConditionTypeReady),
+			Message: fmt.Sprintf("ResourceGroupDefinition is done. ResourceGroup %s expanded and created.", resourceGroupDefinition.Spec.Group.Name),
+		})
+		return err
 	})
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("failed to update ResourceGroupDefinition's status: %w", err)
+		log.Error(err, "failure to update ResourceGroupDefinition status to Ready. Rescheduling...")
+		return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 	}
 
 	return ctrl.Result{}, nil
 }
 
 func expandResourceGroup(args *dag.Args, resourceGroupDefinitionGroup *api.ResourceGroupDefinitionGroup) (*api.ResourceGroupDefinitionGroup, error) {
-	newResourcesToGroup := make([]api.ResourceGroupResource, 0)
-
-	for _, resource := range resourceGroupDefinitionGroup.Resources {
-		// initialize Resource expansion
-
-		// 'patches' field shouldn't be expanded
-		patches := resource.Spec.Patches
-		resource.Spec.Patches = nil
-
-		resourceAsMap, err := serde.ToMap(resource)
-		if err != nil {
-			return nil, fmt.Errorf("failure to serialize spec.Resource to a map of properties: %w", err)
-		}
-
-		resourceToBeExpanded, err := dag.NewElement[api.ResourceGroupResource](resource.Name, resourceAsMap, expr.Exclude("provisioner"), expr.Exclude("resource"))
-		if err != nil {
-			return nil, fmt.Errorf("failure to process resource properties: %w", err)
-		}
-
-		expandedResource, err := resourceToBeExpanded.Evaluate(args)
-		if err != nil {
-			return nil, fmt.Errorf("failure to expand resource properties: %w", err)
-		}
-
-		resourceGroupResource, err := serde.FromMap(expandedResource, &api.ResourceGroupResource{})
-		if err != nil {
-			return nil, fmt.Errorf("failure to serialize a map of properties to ResourceGroupResource: %w", err)
-		}
-
-		// restore 'patches' content
-		resourceGroupResource.Spec.Patches = patches
-		newResourcesToGroup = append(newResourcesToGroup, *resourceGroupResource)
-
-		// the resource spec itself can be used in expressions as a 'resource' variable (does it make sense?)
-		args, _ = args.WithArgs(dag.ResourcesArg(resourceGroupResource.Name, expandedResource))
-	}
-
-	nameExpr, err := exprs.Parse(resourceGroupDefinitionGroup.Name)
+	resourceGroupDefinitionGroupAsMap, err := serde.ToMap(resourceGroupDefinitionGroup)
 	if err != nil {
-		return nil, fmt.Errorf("failure to process ResourceGroup's name property: %w", err)
+		return nil, fmt.Errorf("failure to serialize spec.Group to a map of properties: %w", err)
 	}
 
-	resourceGroupName, err := nameExpr.Evaluate(args.ToMap())
+	resourceGroupDefinitionToBeExpanded, err := dag.NewElement[api.ResourceGroupResource](resourceGroupDefinitionGroup.Name, resourceGroupDefinitionGroupAsMap, expr.Only("generator"))
 	if err != nil {
-		return nil, fmt.Errorf("failure to evaluate ResourceGroup's name property: %w", err)
+		return nil, fmt.Errorf("failure to process resource group properties: %w", err)
 	}
 
-	newResourceGroupDefinitionGroup := &api.ResourceGroupDefinitionGroup{
-		Name:      resourceGroupName.(string),
-		Resources: newResourcesToGroup,
+	expandedResourceGroupDefinition, err := resourceGroupDefinitionToBeExpanded.Evaluate(args)
+	if err != nil {
+		return nil, fmt.Errorf("failure to expand resource group properties: %w", err)
 	}
+
+	newResourceGroupDefinitionGroup, err := serde.FromMap(expandedResourceGroupDefinition, &api.ResourceGroupDefinitionGroup{})
+	if err != nil {
+		return nil, fmt.Errorf("failure to serialize a map of properties to ResourceGroupResource: %w", err)
+	}
+
+	// newResourcesToGroup := make([]api.ResourceGroupResource, 0)
+
+	// for _, resourceGroup := range resourceGroupDefinitionGroup.Resources {
+	// 	// initialize Resource expansion
+
+	// 	resourceGroupAsMap, err := serde.ToMap(resourceGroup)
+	// 	if err != nil {
+	// 		return nil, fmt.Errorf("failure to serialize spec.Resource to a map of properties: %w", err)
+	// 	}
+
+	// 	resourceToBeExpanded, err := dag.NewElement[api.ResourceGroupResource](resourceGroup.Name, resourceGroupAsMap, expr.Only("generator"))
+	// 	if err != nil {
+	// 		return nil, fmt.Errorf("failure to process resource properties: %w", err)
+	// 	}
+
+	// 	expandedResource, err := resourceToBeExpanded.Evaluate(args)
+	// 	if err != nil {
+	// 		return nil, fmt.Errorf("failure to expand resource properties: %w", err)
+	// 	}
+
+	// 	resourceGroupResource, err := serde.FromMap(expandedResource, &api.ResourceGroupResource{})
+	// 	if err != nil {
+	// 		return nil, fmt.Errorf("failure to serialize a map of properties to ResourceGroupResource: %w", err)
+	// 	}
+
+	// 	newResourcesToGroup = append(newResourcesToGroup, *resourceGroupResource)
+
+	// 	// the resource spec itself can be used in expressions as a 'resource' variable (does it make sense?)
+	// 	args, _ = args.WithArgs(dag.ResourcesArg(resourceGroupResource.Name, expandedResource))
+	// }
+
+	// nameExpr, err := exprs.Parse(resourceGroupDefinitionGroup.Name)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failure to process ResourceGroup's name property: %w", err)
+	// }
+
+	// resourceGroupName, err := nameExpr.Evaluate(args.ToMap())
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failure to evaluate ResourceGroup's name property: %w", err)
+	// }
+
+	// newResourceGroupDefinitionGroup := &api.ResourceGroupDefinitionGroup{
+	// 	Name:      resourceGroupName.(string),
+	// 	Resources: newResourcesToGroup,
+	// }
 
 	return newResourceGroupDefinitionGroup, nil
 }
 
-func (reconciler *ResourceGroupDefinitionReconciler) newResourceGroup(ctx context.Context, resourceGroupDefinition *api.ResourceGroupDefinition, source *api.ResourceGroupDefinitionGroup) (*api.ResourceGroup, error) {
-	name := flect.Dasherize(source.Name)
+func (reconciler *ResourceGroupDefinitionReconciler) newOrUpdateResourceGroup(ctx context.Context, resourceGroupDefinition *api.ResourceGroupDefinition, source *api.ResourceGroupDefinitionGroup) (*api.ResourceGroup, error) {
+	name := source.ObjectMeta.GetName()
+	if name == "" {
+		name = source.Name
+	}
+	if name == "" {
+		name = fmt.Sprintf("%s-resource-group", resourceGroupDefinition.Name)
+	}
+	name = flect.Dasherize(name)
 
-	newResourceGroup := &api.ResourceGroup{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: resourceGroupDefinition.Namespace,
-			Labels: map[string]string{
-				api.Group + "/managedBy.group":   resourceGroupDefinition.GroupVersionKind().Group,
-				api.Group + "/managedBy.version": resourceGroupDefinition.GroupVersionKind().Version,
-				api.Group + "/managedBy.kind":    resourceGroupDefinition.GroupVersionKind().Kind,
-				api.Group + "/managedBy.name":    resourceGroupDefinition.Name,
-				api.Group + "/managedBy.id":      string(resourceGroupDefinition.UID),
+	namespace := source.ObjectMeta.GetNamespace()
+	if namespace == "" {
+		namespace = resourceGroupDefinition.Namespace
+	}
+
+	resourceGroup := &api.ResourceGroup{}
+	if err := reconciler.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, resourceGroup); err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, fmt.Errorf("unable to read ResourceGroup: %w", err)
+		}
+
+		labels := source.Labels
+		if labels == nil {
+			labels = make(map[string]string)
+		}
+		labels[api.Group+"/managedBy.group"] = resourceGroupDefinition.GroupVersionKind().Group
+		labels[api.Group+"/managedBy.version"] = resourceGroupDefinition.GroupVersionKind().Version
+		labels[api.Group+"/managedBy.kind"] = resourceGroupDefinition.GroupVersionKind().Kind
+		labels[api.Group+"/managedBy.name"] = resourceGroupDefinition.Name
+		labels[api.Group+"/managedBy.id"] = string(resourceGroupDefinition.UID)
+
+		// ResourceGroup does not exist yet
+		resourceGroup = &api.ResourceGroup{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:        name,
+				Namespace:   namespace,
+				Labels:      labels,
+				Annotations: source.Annotations,
 			},
-		},
-		Spec: api.ResourceGroupSpec{
-			Resources: source.Resources,
-		},
+			Spec: api.ResourceGroupSpec{
+				Resources: source.Resources,
+			},
+		}
+		if err := ctrl.SetControllerReference(resourceGroupDefinition, resourceGroup, reconciler.Scheme); err != nil {
+			return nil, fmt.Errorf("unable to set ResourceGroups's ownerReference: %w", err)
+		}
+		if err := reconciler.Create(ctx, resourceGroup); err != nil {
+			return nil, fmt.Errorf("unable to create ResourceGroup %s: %w", source.Name, err)
+		}
+
+		return resourceGroup, nil
 	}
-	if err := ctrl.SetControllerReference(resourceGroupDefinition, newResourceGroup, reconciler.Scheme); err != nil {
-		return nil, fmt.Errorf("unable to set ResourceGroups's ownerReference: %w", err)
+
+	// Resource already exists, update metadata and spec
+
+	maps.Insert(resourceGroup.Labels, maps.All(source.Labels))
+	maps.Insert(resourceGroup.Annotations, maps.All(source.Annotations))
+
+	resourceGroup.Spec.Resources = source.Resources
+
+	if err := reconciler.Update(ctx, resourceGroup); err != nil {
+		return nil, fmt.Errorf("unable to update Resource: %w", err)
 	}
-	if err := reconciler.Create(ctx, newResourceGroup); err != nil {
-		return nil, fmt.Errorf("unable to create ResourceGroup %s: %w", source.Name, err)
-	}
-	return newResourceGroup, nil
+
+	return resourceGroup, nil
 }
 
 func (reconciler *ResourceGroupDefinitionReconciler) newResourceGroupDefinitionCondition(ctx context.Context, resourceGroupDefinition *api.ResourceGroupDefinition, newCondition *metav1.Condition) (*api.ResourceGroupDefinition, error) {

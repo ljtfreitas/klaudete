@@ -1,0 +1,40 @@
+apiVersion: kro.run/v1alpha1
+kind: ResourceGraphDefinition
+metadata:
+  name: pulumi-provisioner-definition
+spec:
+  schema:
+    apiVersion: v1alpha1
+    group: klaudete.nubank.com.br
+    kind: PulumiProvisioner
+    spec:
+      namespace: string
+      project: string
+      stack: string
+      repo:
+        url: string
+        dir: string | default=""
+        branch: string | default="main"
+      config: map[string]string
+    status:
+      conditions: ${pulumiStack.status.conditions} 
+      outputs: ${pulumiStack.status.outputs}
+      lastUpdate: ${pulumiStack.status.lastUpdate}
+  resources:
+    - id: pulumiStack
+      template:
+        apiVersion: pulumi.com/v1
+        kind: Stack
+        metadata:
+          name: ${schema.spec.project}-${schema.spec.stack}
+          namespace: ${schema.spec.namespace}
+        spec:
+          stack: ${schema.spec.stack}
+          projectRepo: ${schema.spec.repo.url}
+          branch: ${schema.spec.repo.branch}
+          repoDir: ${schema.spec.repo.dir}
+          envRefs:
+            PULUMI_CONFIG_PASSPHRASE:
+              type: Literal
+              literal:
+                value: ""

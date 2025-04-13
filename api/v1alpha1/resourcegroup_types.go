@@ -32,6 +32,9 @@ type ResourceGroupSpec struct {
 }
 
 type ResourceGroupResource struct {
+	// +kubebuilder:pruning:PreserveUnknownFields
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
 	Name string       `json:"name"`
 	Spec ResourceSpec `json:"spec"`
 }
@@ -47,12 +50,14 @@ const (
 
 // ResourceGroupStatus defines the observed state of ResourceGroup
 type ResourceGroupStatus struct {
-	Phase      ResourceGroupPhaseDescription `json:"phase,omitempty"`
+	Status     ResourceGroupPhaseDescription `json:"status,omitempty"`
 	Conditions []metav1.Condition            `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.status"
 
 // ResourceGroup is the Schema for the resourcegroups API
 type ResourceGroup struct {

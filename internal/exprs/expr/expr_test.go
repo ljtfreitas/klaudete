@@ -36,6 +36,24 @@ func Test_SearchExprExpressions(t *testing.T) {
 	})
 }
 
+func Test_IsSingleExpression(t *testing.T) {
+	t.Run("We should be able to detect when a candidate is a single expressions", func(t *testing.T) {
+		t.Run("...for the simplest cases, when we have just one expression", func(t *testing.T) {
+			assert.True(t, IsSingleExpression("${single.expression}"))
+		})
+
+		t.Run("...and for more complex cases, like composed expressions. these examples should not be considered single expressions", func(t *testing.T) {
+			assert.False(t, IsSingleExpression("ola, ${single.expression}"))
+			assert.False(t, IsSingleExpression("ola, ${single.expression}, hello"))
+
+			t.Run("...a candidate with two expr expressions also is not a single expression", func(t *testing.T) {
+				assert.False(t, IsSingleExpression("${single.expression} ${another.expression}"))
+				assert.False(t, IsSingleExpression("ola ${single.expression}, hello ${another.expression}"))
+			})
+		})
+	})
+}
+
 func Test_ExprExpression(t *testing.T) {
 
 	t.Run("We should be able to eval a constant expression", func(t *testing.T) {

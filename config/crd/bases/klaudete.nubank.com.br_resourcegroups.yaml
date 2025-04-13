@@ -14,7 +14,14 @@ spec:
     singular: resourcegroup
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ResourceGroup is the Schema for the resourcegroups API
@@ -42,6 +49,9 @@ spec:
               resources:
                 items:
                   properties:
+                    metadata:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     name:
                       type: string
                     spec:
@@ -55,18 +65,17 @@ spec:
                               target:
                                 properties:
                                   nurn:
-                                    type: string
+                                    properties:
+                                      value:
+                                        type: string
+                                    required:
+                                    - value
+                                    type: object
                                   ref:
                                     properties:
-                                      apiVersion:
-                                        type: string
-                                      kind:
-                                        type: string
                                       name:
                                         type: string
                                     required:
-                                    - apiVersion
-                                    - kind
                                     - name
                                     type: object
                                 type: object
@@ -110,8 +119,6 @@ spec:
                                   readyWhen:
                                     type: string
                                   ref:
-                                    description: Ref        ResourceProvisionerObjectRef
-                                      `json:"ref,omitempty"`
                                     type: object
                                     x-kubernetes-preserve-unknown-fields: true
                                 required:
@@ -190,7 +197,7 @@ spec:
                   - type
                   type: object
                 type: array
-              phase:
+              status:
                 type: string
             type: object
         type: object

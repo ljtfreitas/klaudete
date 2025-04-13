@@ -67,28 +67,33 @@ func (provisioner *ManagedResourceProvisioner) Apply(ctx context.Context, resour
 
 	objGvWithResource := gvk.GroupVersion().WithResource(kindAsPlural)
 
+	name := obj.GetName()
+	if name == "" {
+		name = resource.Name
+	}
+	namespace := obj.GetNamespace()
+	if namespace == "" {
+		namespace = resource.Namespace
+	}
+
 	dynamicResourceClient := provisioner.dynamicClient.
 		Resource(objGvWithResource).
-		Namespace(resource.Namespace)
+		Namespace(namespace)
 
-	o, err := dynamicResourceClient.Get(ctx, resource.Name, metav1.GetOptions{})
+	o, err := dynamicResourceClient.Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {
 		if !apierrors.IsNotFound(err) {
 			return nil, err
 		}
 
-		if obj.GetName() == "" {
-			obj.SetName(resource.Name)
-		}
-		if obj.GetNamespace() == "" {
-			obj.SetNamespace(resource.Namespace)
-		}
-
 		resourceGvk, err := apiutil.GVKForObject(resource, provisioner.scheme)
 		if err != nil {
 			return nil, err
 		}
+
+		obj.SetName(name)
+		obj.SetNamespace(namespace)
 
 		labels := obj.GetLabels()
 		if labels == nil {
@@ -118,12 +123,17 @@ func (provisioner *ManagedResourceProvisioner) Apply(ctx context.Context, resour
 		}
 	} else {
 		err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
-			o, err = dynamicResourceClient.Get(ctx, resource.Name, metav1.GetOptions{})
+			o, err = dynamicResourceClient.Get(ctx, name, metav1.GetOptions{})
 			if err != nil {
 				return err
 			}
 			if newSpec, exists, err := unstructured.NestedMap(obj.Object, "spec"); exists && err == nil {
 				if spec, exists, err := unstructured.NestedMap(o.Object, "spec"); exists && err == nil {
+					for name, _ := range spec {
+						if _, ok := newSpec[name]; !ok {
+							delete(spec, name)
+						}
+					}
 					for name, newValue := range newSpec {
 						spec[name] = newValue
 					}
@@ -137,8 +147,14 @@ func (provisioner *ManagedResourceProvisioner) Apply(ctx context.Context, resour
 		if err != nil {
 			return nil, err
 		}
+	}
 
-		obj = o
+	// time.Sleep(time.Second * 5)
+
+	// refresh
+	obj, err = dynamicResourceClient.Get(ctx, name, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
 	}
 
 	managedResource := &ManagedResource{

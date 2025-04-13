@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -88,3 +89,7 @@ var _ = Describe("ResourceType Controller", func() {
 		})
 	})
 })
+
+func teste(t *testing.T) {
+
+}

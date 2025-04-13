@@ -1,0 +1,12 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: Resource
+metadata:
+  name: tiago-pet-owner
+  namespace: playground
+spec:
+  name: tiago
+  alias: tiago
+  description: I'm Tiago, a pet owner
+  resourceTypeRef: pet-owner
+
+  

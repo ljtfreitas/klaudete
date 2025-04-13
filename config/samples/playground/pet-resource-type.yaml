@@ -1,0 +1,7 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: ResourceType
+metadata:
+  name: pet
+spec:
+  name: pet
+  description: Just pet resources :)

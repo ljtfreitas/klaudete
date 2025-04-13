@@ -29,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/tools/record"
+	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -65,17 +66,22 @@ type ResourceReconciler struct {
 func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *api.Resource) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
-	resource.Status.Phase = api.ResourceStatusPending
-	resourceWithCondition, err := reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
-		Type:    string(api.ConditionTypePending),
-		Status:  metav1.ConditionUnknown,
-		Reason:  string(api.ConditionReasonPending),
-		Message: "Starting reconciling...",
-	})
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("failure to update resource status: %w", err)
+	log.Info("Starting resource reconciling...")
+
+	if resource.Status.Phase == "" || len(resource.Status.Conditions) == 0 {
+		resource.Status.Phase = api.ResourceStatusPending
+		resourceWithCondition, err := reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
+			Type:    string(api.ConditionTypePending),
+			Status:  metav1.ConditionUnknown,
+			Reason:  string(api.ConditionReasonPending),
+			Message: "Starting reconciling...",
+		})
+		if err != nil {
+			log.Error(err, "failure to update resource status to Reconciling. Rescheduling...")
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+		}
+		resource = resourceWithCondition
 	}
-	resource = resourceWithCondition
 
 	// check resource.resourceType; should be a valid ref
 	if err := reconciler.Get(ctx, types.NamespacedName{Name: resource.Spec.ResourceTypeRef}, &api.ResourceType{}); err != nil {
@@ -90,7 +96,8 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 			Message: fmt.Sprintf("Unable to find resourceType %s", resource.Spec.ResourceTypeRef),
 		})
 		if err != nil {
-			return ctrl.Result{}, fmt.Errorf("failure to update resource status: %w", err)
+			log.Error(err, "failure to update resource status to Failure. Rescheduling...")
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 		}
 		return ctrl.Result{}, nil
 	}
@@ -98,163 +105,201 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 	// TODO: step 1 => update inventory...
 
 	// TODO: step 2 => provision resource
-	resource.Status.Phase = api.ResourceStatusProvisioningInProgress
-	resource, err = reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
-		Type:    string(api.ConditionTypeInProgress),
-		Status:  metav1.ConditionUnknown,
-		Reason:  string(api.ConditionReasonInProgress),
-		Message: "Initalizing provisioning from resource...",
-	})
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("failure to update resource status: %w", err)
-	}
-
-	provisioner := provisioning.NewProvisioner(reconciler.Client, reconciler.DynamicClient, reconciler.Scheme, resource.Spec.Provisioner)
-
-	log.Info("running provisioner...")
-
-	provisioningStatus, err := provisioner.Run(ctx, resource)
-	if err != nil {
-		log.Error(err, "unable to launch provisioners and creating managed resources")
-
-		resource.Status.Phase = api.ResourceStatusProvisioningFailed
-		_, err := reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
-			Type:    string(api.ConditionTypeFailure),
-			Status:  metav1.ConditionFalse,
-			Reason:  string(api.ConditionReasonFailed),
-			Message: "failed to run provisioner",
+	resourceProvisioner := resource.Spec.Provisioner
+	if resourceProvisioner != nil {
+		err := retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+			if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
+				return fmt.Errorf("failure to refresh resource instance: %w", err)
+			}
+			resource.Status.Phase = api.ResourceStatusProvisioningInProgress
+			resourceWithCondition, err := reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
+				Type:    string(api.ConditionTypeInProgress),
+				Status:  metav1.ConditionUnknown,
+				Reason:  string(api.ConditionReasonInProgress),
+				Message: "Initalizing provisioning from resource...",
+			})
+			if resourceWithCondition != nil {
+				resource = resourceWithCondition
+			}
+			return err
 		})
+		if err != nil {
+			log.Error(err, "failure to update resource status to InProgress. Rescheduling...")
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+		}
 
-		return ctrl.Result{}, err
-	}
+		provisioner := provisioning.NewProvisioner(reconciler.Client, reconciler.DynamicClient, reconciler.Scheme, resourceProvisioner)
 
-	log.Info(fmt.Sprintf("current state from provisioning is [%s]", provisioningStatus.State))
+		log.Info("running provisioner...")
 
-	// TODO: step 3 => update resource status with provisioner data
+		provisioningStatus, err := provisioner.Run(ctx, resource)
+		if err != nil {
+			log.Error(err, "unable to launch provisioners and creating managed resources")
 
-	phase, condition := statusToCondition(provisioningStatus, resource)
-
-	resource.Status.Phase = api.ResourceStatusPhaseDescription(phase)
-
-	if provisioningStatus.Resources != nil {
-		resources := make([]api.ResourceStatusProvisionerObject, 0)
-		allOutputs := make(map[string]any)
-
-		for _, r := range provisioningStatus.Resources {
-			resources = append(resources, api.ResourceStatusProvisionerObject{
-				Group:   r.Group,
-				Version: r.Version,
-				Kind:    r.Kind,
-				Name:    r.GetName(),
+			resource.Status.Phase = api.ResourceStatusProvisioningFailed
+			_, _ = reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
+				Type:    string(api.ConditionTypeFailure),
+				Status:  metav1.ConditionFalse,
+				Reason:  string(api.ConditionReasonFailed),
+				Message: "failed to run provisioner",
 			})
 
-			maps.Insert(allOutputs, maps.All(r.Outputs))
+			return ctrl.Result{}, err
 		}
 
-		rawOutputs, err := json.Marshal(allOutputs)
+		log.Info(fmt.Sprintf("current state from provisioning is [%s]", provisioningStatus.State))
+
+		// TODO: step 3 => update resource status with provisioner data
+
+		phase, condition := statusToCondition(provisioningStatus, resource)
+
+		if provisioningStatus.Resources != nil {
+			resources := make([]api.ResourceStatusProvisionerObject, 0)
+			allOutputs := make(map[string]any)
+
+			for _, r := range provisioningStatus.Resources {
+				resources = append(resources, api.ResourceStatusProvisionerObject{
+					ApiVersion: r.GetAPIVersion(),
+					Kind:       r.Kind,
+					Name:       r.GetName(),
+					UId:        string(r.GetUID()),
+				})
+
+				maps.Insert(allOutputs, maps.All(r.Outputs))
+			}
+
+			log.Info("Outputs generated from provisioning:", "outputs", fmt.Sprint(allOutputs))
+
+			rawOutputs, err := json.Marshal(allOutputs)
+			if err != nil {
+				return ctrl.Result{}, fmt.Errorf("failed to serialize provisioner resource outputs: %w", err)
+			}
+
+			resource.Status.AtProvisioner = api.ResourceStatusProvisioner{
+				State:     string(provisioningStatus.State),
+				Resources: resources,
+				Outputs:   &runtime.RawExtension{Raw: rawOutputs},
+			}
+		}
+
+		err = retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+			resourceToBeUpdated := &api.Resource{}
+			if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resourceToBeUpdated); err != nil {
+				return fmt.Errorf("failure to refresh resource instance: %w", err)
+			}
+
+			resourceToBeUpdated.Status.Phase = api.ResourceStatusPhaseDescription(phase)
+			resourceToBeUpdated.Status.AtProvisioner = resource.Status.AtProvisioner
+
+			resourceWithProvisioner, err := reconciler.newResourceCondition(ctx, resourceToBeUpdated, condition)
+			if resourceWithProvisioner != nil {
+				resource = resourceWithProvisioner
+			}
+			return err
+		})
 		if err != nil {
-			return ctrl.Result{}, fmt.Errorf("failed to serialize provisioner resource outputs: %w", err)
+			log.Error(err, "failure to update resource status with provisioning data. Rescheduling...")
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 		}
 
-		resource.Status.AtProvisioner = api.ResourceStatusProvisioner{
-			State:     string(provisioningStatus.State),
-			Resources: resources,
-			Outputs:   &runtime.RawExtension{Raw: rawOutputs},
-		}
-	}
-
-	_, err = reconciler.newResourceCondition(ctx, resource, condition)
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("failure to update resource status: %w", err)
-	}
-
-	if provisioningStatus.IsRunning() {
-		return ctrl.Result{RequeueAfter: time.Duration(5) * time.Second}, nil
-	}
-
-	// TODO step 4: run patches
-
-	resourcePatches := resource.Spec.Patches
-	if resourcePatches != nil && len(resourcePatches) != 0 {
-		// inject resource as a variable
-		resourceAsMap, err := serde.ToMap(resource)
-		if err != nil {
-			return ctrl.Result{}, fmt.Errorf("failure to serialize resource to a map of properties: %w", err)
+		if provisioningStatus.IsRunning() {
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 		}
 
-		args, err := dag.NewArgs(dag.ResourceArg(resourceAsMap))
-		if err != nil {
-			return ctrl.Result{}, fmt.Errorf("failure to initialize patches args: %w", err)
-		}
+		// TODO step 4: run patches
 
-		// inject provisioner data as a variable
-		for _, managedResource := range provisioningStatus.Resources {
-			args, err = args.WithArgs(dag.ProvisionerObjectArg(managedResource.Name, managedResource.Object))
+		resourcePatches := resource.Spec.Patches
+		if resourcePatches != nil && len(resourcePatches) != 0 {
+			// inject resource as a variable
+			resourceAsMap, err := serde.ToMap(resource)
 			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to initialize patch args: %w", err)
-			}
-		}
-
-		newPatches := make(api.ResourcePatches, 0, len(resourcePatches))
-		for _, patch := range resourcePatches {
-			patchAsMap, err := serde.ToMap(patch)
-			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to serialize patch to map: %w", err)
-			}
-			patchToBeExpanded, err := dag.NewElement[api.ResourcePatches]("patch", patchAsMap)
-			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to generate a dag.Element to a resource.Patch instance: %w", err)
-			}
-			expandedPatch, err := patchToBeExpanded.Evaluate(args)
-			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to expand patches: %w", err)
-			}
-			newPatch, err := serde.FromMap(expandedPatch, &api.ResourcePatch{})
-			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to deserialize patch properties: %w", err)
-			}
-			newPatches = append(newPatches, *newPatch)
-		}
-
-		if len(newPatches) != 0 {
-			resourceStatusAsMap, err := serde.ToMap(resource.Status)
-			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to serialize resource status: %w", err)
-			}
-			newResourceStatusAsMap := map[string]any{
-				"status": resourceStatusAsMap,
+				return ctrl.Result{}, fmt.Errorf("failure to serialize resource to a map of properties: %w", err)
 			}
 
-			for _, patch := range newPatches {
-				newResourceStatusAsMap = patches.ApplyTo(patch, newResourceStatusAsMap)
-			}
-
-			newResourceStatus, err := serde.FromMap(newResourceStatusAsMap["status"].(map[string]any), &api.ResourceStatus{})
+			args, err := dag.NewArgs(dag.ResourceArg(resourceAsMap))
 			if err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to deserialize resource status: %w", err)
+				return ctrl.Result{}, fmt.Errorf("failure to initialize patches args: %w", err)
 			}
 
-			resource.Status = *newResourceStatus
-			if err := reconciler.Status().Update(ctx, resource); err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to update resource status: %w", err)
+			// inject provisioner data as a variable
+			for _, managedResource := range provisioningStatus.Resources {
+				args, err = args.WithArgs(dag.ProvisionerObjectArg(managedResource.Name, managedResource.Object))
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to initialize patch args: %w", err)
+				}
 			}
-			if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
-				return ctrl.Result{}, fmt.Errorf("failure to refresh resource instance: %w", err)
+
+			newPatches := make(api.ResourcePatches, 0, len(resourcePatches))
+			for _, patch := range resourcePatches {
+				patchAsMap, err := serde.ToMap(patch)
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to serialize patch to map: %w", err)
+				}
+				patchToBeExpanded, err := dag.NewElement[api.ResourcePatches]("patch", patchAsMap)
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to generate a dag.Element to a resource.Patch instance: %w", err)
+				}
+				expandedPatch, err := patchToBeExpanded.Evaluate(args)
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to expand patches: %w", err)
+				}
+				newPatch, err := serde.FromMap(expandedPatch, &api.ResourcePatch{})
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to deserialize patch properties: %w", err)
+				}
+				newPatches = append(newPatches, *newPatch)
 			}
+			if len(newPatches) != 0 {
+				resourceStatusAsMap, err := serde.ToMap(resource.Status)
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to serialize resource status: %w", err)
+				}
+				newResourceStatusAsMap := map[string]any{
+					"status": resourceStatusAsMap,
+				}
+
+				for _, patch := range newPatches {
+					newResourceStatusAsMap = patches.ApplyTo(patch, newResourceStatusAsMap)
+				}
+
+				newResourceStatus, err := serde.FromMap(newResourceStatusAsMap["status"].(map[string]any), &api.ResourceStatus{})
+				if err != nil {
+					return ctrl.Result{}, fmt.Errorf("failure to deserialize resource status: %w", err)
+				}
+
+				err = retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+					if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
+						return fmt.Errorf("failure to refresh resource instance: %w", err)
+					}
+					resource.Status = *newResourceStatus
+					return reconciler.Status().Update(ctx, resource)
+				})
+				if err != nil {
+					log.Error(err, "failure to update resource status after calculate patches. Rescheduling...")
+					return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+				}
+			}
+
 		}
 	}
 
-	// TODO step 5: provisioning is done.
-
-	resource.Status.Phase = api.ResourceStatusReady
-	resource, err = reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
-		Type:    string(api.ConditionTypeInSync),
-		Status:  metav1.ConditionTrue,
-		Reason:  string(api.ConditionReasonInSync),
-		Message: "Provisioning is done. Resource is ready to be used.",
+	// TODO step 5: resource is done.
+	err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
+			return fmt.Errorf("failure to refresh resource instance: %w", err)
+		}
+		resource.Status.Phase = api.ResourceStatusReady
+		_, err := reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
+			Type:    string(api.ConditionTypeInSync),
+			Status:  metav1.ConditionTrue,
+			Reason:  string(api.ConditionReasonInSync),
+			Message: "Resource is ready to be used.",
+		})
+		return err
 	})
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("failure to update resource status: %w", err)
+		log.Error(err, "failure to update resource status to Ready. Rescheduling...")
+		return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 	}
 
 	reconciler.Recorder.Eventf(resource, "Normal", "Created", "Resource %s provisioned/in-sync.", resource.Name)
@@ -266,6 +311,7 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 func (reconciler *ResourceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&api.Resource{}).
+		WithEventFilter(checkObjectGenerationPredicate()).
 		Complete(reconcile.AsReconciler(mgr.GetClient(), reconciler))
 }
 
@@ -274,10 +320,11 @@ func (reconciler *ResourceReconciler) newResourceCondition(ctx context.Context, 
 	if err := reconciler.Status().Update(ctx, resource); err != nil {
 		return nil, err
 	}
-	if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
+	r := &api.Resource{}
+	if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, r); err != nil {
 		return nil, err
 	}
-	return resource, nil
+	return r, nil
 }
 
 func statusToCondition(status *provisioning.ProvisioningStatus, resource *api.Resource) (api.ResourceStatusPhaseDescription, *metav1.Condition) {

@@ -17,12 +17,14 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"flag"
 	"os"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"k8s.io/client-go/dynamic"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	kro "github.com/kro-run/kro/api/v1alpha1"
@@ -38,7 +40,11 @@ import (
 
 	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/controller"
+	"github.com/nubank/klaudete/internal/generators"
+
 	// +kubebuilder:scaffold:imports
+
+	inventoryClientv1alpha1 "github.com/nubank/nu-infra-inventory/sdk/pkg/client"
 )
 
 var (
@@ -123,6 +129,13 @@ func main() {
 		metricsServerOptions.FilterProvider = filters.WithAuthenticationAndAuthorization
 	}
 
+	inventoryClient, err := inventoryClientv1alpha1.New(context.Background())
+	if err != nil {
+		setupLog.Error(err, "unable to initialize the Inventory client.")
+		os.Exit(1)
+	}
+	generators.Register(generators.InventoryGeneratorType, generators.NewInventoryGenerator(inventoryClient))
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		Metrics:                metricsServerOptions,
@@ -157,9 +170,10 @@ func main() {
 	}
 
 	resourceReconciler := &controller.ResourceReconciler{
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Recorder: mgr.GetEventRecorderFor("resource-controller"),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		DynamicClient: dynamic.NewForConfigOrDie(mgr.GetConfig()),
+		Recorder:      mgr.GetEventRecorderFor("resource-controller"),
 	}
 	if err = resourceReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Resource")

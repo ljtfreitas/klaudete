@@ -1,8 +1,6 @@
 package exprs
 
 import (
-	"strings"
-
 	"github.com/nubank/klaudete/internal/exprs/expr"
 )
 
@@ -37,8 +35,8 @@ func Parse(expression any, opts ...expr.ExprOption) (Expression, error) {
 
 }
 
-func isSingleExpression(expr string) bool {
-	return strings.HasPrefix(expr, StartToken) && strings.HasSuffix(expr, EndToken)
+func isSingleExpression(expression string) bool {
+	return expr.IsSingleExpression(expression)
 }
 
 func noDependencies() []string {

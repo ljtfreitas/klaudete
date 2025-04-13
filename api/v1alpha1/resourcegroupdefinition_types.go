@@ -29,12 +29,14 @@ type ResourceGroupDefinitionSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Generator ResourceGenerator            `json:"generator,omitempty"`
-	Group     ResourceGroupDefinitionGroup `json:"spec,omitempty"`
+	Group     ResourceGroupDefinitionGroup `json:"group,omitempty"`
 }
 
 type ResourceGroupDefinitionGroup struct {
-	Name      string                  `json:"name,omitempty"`
-	Resources []ResourceGroupResource `json:"resources,omitempty"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Name              string                  `json:"name,omitempty"`
+	Resources         []ResourceGroupResource `json:"resources,omitempty"`
 }
 
 type ResourceGroupDefinitionStatusDescription string
@@ -53,6 +55,8 @@ type ResourceGroupDefinitionStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.status"
 
 // ResourceGroupDefinition is the Schema for the resourcegroupdefinitions API
 type ResourceGroupDefinition struct {

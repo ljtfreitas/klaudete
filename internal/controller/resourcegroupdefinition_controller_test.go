@@ -306,7 +306,9 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 											api.ResourceConnection{
 												Via: "belongs-to",
 												Target: api.ResourceConnectionTarget{
-													Nurn: ptr.To("${generator.environments.nurn}"),
+													Nurn: &api.ResourceConnectionTargetNurn{
+														Value: "${generator.environments.nurn}",
+													},
 												},
 											},
 										},

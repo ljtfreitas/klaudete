@@ -33,8 +33,13 @@ type ResourceDefinitionSpec struct {
 }
 
 type ResourceDefinitionResource struct {
-	Name string       `json:"name"`
-	Spec ResourceSpec `json:"spec"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              ResourceSpec `json:"spec"`
+}
+
+type Metadata struct {
+	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
 }
 
 // ResourceDefinitionStatus defines the observed state of ResourceDefinition
@@ -43,7 +48,17 @@ type ResourceDefinitionStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	Status     ResourceDefinitionStatusDescription `json:"status,omitempty"`
+	Resources  ResourceDefinitionResourcesStatus   `json:"resources,omitempty"`
 	Conditions []metav1.Condition                  `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+}
+
+type ResourceDefinitionResourcesStatus []ResourceDefinitionResourceStatus
+
+type ResourceDefinitionResourceStatus struct {
+	ApiVersion string `json:"apiVersion"`
+	Kind       string `json:"kind"`
+	Name       string `json:"name"`
+	UId        string `json:"uid"`
 }
 
 type ResourceDefinitionStatusDescription string
@@ -56,6 +71,8 @@ const (
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=`.status.status`
 
 // ResourceDefinition is the Schema for the resourcedefinitions API
 type ResourceDefinition struct {

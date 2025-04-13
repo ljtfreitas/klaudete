@@ -14,6 +14,8 @@ var (
 
 	resourcesEscapedExpressionRe = regexp.MustCompile(`(resources)\["([^"]+)"\]`)
 	generatorEscapedExpressionRe = regexp.MustCompile(`(generator)\["([^"]+)"\]`)
+
+	checkSingleExprRe = regexp.MustCompile(`^\$\{[^}]+\}$`)
 )
 
 type ExprOption func(string) string
@@ -30,6 +32,24 @@ func Exclude(variableToExclude string) ExprOption {
 		}
 		return expr
 	}
+}
+
+func Only(variableToExpand string) ExprOption {
+	return func(expr string) string {
+		pattern := fmt.Sprintf(`^%s`, regexp.QuoteMeta(variableToExpand))
+		matched, err := regexp.MatchString(pattern, expr)
+		if err != nil {
+			return expr
+		}
+		if matched {
+			return expr
+		}
+		return ""
+	}
+}
+
+func IsSingleExpression(expr string) bool {
+	return checkSingleExprRe.MatchString(expr)
 }
 
 func SearchExpressions(expression string, opts ...ExprOption) []string {

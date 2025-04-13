@@ -124,9 +124,7 @@ var _ = Describe("Resource Controller", Ordered, func() {
 								Via: "belongs-to",
 								Target: api.ResourceConnectionTarget{
 									Ref: &api.ResourceConnectionTargetRef{
-										ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-										Kind:       "Resource",
-										Name:       "petOwner",
+										Name: "petOwner",
 									},
 								},
 							},

@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -47,24 +48,25 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 			Namespace: "default",
 		}
 
-		configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
-			"apiVersion": "v1",
-			"kind":       "ConfigMap",
-			"metadata": map[string]any{
-				"name": "${resource.spec.name}-config",
-			},
-			"data": map[string]string{
-				"name": "${resource.spec.properties.name}",
-			},
-		})
-		if err != nil {
-			Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
-		}
-
 		When("...using a List generator", func() {
 			listGeneratorSpec, err := generators.NewListGeneratorSpec("parameter", "one", "two")
 			if err != nil {
 				Fail(fmt.Sprintf("Failure to generate a list generator spec: %v", err))
+			}
+
+			configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
+				"apiVersion": "v1",
+				"kind":       "ConfigMap",
+				"metadata": map[string]any{
+					"name": "${resource.spec.name}-config",
+				},
+				"data": map[string]string{
+					"name":              "${resource.spec.properties.name}",
+					"belongsToResource": "${resource.metadata.name}-dev-${generator.parameter}",
+				},
+			})
+			if err != nil {
+				Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
 			}
 
 			BeforeEach(func() {
@@ -92,7 +94,9 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 							string(generators.ListGeneratorType): listGeneratorSpec,
 						},
 						Resource: api.ResourceDefinitionResource{
-							Name: "just-a-simple-pet",
+							ObjectMeta: metav1.ObjectMeta{
+								Name: "just-a-simple-pet-called-${generator.parameter}",
+							},
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-called-${generator.parameter}",
 								Alias:           "just-a-pet-called-${generator.parameter}",
@@ -104,9 +108,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 										Via: "belongs-to",
 										Target: api.ResourceConnectionTarget{
 											Ref: &api.ResourceConnectionTargetRef{
-												ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-												Kind:       "Resource",
-												Name:       "pet-owner",
+												Name: "pet-owner",
 											},
 										},
 									},
@@ -151,13 +153,19 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 					for _, value := range listGeneratorSpec.Values {
 						namespacedName := types.NamespacedName{
-							Name:      fmt.Sprintf("just-a-pet-called-%s", value),
+							Name:      fmt.Sprintf("just-a-simple-pet-called-%s", value),
 							Namespace: resourceDefinitionNamespacedName.Namespace,
 						}
 
 						resource := &api.Resource{}
 						err := k8sClient.Get(ctx, namespacedName, resource)
 						Expect(err).NotTo(HaveOccurred())
+
+						for _, pr := range resource.Spec.Provisioner.Resources {
+							m := make(map[string]any)
+							json.Unmarshal(pr.Ref.Raw, &m)
+							fmt.Fprintf(GinkgoWriter, "Resource To Check: %s", m)
+						}
 					}
 				})
 			})
@@ -212,6 +220,21 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
 				}
 
+				configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
+					"apiVersion": "v1",
+					"kind":       "ConfigMap",
+					"metadata": map[string]any{
+						"name": "${resource.spec.name}-config",
+					},
+					"data": map[string]string{
+						"name":              "${resource.spec.properties.name}",
+						"belongsToResource": "${resource.metadata.name}-dev-${generator.parameters.value}",
+					},
+				})
+				if err != nil {
+					Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
+				}
+
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceDefinitionNamespacedName.Name,
@@ -222,7 +245,9 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 							string(generators.DataGeneratorType): dataGeneratorSpec,
 						},
 						Resource: api.ResourceDefinitionResource{
-							Name: "just-a-pet",
+							ObjectMeta: metav1.ObjectMeta{
+								Name: "just-a-pet-${generator.parameters.value}",
+							},
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-called-${generator.parameters.value}",
 								Alias:           "just-a-pet-called-${generator.parameters.value}",
@@ -234,9 +259,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 										Via: "belongs-to",
 										Target: api.ResourceConnectionTarget{
 											Ref: &api.ResourceConnectionTargetRef{
-												ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-												Kind:       "Resource",
-												Name:       "pet-owner",
+												Name: "pet-owner",
 											},
 										},
 									},
@@ -261,6 +284,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 						},
 					},
 				}
+
 				Expect(k8sClient.Create(ctx, resourceDefinition)).To(Succeed())
 			})
 
@@ -281,7 +305,7 @@ var _ = Describe("ResourceDefinition Controller", Ordered, func() {
 
 					for _, obj := range dataGeneratorSpec.Values {
 						namespacedName := types.NamespacedName{
-							Name:      fmt.Sprintf("just-a-pet-called-%s", obj["value"]),
+							Name:      fmt.Sprintf("just-a-pet-%s", obj["value"]),
 							Namespace: resourceDefinitionNamespacedName.Namespace,
 						}
 
@@ -345,6 +369,21 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
 				}
 
+				configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
+					"apiVersion": "v1",
+					"kind":       "ConfigMap",
+					"metadata": map[string]any{
+						"name": "${resource.spec.name}-config",
+					},
+					"data": map[string]string{
+						"name":              "${resource.spec.properties.name}",
+						"belongsToResource": "${resource.metadata.name}-dev-${generator.environments.alias}",
+					},
+				})
+				if err != nil {
+					Fail(fmt.Sprintf("Failure to serialize provisioner spec to map: %v", err))
+				}
+
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceDefinitionNamespacedName.Name,
@@ -355,7 +394,9 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 							string(generators.InventoryGeneratorType): inventoryGeneratorSpec,
 						},
 						Resource: api.ResourceDefinitionResource{
-							Name: "just-a-pet",
+							ObjectMeta: metav1.ObjectMeta{
+								Name: "just-a-pet-${generator.environments.alias}",
+							},
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-from-${generator.environments.alias}",
 								Alias:           "just-a-pet-from-${generator.environments.alias}",
@@ -366,7 +407,9 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 									api.ResourceConnection{
 										Via: "belongs-to",
 										Target: api.ResourceConnectionTarget{
-											Nurn: ptr.To("${generator.environments.nurn}"),
+											Nurn: &api.ResourceConnectionTargetNurn{
+												Value: "${generator.environments.nurn}",
+											},
 										},
 									},
 								},
@@ -467,6 +510,17 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 					Fail(fmt.Sprintf("Failure to serialize properties map: %v", err))
 				}
 
+				configMapProvisionerSpec, err := serde.ToRaw(map[string]any{
+					"apiVersion": "v1",
+					"kind":       "ConfigMap",
+					"metadata": map[string]any{
+						"name": "${resource.spec.name}-config",
+					},
+					"data": map[string]string{
+						"name": "${resource.spec.properties.name}",
+					},
+				})
+
 				resourceDefinition = &api.ResourceDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceDefinitionNamespacedName.Name,
@@ -474,7 +528,9 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 					},
 					Spec: api.ResourceDefinitionSpec{
 						Resource: api.ResourceDefinitionResource{
-							Name: "just-a-pet",
+							ObjectMeta: metav1.ObjectMeta{
+								Name: "just-a-pet-with-no-name",
+							},
 							Spec: api.ResourceSpec{
 								Name:            "just-a-pet-called-no-name",
 								Alias:           "just-a-pet-called-no-name",
@@ -486,9 +542,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 										Via: "belongs-to",
 										Target: api.ResourceConnectionTarget{
 											Ref: &api.ResourceConnectionTargetRef{
-												ApiVersion: "klaudete.nubank.com.br/v1alpha1",
-												Kind:       "Resource",
-												Name:       "pet-owner",
+												Name: "pet-owner",
 											},
 										},
 									},
@@ -529,7 +583,7 @@ environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e
 
 				By("we are expecting to create just one Resource", func() {
 					namespacedName := types.NamespacedName{
-						Name:      "just-a-pet-called-no-name",
+						Name:      "just-a-pet-with-no-name",
 						Namespace: resourceDefinitionNamespacedName.Namespace,
 					}
 

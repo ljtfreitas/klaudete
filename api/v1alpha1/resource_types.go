@@ -52,8 +52,7 @@ type ResourceProvisioner struct {
 type ResourceProvisionerObjects []ResourceProvisionerObject
 
 type ResourceProvisionerObject struct {
-	Name string `json:"name"`
-	// Ref        ResourceProvisionerObjectRef `json:"ref,omitempty"`
+	Name       string                `json:"name"`
 	Ref        *runtime.RawExtension `json:"ref,omitempty"`
 	ReadyWhen  *string               `json:"readyWhen,omitempty"`
 	FailedWhen *string               `json:"failedWhen,omitempty"`
@@ -70,14 +69,16 @@ type ResourceConnection struct {
 }
 
 type ResourceConnectionTarget struct {
-	Ref  *ResourceConnectionTargetRef `json:"ref,omitempty"`
-	Nurn *string                      `json:"nurn,omitempty"`
+	Ref  *ResourceConnectionTargetRef  `json:"ref,omitempty"`
+	Nurn *ResourceConnectionTargetNurn `json:"nurn,omitempty"`
 }
 
 type ResourceConnectionTargetRef struct {
-	ApiVersion string `json:"apiVersion"`
-	Kind       string `json:"kind"`
-	Name       string `json:"name"`
+	Name string `json:"name"`
+}
+
+type ResourceConnectionTargetNurn struct {
+	Value string `json:"value"`
 }
 
 type ResourcePatches []ResourcePatch
@@ -112,10 +113,10 @@ type ResourceStatusProvisioner struct {
 }
 
 type ResourceStatusProvisionerObject struct {
-	Group   string `json:"group,omitempty"`
-	Version string `json:"version,omitempty"`
-	Kind    string `json:"kind,omitempty"`
-	Name    string `json:"name,omitempty"`
+	ApiVersion string `json:"apiVersion"`
+	Kind       string `json:"kind"`
+	Name       string `json:"name"`
+	UId        string `json:"uid"`
 }
 
 const (
@@ -126,8 +127,13 @@ const (
 	ResourceStatusReady                  = ResourceStatusPhaseDescription("Ready")
 )
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+//+kubebuilder:printcolumn:name="Resource Type",type="string",JSONPath=".spec.resourceTypeRef"
+//+kubebuilder:printcolumn:name="Alias",type="string",JSONPath=`.spec.alias`
+//+kubebuilder:printcolumn:name="Description",type="string",JSONPath=`.spec.description`
+//+kubebuilder:printcolumn:name="Phase",type="string",JSONPath=`.status.phase`
 
 // Resource is the Schema for the resources API
 type Resource struct {

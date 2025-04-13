@@ -55,6 +55,9 @@ var _ = Describe("ResourceGroup Controller", func() {
 							Resources: []api.ResourceGroupResource{
 								api.ResourceGroupResource{
 									Name: "just-a-resource",
+									ObjectMeta: metav1.ObjectMeta{
+										Name: "just-a-first-resource",
+									},
 									Spec: api.ResourceSpec{
 										Name:        "just-a-resource",
 										Alias:       "just-a-resource",
@@ -63,6 +66,9 @@ var _ = Describe("ResourceGroup Controller", func() {
 								},
 								api.ResourceGroupResource{
 									Name: "just-another-resource",
+									ObjectMeta: metav1.ObjectMeta{
+										Name: "just-a-second-resource",
+									},
 									Spec: api.ResourceSpec{
 										Name:        "just-another-resource",
 										Alias:       "just-another-resource",
@@ -72,9 +78,7 @@ var _ = Describe("ResourceGroup Controller", func() {
 												Via: "belongs-to",
 												Target: api.ResourceConnectionTarget{
 													Ref: &api.ResourceConnectionTargetRef{
-														ApiVersion: "klaudete.nubank.com.br",
-														Kind:       "Resource",
-														Name:       `${resources["just-a-resource"].metadata.name}`,
+														Name: `${resources["just-a-resource"].metadata.name}`,
 													},
 												},
 											},
@@ -99,7 +103,7 @@ var _ = Describe("ResourceGroup Controller", func() {
 				Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 			})
 		})
-		It("should successfully reconcile the resource", func() {
+		It("...should successfully reconcile the resource", func() {
 			By("Reconciling the created resource", func() {
 				resourceGroupReconciler := &ResourceGroupReconciler{
 					Client: k8sClient,
@@ -110,8 +114,28 @@ var _ = Describe("ResourceGroup Controller", func() {
 					NamespacedName: resourceGroupNamespacedName,
 				})
 				Expect(err).NotTo(HaveOccurred())
-				// TODO(user): Add more specific assertions depending on your controller's reconciliation logic.
-				// Example: If you expect a certain status condition after reconciliation, verify it here.
+
+				By("...we are expecting to create a Resource called 'just-a-first-resource'...", func() {
+					namespacedName := types.NamespacedName{
+						Name:      "just-a-first-resource",
+						Namespace: resourceGroupNamespacedName.Namespace,
+					}
+
+					resource := &api.Resource{}
+					err := k8sClient.Get(ctx, namespacedName, resource)
+					Expect(err).NotTo(HaveOccurred())
+				})
+
+				By("...and another Resource called 'just-a-second-resource'...", func() {
+					namespacedName := types.NamespacedName{
+						Name:      "just-a-second-resource",
+						Namespace: resourceGroupNamespacedName.Namespace,
+					}
+
+					resource := &api.Resource{}
+					err := k8sClient.Get(ctx, namespacedName, resource)
+					Expect(err).NotTo(HaveOccurred())
+				})
 			})
 		})
 	})

@@ -1,0 +1,93 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: ResourceGroup
+metadata:
+  name: random-pet-family
+  namespace: playground
+spec:
+  resources:
+    - name: firstPet
+      metadata:
+        name: first-pet
+      spec:
+        name: first-pet
+        alias: first-pet
+        description: I'm just a pet, the first one.
+        resourceTypeRef: pet
+        properties:
+          prefix: first
+        connections:
+          - via: belongs-to
+            target:
+              ref:
+                name: tiago-pet-owner
+        provisioner:
+          resources:
+            - name: pulumiStack
+              ref:
+                apiVersion: pulumi.com/v1
+                kind: Stack
+                metadata:
+                  name: ${resource.metadata.name}-dev
+                spec:
+                  config:
+                    prefix: ${resource.spec.properties.prefix}
+                  stack: dev
+                  projectRepo: https://github.com/ljtfreitas/iac-experiments
+                  repoDir: pulumi/random-pet-yaml
+                  branch: just-ideas
+                  envRefs:
+                    PULUMI_CONFIG_PASSPHRASE:
+                      type: Literal
+                      literal:
+                        value: ""
+              readyWhen: ${provisioner.resources.pulumiStack.status?.currentUpdate == nil && last(provisioner.resources.pulumiStack.status?.conditions)?.type == "Ready" && provisioner.resources.pulumiStack.status?.lastUpdate?.state == "succeeded"}
+              failedWhen: ${provisioner.resources.pulumiStack.status?.lastUpdate?.state == "failed"}
+              outputs: ${provisioner.resources.pulumiStack.status.outputs}
+        patches:
+          - from: ${provisioner.resources.pulumiStack.status.outputs.name}
+            to: status.inventory.properties.petName
+    - name: secondPet
+      metadata:
+        name: second-pet
+      spec:
+        name: second-pet
+        alias: second-pet
+        description: I'm just a pet, the second one. Brother of ${resources.firstPet.spec.name}
+        resourceTypeRef: pet
+        properties:
+          prefix: second-brother-of-${resources.firstPet.spec.name}
+        connections:
+          - via: belongs-to
+            target:
+              ref:
+                name: tiago-pet-owner
+          - via: is-brother
+            target:
+              ref:
+                name: ${resources.firstPet.metadata.name}
+        provisioner:
+          resources:
+            - name: pulumiStack
+              ref:
+                apiVersion: pulumi.com/v1
+                kind: Stack
+                metadata:
+                  name: ${resource.metadata.name}-dev
+                spec:
+                  config:
+                    prefix: ${resource.spec.properties.prefix}
+                  stack: dev
+                  projectRepo: https://github.com/ljtfreitas/iac-experiments
+                  repoDir: pulumi/random-pet-yaml
+                  branch: just-ideas
+                  envRefs:
+                    PULUMI_CONFIG_PASSPHRASE:
+                      type: Literal
+                      literal:
+                        value: ""
+              readyWhen: ${provisioner.resources.pulumiStack.status?.currentUpdate == nil && last(provisioner.resources.pulumiStack.status?.conditions)?.type == "Ready" && provisioner.resources.pulumiStack.status?.lastUpdate?.state == "succeeded"}
+              failedWhen: ${provisioner.resources.pulumiStack.status?.lastUpdate?.state == "failed"}
+              outputs: ${provisioner.resources.pulumiStack.status.outputs}
+        patches:
+          - from: ${provisioner.resources.pulumiStack.status.outputs.name}
+            to: status.inventory.properties.petName

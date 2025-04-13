@@ -14,7 +14,14 @@ spec:
     singular: resourcedefinition
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ResourceDefinition is the Schema for the resourcedefinitions
@@ -47,8 +54,9 @@ spec:
                 type: object
               resource:
                 properties:
-                  name:
-                    type: string
+                  metadata:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   spec:
                     description: ResourceSpec defines the desired state of Resource
                     properties:
@@ -60,18 +68,17 @@ spec:
                             target:
                               properties:
                                 nurn:
-                                  type: string
+                                  properties:
+                                    value:
+                                      type: string
+                                  required:
+                                  - value
+                                  type: object
                                 ref:
                                   properties:
-                                    apiVersion:
-                                      type: string
-                                    kind:
-                                      type: string
                                     name:
                                       type: string
                                   required:
-                                  - apiVersion
-                                  - kind
                                   - name
                                   type: object
                               type: object
@@ -115,8 +122,6 @@ spec:
                                 readyWhen:
                                   type: string
                                 ref:
-                                  description: Ref        ResourceProvisionerObjectRef
-                                    `json:"ref,omitempty"`
                                   type: object
                                   x-kubernetes-preserve-unknown-fields: true
                               required:
@@ -131,7 +136,6 @@ spec:
                     - resourceTypeRef
                     type: object
                 required:
-                - name
                 - spec
                 type: object
             type: object
@@ -192,6 +196,24 @@ spec:
                   - reason
                   - status
                   - type
+                  type: object
+                type: array
+              resources:
+                items:
+                  properties:
+                    apiVersion:
+                      type: string
+                    kind:
+                      type: string
+                    name:
+                      type: string
+                    uid:
+                      type: string
+                  required:
+                  - apiVersion
+                  - kind
+                  - name
+                  - uid
                   type: object
                 type: array
               status:
