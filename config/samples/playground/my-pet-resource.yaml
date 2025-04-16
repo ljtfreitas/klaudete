@@ -1,0 +1,47 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: Resource
+metadata:
+  name: my-pet
+  namespace: playground
+spec:
+  name: my-pet
+  alias: my-pet
+  description: I'm just a pet.
+  resourceTypeRef: pet
+  properties:
+    prefix: i-am-a-doguinho
+  connections:
+    - via: belongs-to
+      target:
+        ref:
+          name: tiago-pet-owner
+  provisioner:
+    resources:
+      - name: pulumiStack
+        ref:
+          apiVersion: pulumi.com/v1
+          kind: Stack
+          metadata:
+            name: ${resource.spec.name}-dev
+          spec:
+            stack: dev
+            projectRepo: https://github.com/ljtfreitas/iac-experiments
+            repoDir: pulumi/random-pet-yaml
+            branch: just-ideas
+            config:
+              prefix: ${resource.spec.properties.prefix}
+            envRefs:
+              PULUMI_CONFIG_PASSPHRASE:
+                type: Literal
+                literal:
+                  value: ""
+        readyWhen: ${provisioner.resources.pulumiStack.status?.currentUpdate == nil && last(provisioner.resources.pulumiStack.status?.conditions)?.type == "Ready" && provisioner.resources.pulumiStack.status?.lastUpdate?.state == "succeeded"}
+        failedWhen: ${provisioner.resources.pulumiStack.status?.lastUpdate?.state == "failed"}
+        outputs: ${provisioner.resources.pulumiStack.status.outputs}
+  patches:
+    - from: ${provisioner.resources.pulumiStack.status.outputs.name}
+      to: status.inventory.properties.name
+
+# // gerar um Resource no inventario
+# // provisionar o resource usando Pulumi
+# // atualizar o inventario com o resultado do provisionamento

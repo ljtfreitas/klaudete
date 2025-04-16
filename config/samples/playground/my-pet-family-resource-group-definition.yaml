@@ -1,0 +1,202 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: ResourceGroupDefinition
+metadata:
+  name: my-pet-family
+  namespace: playground
+spec:
+  generator:
+    inventory:
+      name: environment
+      kcl:
+        path: environments
+        content: |-
+          import kcl_plugin.inventory
+          
+          _environments = inventory.list_resources("environment")
+
+          environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e in _environments]
+  group:
+    metadata:
+      name: my-pet-family-${generator.environment.alias}
+    resources:
+      - name: firstPet
+        metadata:
+          name: first-pet-${generator.environment.alias}
+        spec:
+          name: first-pet-${generator.environment.alias}
+          alias: first-pet-${generator.environment.alias}
+          description: I'm just a pet. I'm the first one. My environment is ${generator.environment.alias}.
+          resourceTypeRef: pet
+          properties:
+            prefix: first-doguinho-${generator.environment.alias}
+          connections:
+            - via: belongs-to
+              target:
+                ref:
+                  name: tiago-pet-owner
+            - via: has-env
+              target:
+                nurn:
+                  value: ${generator.environment.nurn}
+          provisioner:
+            resources:
+              - name: pulumiStack
+                ref:
+                  apiVersion: pulumi.com/v1
+                  kind: Stack
+                  metadata:
+                    name: ${resource.metadata.name}
+                  spec:
+                    config:
+                      prefix: ${resource.spec.properties.prefix}
+                    stack: dev
+                    projectRepo: https://github.com/ljtfreitas/iac-experiments
+                    repoDir: pulumi/random-pet-yaml
+                    branch: just-ideas
+                    envRefs:
+                      PULUMI_CONFIG_PASSPHRASE:
+                        type: Literal
+                        literal:
+                          value: ""
+                readyWhen: ${provisioner.resources.pulumiStack.status?.currentUpdate == nil && last(provisioner.resources.pulumiStack.status?.conditions)?.type == "Ready" && provisioner.resources.pulumiStack.status?.lastUpdate?.state == "succeeded"}
+                failedWhen: ${provisioner.resources.pulumiStack.status?.lastUpdate?.state == "failed"}
+                outputs: ${provisioner.resources.pulumiStack.status.outputs}
+          patches:
+            - from: ${provisioner.resources.pulumiStack.status.outputs.name}
+              to: status.inventory.properties.name
+      - name: secondPet
+        metadata:
+          name: second-pet-${generator.environment.alias}
+        spec:
+          name: second-pet-${generator.environment.alias}
+          alias: second-pet-${generator.environment.alias}
+          description: I'm just a pet. I'm the second one. I'm a brother of ${resources.firstPet.spec.name}. My environment is ${generator.environment.alias}.
+          resourceTypeRef: pet
+          properties:
+            prefix: second-${generator.environment.alias}
+          connections:
+            - via: belongs-to
+              target:
+                ref:
+                  name: tiago-pet-owner
+            - via: is-brother
+              target:
+                ref:
+                  name: ${resources.firstPet.metadata.name}
+          provisioner:
+            resources:
+              - name: pulumiConfig
+                ref:
+                  apiVersion: v1
+                  kind: ConfigMap
+                  metadata:
+                    name: ${resource.metadata.name}-config
+                  data:
+                    prefix: second-doguinho-${generator.environment.alias}
+              - name: pulumiStack
+                ref:
+                  apiVersion: pulumi.com/v1
+                  kind: Stack
+                  metadata:
+                    name: ${resource.metadata.name}-dev
+                  spec:
+                    config:
+                      prefix: second-doguinho-${generator.environment.alias}
+                    stack: dev
+                    projectRepo: https://github.com/ljtfreitas/iac-experiments
+                    repoDir: pulumi/random-pet-yaml
+                    branch: just-ideas
+                      workspaceTemplate:
+						            metadata:
+							            labels:
+                            "app.oam.dev/name": context.appName
+                            "app.oam.dev/namespace": executionNamespace
+						            spec:
+                          podTemplate:
+                            metadata:
+                              labels:
+                                "app.oam.dev/name": context.appName
+                                "app.oam.dev/namespace": context.namespace
+								            spec:
+                              initContainers: [
+                                name: "init-copy-stack-config"
+                                command: [
+                                  "cp",
+                                  "-r",
+                                  "/config/.",
+                                  "/workspace/"
+                                ]
+                                image: "busybox:latest"
+                                volumeMounts: [
+                                  name:      "stack-volume"
+                                  mountPath: "/config"
+                                },{
+											name:      "writable-stack-volume"
+											mountPath: "/workspace"
+										}]
+									}]
+									containers: [{
+										name: "pulumi"
+										volumeMounts: [
+											{
+												name:      "writable-stack-volume"
+												mountPath: "/share/source/\(parameter.workspaceInfo.repoDir)/stacks"
+											},
+											{
+												name:      "gitconfig-volume"
+												mountPath: "/home/pulumi/.gitconfig"
+												subPath:   ".gitconfig"
+											},
+											{
+												name:      "inventory-api-config-volume"
+												mountPath: "/home/pulumi/.nu/infra"
+											}
+										]
+									}]
+									volumes: [
+										{
+											name: "stack-volume"
+											configMap: {
+												name: parameter.stackConfigMapName
+												items: [{
+													key:  "config.yaml"
+													path: "Pulumi.\${provisioner.resources.pulumiConfig.metadata.name}.yaml"
+												}]
+											}
+										},
+										{
+											name: "gitconfig-volume"
+											secret: {
+												secretName: "github-app-cloud-provisioning-bot-gitconfig"
+												defaultMode: 493
+												items: [{
+													key:  ".gitconfig"
+													path: ".gitconfig"
+												}]
+											}
+										},
+										{
+											name: "inventory-api-config-volume"
+											secret: {
+												secretName: "inventory-api-config"
+											}
+										},
+										{
+											name: "writable-stack-volume"
+											emptyDir: {}
+										}
+									]
+								}
+							}
+						}
+                    envRefs:
+                      PULUMI_CONFIG_PASSPHRASE:
+                        type: Literal
+                        literal:
+                          value: ""
+                readyWhen: ${provisioner.resources.pulumiStack.status?.currentUpdate == nil && last(provisioner.resources.pulumiStack.status?.conditions)?.type == "Ready" && provisioner.resources.pulumiStack.status?.lastUpdate?.state == "succeeded"}
+                failedWhen: ${provisioner.resources.pulumiStack.status?.lastUpdate?.state == "failed"}
+                outputs: ${provisioner.resources.pulumiStack.status.outputs}
+          patches:
+            - from: ${provisioner.resources.pulumiStack.status.outputs.name}
+              to: status.inventory.properties.name

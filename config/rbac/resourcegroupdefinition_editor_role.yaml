@@ -1,0 +1,27 @@
+# permissions for end users to edit resourcegroupdefinitions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: klaudete
+    app.kubernetes.io/managed-by: kustomize
+  name: resourcegroupdefinition-editor-role
+rules:
+- apiGroups:
+  - klaudete.nubank.com.br
+  resources:
+  - resourcegroupdefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - klaudete.nubank.com.br
+  resources:
+  - resourcegroupdefinitions/status
+  verbs:
+  - get

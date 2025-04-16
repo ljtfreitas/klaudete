@@ -1,0 +1,42 @@
+apiVersion: kro.run/v1alpha1
+kind: ResourceGraphDefinition
+metadata:
+  name: random-pet
+spec:
+  schema:
+    apiVersion: v1alpha1
+    kind: RandomPet
+    spec:
+      name: string | required=true
+      description: string | default=""
+      alias: string | default=""
+      properties: map[string]string | default={}
+      provisioner:
+        ref:
+          name: string | required=true
+          spec: map[string]string | default={}  
+  resources:
+    - id: randomPet
+      template:
+        apiVersion: klaudete.nubank.com.br/v1alpha1
+        kind: Resource
+        metadata:
+          name: ${schema.spec.name}
+        spec:
+          name: ${schema.spec.name}
+          alias: ${schema.spec.alias}
+          description: ${schema.spec.description}
+          resourceTypeRef: random-pet
+          properties: ${schema.spec.properties}
+          provisioner: ${schema.spec.provisioner}
+---
+apiVersion: kro.run/v1alpha1
+kind: RandomPet
+metadata:
+  name: random-pet
+spec:
+  name: just-a-random-pet
+  properties:
+    hello: hello
+  provisioner:
+    ola: ola

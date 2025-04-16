@@ -23,8 +23,10 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"k8s.io/client-go/dynamic"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
+	kro "github.com/kro-run/kro/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -37,6 +39,8 @@ import (
 
 	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/controller"
+	"github.com/nubank/klaudete/internal/generators"
+	"github.com/nubank/klaudete/internal/inventory"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -50,6 +54,8 @@ func init() {
 
 	utilruntime.Must(klaudetev1alpha1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
+
+	utilruntime.Must(kro.AddToScheme(scheme))
 }
 
 func main() {
@@ -120,6 +126,13 @@ func main() {
 		metricsServerOptions.FilterProvider = filters.WithAuthenticationAndAuthorization
 	}
 
+	inventoryClient, err := inventory.NewInventoryClient()
+	if err != nil {
+		setupLog.Error(err, "unable to initialize Inventory.")
+		os.Exit(1)
+	}
+	generators.Register(generators.InventoryGeneratorType, generators.NewInventoryGenerator(inventoryClient))
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		Metrics:                metricsServerOptions,
@@ -144,11 +157,48 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controller.ResourceTypeReconciler{
+	resourceTypeReconciler := &controller.ResourceTypeReconciler{
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		InventoryClient: inventoryClient,
+	}
+	if err = resourceTypeReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ResourceType")
+		os.Exit(1)
+	}
+
+	resourceReconciler := &controller.ResourceReconciler{
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		DynamicClient:   dynamic.NewForConfigOrDie(mgr.GetConfig()),
+		Recorder:        mgr.GetEventRecorderFor("resource-controller"),
+		InventoryClient: inventoryClient,
+	}
+	if err = resourceReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Resource")
+		os.Exit(1)
+	}
+
+	resourceDefinitionReconciler := &controller.ResourceDefinitionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}
+	if err = resourceDefinitionReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ResourceDefinition")
+		os.Exit(1)
+	}
+	if err = (&controller.ResourceGroupReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "ResourceType")
+		setupLog.Error(err, "unable to create controller", "controller", "ResourceGroup")
+		os.Exit(1)
+	}
+	if err = (&controller.ResourceGroupDefinitionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ResourceGroupDefinition")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

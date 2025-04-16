@@ -28,24 +28,42 @@ type ResourceTypeSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Name        *string `json:"name,omitempty"`
-	Description *string `json:"description,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
 }
+
+type ResourceTypeStatusDescription string
+
+const (
+	ResourceTypeStatusPending = ResourceTypeStatusDescription("Pending")
+	ResourceTypeStatusInSync  = ResourceTypeStatusDescription("InSync")
+)
 
 // ResourceTypeStatus defines the observed state of ResourceType
 type ResourceTypeStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Status     ResourceTypeStatusDescription `json:"status"`
+	Inventory  ResourceTypeStatusInventory   `json:"inventory,omitempty"`
+	Conditions []metav1.Condition            `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+}
+
+type ResourceTypeStatusInventory struct {
+	Id string `json:"id"`
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:scope=Cluster
+// +kubebuilder:printcolumn:name="Description",type="string",JSONPath=`.spec.description`
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=`.status.status`
+// +kubebuilder:printcolumn:name="Inventory Id",type="string",JSONPath=`.status.inventory.id`
 
 // ResourceType is the Schema for the resourcetypes API
 type ResourceType struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec ResourceTypeSpec `json:"spec,omitempty"`
+	Spec   ResourceTypeSpec   `json:"spec,omitempty"`
+	Status ResourceTypeStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

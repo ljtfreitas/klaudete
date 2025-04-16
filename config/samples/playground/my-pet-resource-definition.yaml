@@ -1,0 +1,67 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: ResourceDefinition
+metadata:
+  name: my-pet-definition
+  namespace: playground
+spec:
+  generator:
+    inventory:
+      name: environment
+      kcl:
+        path: environments
+        content: |-
+          import kcl_plugin.inventory
+          
+          _environments = inventory.list_resources("environment")
+
+          environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e in _environments]
+  resource:
+    metadata:
+      name: my-pet-${generator.environment.alias}
+    spec:
+      name: my-pet-${generator.environment.alias}
+      alias: my-pet-${generator.environment.alias}
+      description: I'm just a pet. My environment is ${generator.environment.alias}.
+      resourceTypeRef: pet
+      properties:
+        prefix: doguinho-${generator.environment.alias}
+      connections:
+        - via: has-env
+          target:
+            nurn:
+              value: ${generator.environment.nurn}
+        - via: belongs-to
+          target:
+            ref:
+              name: tiago-pet-owner
+      provisioner:
+        resources:
+          - name: pulumiStack
+            ref:
+              apiVersion: pulumi.com/v1
+              kind: Stack
+              metadata:
+                name: ${resource.metadata.name}
+              spec:
+                config:
+                  prefix: ${resource.spec.properties.prefix}
+                stack: ${generator.environment.alias}
+                projectRepo: https://github.com/ljtfreitas/iac-experiments
+                repoDir: pulumi/random-pet-yaml
+                branch: just-ideas
+                envRefs:
+                  PULUMI_CONFIG_PASSPHRASE:
+                    type: Literal
+                    literal:
+                      value: ""
+            readyWhen: ${provisioner.resources.pulumiStack.status?.currentUpdate == nil && last(provisioner.resources.pulumiStack.status?.conditions)?.type == "Ready" && provisioner.resources.pulumiStack.status?.lastUpdate?.state == "succeeded"}
+            failedWhen: ${provisioner.resources.pulumiStack.status?.lastUpdate?.state == "failed"}
+            outputs: ${provisioner.resources.pulumiStack.status.outputs}
+      patches:
+        - from: ${provisioner.resources.pulumiStack.status.outputs.name}
+          to: status.inventory.properties.name
+
+# // gerar 2 resources no inventario
+# // pet-staging, pet-prod
+# // 2 stacks do pulumi
+# // inventario atualizado dos 2 resources

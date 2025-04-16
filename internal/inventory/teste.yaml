@@ -1,0 +1,3617 @@
+output:
+    - account:
+        alias: nu-a74ad8d-sandbox
+        id: 00caf6dc-68df-a114-9706-08059057fb9f
+        nurn: nurn:nu:infra:aws:aws-account/nu-a74ad8d-sandbox
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ar
+        id: 58caf6dc-6bd0-ad8e-ab21-5eec1741186f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ar-payer
+        id: cccaf6dc-6a60-c679-6311-12e1adc4ba3e
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-br-prod
+        id: bccaf6dc-6d45-2091-8511-9324075558cc
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-br-staging
+        id: eecaf6dc-6e87-e3f6-60ca-df9a90d5ba5e
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-co-prod
+        id: 4acaf6dc-7002-1a5f-2001-830ed7e52cda
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-co-staging
+        id: 6acaf6dc-7181-ab99-d0f4-fc768284dd3d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-mx-prod
+        id: 0acaf6dc-72c0-43aa-65a0-e5f3a05f9a57
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-mx-staging
+        id: 26caf6dc-7441-1f2e-3b91-0cffab51e99c
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-ww-prod
+        id: 42caf6dc-75ab-6f2a-b02b-1cfc2dba343a
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-avax-ww-staging
+        id: aacaf6dc-7736-f0fa-5641-1af9466da55d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-backup
+        id: 8ecaf6dc-7871-bc8f-d68e-8e34779755c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-backup
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-banrep
+        id: 5ecaf6dc-79e6-7ea0-3aa4-4b7a492b06e0
+        nurn: nurn:nu:infra:aws:aws-account/nu-banrep
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-bip-ww-prod
+        id: 92caf6dc-7b55-6879-bb07-14424a62fc58
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-bip-ww-staging
+        id: e6caf6dc-7c92-bc4a-5d2f-3fe1c07df8c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-br
+        id: 78caf6dc-80e4-3787-2c7b-f28c384e9278
+        nurn: nurn:nu:infra:aws:aws-account/nu-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-br-payer
+        id: bccaf6dc-7e08-b26b-dc86-42b303ba51b5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-br-staging
+        id: 42caf6dc-7f71-5c3e-0195-94e1ca1a76c5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-c1c824c-staging
+        id: facaf6dc-8216-20e9-b45e-7d57096e58a7
+        nurn: nurn:nu:infra:aws:aws-account/nu-c1c824c-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-cri-br
+        id: 64caf6dc-838c-0efd-f57d-a57d1550bb93
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-cri-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a0-br
+        id: e2caf6dc-8507-7705-383c-c32413ac15f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a0-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a1-br
+        id: 24caf6dc-865d-f336-1fd5-8ee34747d288
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a1-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a10-br
+        id: 36caf6dc-87d9-7609-a582-a9d356141e1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a10-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a11-br
+        id: e6caf6dc-8952-c120-221c-78a27f0d3da7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a11-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a12-br
+        id: 24caf6dc-8ad8-8445-1201-d4cdbaa9cb3b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a12-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a13-br
+        id: facaf6dc-8c2e-92e0-d3a6-d937c9baeaec
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a13-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a14-br
+        id: dccaf6dc-8db8-4e8d-f632-cfc729c980af
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a14-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a15-br
+        id: b6caf6dc-8f30-66fd-da36-620da4b27d2b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a15-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a2-br
+        id: 90caf6dc-90ad-5124-aa27-de6566643224
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a2-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a3-br
+        id: 40caf6dc-91f3-081a-abdb-6871d60e7679
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a3-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a4-br
+        id: 60caf6dc-9383-18ed-6db2-78dbf934ecd4
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a4-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a5-br
+        id: bacaf6dc-94f2-efbf-2d63-d12ba32384d5
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a5-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a6-br
+        id: 6acaf6dc-969b-6a58-deeb-be59e8312b2f
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a6-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a7-br
+        id: f6caf6dc-97e5-d90e-d623-69455be2fab2
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a7-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a8-br
+        id: 58caf6dc-9961-f113-4033-9de61e7e9e22
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a8-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cfm-csp-a9-br
+        id: 2acaf6dc-9adb-bb4a-add8-b3b61eb2820d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a9-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ch-payer
+        id: 3ecaf6dc-9c54-7f47-d724-a9068ecc2de9
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ch-prod
+        id: e0caf6dc-9d9d-7369-a9f0-c993b8b7ce39
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ch-staging
+        id: 5acaf6dc-9f04-0da7-b678-fd4c21ca9d5f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cicd
+        id: 14caf6dc-a078-1f0c-2d74-833baee47e35
+        nurn: nurn:nu:infra:aws:aws-account/nu-cicd
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-cloud-provisioning-test-staging
+        id: fecaf6dc-a227-eaff-d572-c4398ac25c97
+        nurn: nurn:nu:infra:aws:aws-account/nu-cloud-provisioning-test-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-co
+        id: 38caf6dc-a4db-ced7-3460-8693ae8d9d71
+        nurn: nurn:nu:infra:aws:aws-account/nu-co
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-co-payer
+        id: b6caf6dc-a369-a8b7-8e70-daec99190c6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-co-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-control
+        id: c8caf6dc-a671-b0e9-956e-bb95b4a01389
+        nurn: nurn:nu:infra:aws:aws-account/nu-control
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-data
+        id: d2caf6dc-a7da-8aa9-bcaf-3d909ea25270
+        nurn: nurn:nu:infra:aws:aws-account/nu-data
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-databricks
+        id: cccaf6dc-a916-2fab-25a1-4127c759caec
+        nurn: nurn:nu:infra:aws:aws-account/nu-databricks
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-dev
+        id: a6caf6dc-abf9-b261-8446-93ab7b068290
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-dev-databricks
+        id: 4ccaf6dc-aa84-42ad-1a3f-786c1e99784d
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev-databricks
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-fsn-br-prod
+        id: 16caf6dc-ad2e-4302-a63b-0c103c6f9eb0
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-br-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-fsn-ch
+        id: 50caf6dc-ae9b-ac0f-533c-367028319993
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-ch
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-fsn-us
+        id: 90caf6dc-b014-afec-06bc-c6f5fa200a2c
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-us
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-incode
+        id: bacaf6dc-b223-315c-1821-38247129b1a6
+        nurn: nurn:nu:infra:aws:aws-account/nu-incode
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-infra-mgmt
+        id: 18caf6dc-b394-fbf5-9447-fb25439e0b8e
+        nurn: nurn:nu:infra:aws:aws-account/nu-infra-mgmt
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-invest-data-br-prod
+        id: 1ecaf6dc-b4e2-ae1c-1f31-f85033d4637e
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-invest-data-br-staging
+        id: e8caf6dc-b629-6997-f747-d34a561a9762
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-investbr
+        id: 72caf6dc-b776-d63a-cf12-3a1e98319cf9
+        nurn: nurn:nu:infra:aws:aws-account/nu-investbr
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-investnews
+        id: becaf6dc-b8ca-c7f0-89a7-1047af6420a4
+        nurn: nurn:nu:infra:aws:aws-account/nu-investnews
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-br-prod
+        id: dacaf6dc-ba16-c097-d17d-a33622ed460e
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-br-staging
+        id: cecaf6dc-bb8d-b9dd-e4ed-a9e149424992
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-ch-prod
+        id: eacaf6dc-bcc3-9fe3-fb94-46a36affe941
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-ch-staging
+        id: a2caf6dc-be07-f8a7-cfc7-e162f0c2fd19
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-co-prod
+        id: e2caf6dc-bf6a-77df-43dc-38a335cb9f81
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-co-staging
+        id: 06caf6dc-c0a9-7ae9-a3ce-e36e58949e30
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-data-prod
+        id: 20caf6dc-c22d-e92d-cb54-08ae774eb27c
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-data-staging
+        id: b0caf6dc-c392-0f9d-bf60-42114054c7ef
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-ist-prod
+        id: eecaf6dc-c4e8-822a-09a6-496690cccbb5
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-ist-staging
+        id: 58caf6dc-c62f-7e2f-c6d2-c18a762acb61
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-mx-prod
+        id: 3ccaf6dc-c760-76df-518e-ecb5511a77e1
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-mx-staging
+        id: c0caf6dc-c8d9-0bd5-6789-c292b02ac434
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-sandbox-staging
+        id: 0ecaf6dc-ca0d-ff21-25be-31b593369610
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-sandbox-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-us-prod
+        id: 92caf6dc-cb5c-4301-4574-86e52483702f
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-isc-us-staging
+        id: 3ecaf6dc-cca6-db20-ffa3-5d461ab7c6ad
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ist
+        id: b2caf6dc-cf4a-75eb-a3c0-7c64916d23c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ist-staging
+        id: fccaf6dc-cdf5-a7fe-f72a-847503486e51
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-logs
+        id: 22caf6dc-d0d3-5b76-f76f-acdc52d7a6dc
+        nurn: nurn:nu:infra:aws:aws-account/nu-logs
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-mx
+        id: a4caf6dc-d35f-2359-7589-95ec01def28c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-mx-payer
+        id: c4caf6dc-d20a-046b-0a28-17ff2ee0fa6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-network
+        id: bacaf6dc-dbd2-69ed-5056-1d87d84a07c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-network
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-network-br
+        id: b0caf6dc-d4a6-64c3-5d0d-6347b1c93fbb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-br
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-network-ch
+        id: a8caf6dc-d5da-2213-2fa0-f5c3aec79313
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-ch
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-network-co
+        id: 12caf6dc-d724-8fdd-5630-65121ec8f941
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-co
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-network-mx
+        id: 8ecaf6dc-d888-e31f-0da1-de317d7795cb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-mx
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-network-us
+        id: fccaf6dc-d9db-5af5-05be-cce538a7a144
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-us
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-nupay-br-prod
+        id: 2acaf6dc-dd15-b906-2cff-a1f364c2a604
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-nupay-br-staging
+        id: c2caf6dc-de79-6f42-de9a-c42f39f01ac2
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-o11y-ww-prod
+        id: d4caf6dc-dfd8-6729-3226-805234b1e768
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-o11y-ww-staging
+        id: 10caf6dc-e140-5427-65bd-a9da2aaf4ef0
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-offensive
+        id: 92caf6dc-e2cb-d336-a386-d0c84f58928e
+        nurn: nurn:nu:infra:aws:aws-account/nu-offensive
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-pinot-ww-prod
+        id: bacaf6dc-e445-9313-577d-54abdf96a706
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-pinot-ww-staging
+        id: 96caf6dc-e5d1-ee9f-481f-7d44ef0eb5ec
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-playbooks-validation
+        id: 16caf6dc-e774-b96c-9664-7be3fd719c1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-playbooks-validation
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-resilience-ww-prod
+        id: 4ecaf6dc-e906-11ec-87f3-e8ad533a4f71
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-resilience-ww-staging
+        id: a8caf6dc-eaa0-394b-d2c6-2cec3dd02d1e
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-sandbox-cyberintel
+        id: f8caf6dc-ec2c-25e2-cea2-546bff02271b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-cyberintel
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-sandbox-ephemeral-a0
+        id: b0caf6dc-ed61-0dca-a84c-1f1f8ea1f9d3
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-ephemeral-a0
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-sandbox-network
+        id: 40caf6dc-ef15-98d9-ff95-e1cb39fdb848
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-network
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-sandbox-nufuturo
+        id: 7ecaf6dc-f09d-c616-7d8b-e0b04c1f1086
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-nufuturo
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-sandbox-payer
+        id: 20caf6dc-f240-4f7d-6bc4-ca1b38813833
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-sec
+        id: 64caf6dc-f38e-57f7-d1be-0cddda98589b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sec
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-shekel-prod
+        id: b4caf6dc-f519-ca83-4f97-c1dc071c32b3
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-shekel-staging
+        id: 80caf6dc-f6b1-bb87-d90d-3748551c41f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-signals-admin
+        id: a0caf6dc-f83f-454e-0a35-99f392330d82
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-admin
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-signals-data
+        id: 9acaf6dc-f992-3803-d6ad-7b2c3b417197
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-data
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-signals-dev
+        id: eacaf6dc-fb0b-67d7-ec4b-ad29eac92d99
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-dev
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-signals-prd
+        id: d6caf6dc-fc6f-c61f-8112-7e820cf6400a
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-prd
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-storage-0a-br-prod
+        id: decaf6dc-fde4-62f7-437e-03f24e239b16
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-storage-0a-br-staging
+        id: 2ccaf6dd-01a3-1f02-2c62-c37e16f16857
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-t5
+        id: 28caf6dd-0305-34db-cd43-fe8c184ad13d
+        nurn: nurn:nu:infra:aws:aws-account/nu-t5
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-taktile-ww-prod
+        id: 26caf6dd-0471-b2e5-8456-5c60606f5626
+        nurn: nurn:nu:infra:aws:aws-account/nu-taktile-ww-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-us-payer
+        id: 64caf6dd-05d5-7ce7-9630-baa5e62bbe8f
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-us-prod
+        id: 2acaf6dd-0720-8219-8641-66962049f8e7
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-prod
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-us-staging
+        id: c2caf6dd-0896-c865-b4cf-fc8a4618c763
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-staging
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-ww-payer
+        id: 76caf6dd-0a27-919a-bbbd-353784ffb3c2
+        nurn: nurn:nu:infra:aws:aws-account/nu-ww-payer
+      environment:
+        alias: cantareira
+        id: b8c9f050-de9a-7681-8d40-1878dfb3a4f7
+        nurn: nurn:nu:infra:environment/cantareira
+    - account:
+        alias: nu-a74ad8d-sandbox
+        id: 00caf6dc-68df-a114-9706-08059057fb9f
+        nurn: nurn:nu:infra:aws:aws-account/nu-a74ad8d-sandbox
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ar
+        id: 58caf6dc-6bd0-ad8e-ab21-5eec1741186f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ar-payer
+        id: cccaf6dc-6a60-c679-6311-12e1adc4ba3e
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-br-prod
+        id: bccaf6dc-6d45-2091-8511-9324075558cc
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-br-staging
+        id: eecaf6dc-6e87-e3f6-60ca-df9a90d5ba5e
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-co-prod
+        id: 4acaf6dc-7002-1a5f-2001-830ed7e52cda
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-co-staging
+        id: 6acaf6dc-7181-ab99-d0f4-fc768284dd3d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-mx-prod
+        id: 0acaf6dc-72c0-43aa-65a0-e5f3a05f9a57
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-mx-staging
+        id: 26caf6dc-7441-1f2e-3b91-0cffab51e99c
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-ww-prod
+        id: 42caf6dc-75ab-6f2a-b02b-1cfc2dba343a
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-avax-ww-staging
+        id: aacaf6dc-7736-f0fa-5641-1af9466da55d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-backup
+        id: 8ecaf6dc-7871-bc8f-d68e-8e34779755c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-backup
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-banrep
+        id: 5ecaf6dc-79e6-7ea0-3aa4-4b7a492b06e0
+        nurn: nurn:nu:infra:aws:aws-account/nu-banrep
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-bip-ww-prod
+        id: 92caf6dc-7b55-6879-bb07-14424a62fc58
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-bip-ww-staging
+        id: e6caf6dc-7c92-bc4a-5d2f-3fe1c07df8c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-br
+        id: 78caf6dc-80e4-3787-2c7b-f28c384e9278
+        nurn: nurn:nu:infra:aws:aws-account/nu-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-br-payer
+        id: bccaf6dc-7e08-b26b-dc86-42b303ba51b5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-br-staging
+        id: 42caf6dc-7f71-5c3e-0195-94e1ca1a76c5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-c1c824c-staging
+        id: facaf6dc-8216-20e9-b45e-7d57096e58a7
+        nurn: nurn:nu:infra:aws:aws-account/nu-c1c824c-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-cri-br
+        id: 64caf6dc-838c-0efd-f57d-a57d1550bb93
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-cri-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a0-br
+        id: e2caf6dc-8507-7705-383c-c32413ac15f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a0-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a1-br
+        id: 24caf6dc-865d-f336-1fd5-8ee34747d288
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a1-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a10-br
+        id: 36caf6dc-87d9-7609-a582-a9d356141e1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a10-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a11-br
+        id: e6caf6dc-8952-c120-221c-78a27f0d3da7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a11-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a12-br
+        id: 24caf6dc-8ad8-8445-1201-d4cdbaa9cb3b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a12-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a13-br
+        id: facaf6dc-8c2e-92e0-d3a6-d937c9baeaec
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a13-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a14-br
+        id: dccaf6dc-8db8-4e8d-f632-cfc729c980af
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a14-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a15-br
+        id: b6caf6dc-8f30-66fd-da36-620da4b27d2b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a15-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a2-br
+        id: 90caf6dc-90ad-5124-aa27-de6566643224
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a2-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a3-br
+        id: 40caf6dc-91f3-081a-abdb-6871d60e7679
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a3-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a4-br
+        id: 60caf6dc-9383-18ed-6db2-78dbf934ecd4
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a4-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a5-br
+        id: bacaf6dc-94f2-efbf-2d63-d12ba32384d5
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a5-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a6-br
+        id: 6acaf6dc-969b-6a58-deeb-be59e8312b2f
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a6-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a7-br
+        id: f6caf6dc-97e5-d90e-d623-69455be2fab2
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a7-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a8-br
+        id: 58caf6dc-9961-f113-4033-9de61e7e9e22
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a8-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cfm-csp-a9-br
+        id: 2acaf6dc-9adb-bb4a-add8-b3b61eb2820d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a9-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ch-payer
+        id: 3ecaf6dc-9c54-7f47-d724-a9068ecc2de9
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ch-prod
+        id: e0caf6dc-9d9d-7369-a9f0-c993b8b7ce39
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ch-staging
+        id: 5acaf6dc-9f04-0da7-b678-fd4c21ca9d5f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cicd
+        id: 14caf6dc-a078-1f0c-2d74-833baee47e35
+        nurn: nurn:nu:infra:aws:aws-account/nu-cicd
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-cloud-provisioning-test-staging
+        id: fecaf6dc-a227-eaff-d572-c4398ac25c97
+        nurn: nurn:nu:infra:aws:aws-account/nu-cloud-provisioning-test-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-co
+        id: 38caf6dc-a4db-ced7-3460-8693ae8d9d71
+        nurn: nurn:nu:infra:aws:aws-account/nu-co
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-co-payer
+        id: b6caf6dc-a369-a8b7-8e70-daec99190c6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-co-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-control
+        id: c8caf6dc-a671-b0e9-956e-bb95b4a01389
+        nurn: nurn:nu:infra:aws:aws-account/nu-control
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-data
+        id: d2caf6dc-a7da-8aa9-bcaf-3d909ea25270
+        nurn: nurn:nu:infra:aws:aws-account/nu-data
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-databricks
+        id: cccaf6dc-a916-2fab-25a1-4127c759caec
+        nurn: nurn:nu:infra:aws:aws-account/nu-databricks
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-dev
+        id: a6caf6dc-abf9-b261-8446-93ab7b068290
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-dev-databricks
+        id: 4ccaf6dc-aa84-42ad-1a3f-786c1e99784d
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev-databricks
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-fsn-br-prod
+        id: 16caf6dc-ad2e-4302-a63b-0c103c6f9eb0
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-br-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-fsn-ch
+        id: 50caf6dc-ae9b-ac0f-533c-367028319993
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-ch
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-fsn-us
+        id: 90caf6dc-b014-afec-06bc-c6f5fa200a2c
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-us
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-incode
+        id: bacaf6dc-b223-315c-1821-38247129b1a6
+        nurn: nurn:nu:infra:aws:aws-account/nu-incode
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-infra-mgmt
+        id: 18caf6dc-b394-fbf5-9447-fb25439e0b8e
+        nurn: nurn:nu:infra:aws:aws-account/nu-infra-mgmt
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-invest-data-br-prod
+        id: 1ecaf6dc-b4e2-ae1c-1f31-f85033d4637e
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-invest-data-br-staging
+        id: e8caf6dc-b629-6997-f747-d34a561a9762
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-investbr
+        id: 72caf6dc-b776-d63a-cf12-3a1e98319cf9
+        nurn: nurn:nu:infra:aws:aws-account/nu-investbr
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-investnews
+        id: becaf6dc-b8ca-c7f0-89a7-1047af6420a4
+        nurn: nurn:nu:infra:aws:aws-account/nu-investnews
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-br-prod
+        id: dacaf6dc-ba16-c097-d17d-a33622ed460e
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-br-staging
+        id: cecaf6dc-bb8d-b9dd-e4ed-a9e149424992
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-ch-prod
+        id: eacaf6dc-bcc3-9fe3-fb94-46a36affe941
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-ch-staging
+        id: a2caf6dc-be07-f8a7-cfc7-e162f0c2fd19
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-co-prod
+        id: e2caf6dc-bf6a-77df-43dc-38a335cb9f81
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-co-staging
+        id: 06caf6dc-c0a9-7ae9-a3ce-e36e58949e30
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-data-prod
+        id: 20caf6dc-c22d-e92d-cb54-08ae774eb27c
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-data-staging
+        id: b0caf6dc-c392-0f9d-bf60-42114054c7ef
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-ist-prod
+        id: eecaf6dc-c4e8-822a-09a6-496690cccbb5
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-ist-staging
+        id: 58caf6dc-c62f-7e2f-c6d2-c18a762acb61
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-mx-prod
+        id: 3ccaf6dc-c760-76df-518e-ecb5511a77e1
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-mx-staging
+        id: c0caf6dc-c8d9-0bd5-6789-c292b02ac434
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-sandbox-staging
+        id: 0ecaf6dc-ca0d-ff21-25be-31b593369610
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-sandbox-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-us-prod
+        id: 92caf6dc-cb5c-4301-4574-86e52483702f
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-isc-us-staging
+        id: 3ecaf6dc-cca6-db20-ffa3-5d461ab7c6ad
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ist
+        id: b2caf6dc-cf4a-75eb-a3c0-7c64916d23c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ist-staging
+        id: fccaf6dc-cdf5-a7fe-f72a-847503486e51
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-logs
+        id: 22caf6dc-d0d3-5b76-f76f-acdc52d7a6dc
+        nurn: nurn:nu:infra:aws:aws-account/nu-logs
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-mx
+        id: a4caf6dc-d35f-2359-7589-95ec01def28c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-mx-payer
+        id: c4caf6dc-d20a-046b-0a28-17ff2ee0fa6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-network
+        id: bacaf6dc-dbd2-69ed-5056-1d87d84a07c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-network
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-network-br
+        id: b0caf6dc-d4a6-64c3-5d0d-6347b1c93fbb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-br
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-network-ch
+        id: a8caf6dc-d5da-2213-2fa0-f5c3aec79313
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-ch
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-network-co
+        id: 12caf6dc-d724-8fdd-5630-65121ec8f941
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-co
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-network-mx
+        id: 8ecaf6dc-d888-e31f-0da1-de317d7795cb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-mx
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-network-us
+        id: fccaf6dc-d9db-5af5-05be-cce538a7a144
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-us
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-nupay-br-prod
+        id: 2acaf6dc-dd15-b906-2cff-a1f364c2a604
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-nupay-br-staging
+        id: c2caf6dc-de79-6f42-de9a-c42f39f01ac2
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-o11y-ww-prod
+        id: d4caf6dc-dfd8-6729-3226-805234b1e768
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-o11y-ww-staging
+        id: 10caf6dc-e140-5427-65bd-a9da2aaf4ef0
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-offensive
+        id: 92caf6dc-e2cb-d336-a386-d0c84f58928e
+        nurn: nurn:nu:infra:aws:aws-account/nu-offensive
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-pinot-ww-prod
+        id: bacaf6dc-e445-9313-577d-54abdf96a706
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-pinot-ww-staging
+        id: 96caf6dc-e5d1-ee9f-481f-7d44ef0eb5ec
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-playbooks-validation
+        id: 16caf6dc-e774-b96c-9664-7be3fd719c1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-playbooks-validation
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-resilience-ww-prod
+        id: 4ecaf6dc-e906-11ec-87f3-e8ad533a4f71
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-resilience-ww-staging
+        id: a8caf6dc-eaa0-394b-d2c6-2cec3dd02d1e
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-sandbox-cyberintel
+        id: f8caf6dc-ec2c-25e2-cea2-546bff02271b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-cyberintel
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-sandbox-ephemeral-a0
+        id: b0caf6dc-ed61-0dca-a84c-1f1f8ea1f9d3
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-ephemeral-a0
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-sandbox-network
+        id: 40caf6dc-ef15-98d9-ff95-e1cb39fdb848
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-network
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-sandbox-nufuturo
+        id: 7ecaf6dc-f09d-c616-7d8b-e0b04c1f1086
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-nufuturo
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-sandbox-payer
+        id: 20caf6dc-f240-4f7d-6bc4-ca1b38813833
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-sec
+        id: 64caf6dc-f38e-57f7-d1be-0cddda98589b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sec
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-shekel-prod
+        id: b4caf6dc-f519-ca83-4f97-c1dc071c32b3
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-shekel-staging
+        id: 80caf6dc-f6b1-bb87-d90d-3748551c41f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-signals-admin
+        id: a0caf6dc-f83f-454e-0a35-99f392330d82
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-admin
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-signals-data
+        id: 9acaf6dc-f992-3803-d6ad-7b2c3b417197
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-data
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-signals-dev
+        id: eacaf6dc-fb0b-67d7-ec4b-ad29eac92d99
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-dev
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-signals-prd
+        id: d6caf6dc-fc6f-c61f-8112-7e820cf6400a
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-prd
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-storage-0a-br-prod
+        id: decaf6dc-fde4-62f7-437e-03f24e239b16
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-storage-0a-br-staging
+        id: 2ccaf6dd-01a3-1f02-2c62-c37e16f16857
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-t5
+        id: 28caf6dd-0305-34db-cd43-fe8c184ad13d
+        nurn: nurn:nu:infra:aws:aws-account/nu-t5
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-taktile-ww-prod
+        id: 26caf6dd-0471-b2e5-8456-5c60606f5626
+        nurn: nurn:nu:infra:aws:aws-account/nu-taktile-ww-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-us-payer
+        id: 64caf6dd-05d5-7ce7-9630-baa5e62bbe8f
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-us-prod
+        id: 2acaf6dd-0720-8219-8641-66962049f8e7
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-prod
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-us-staging
+        id: c2caf6dd-0896-c865-b4cf-fc8a4618c763
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-staging
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-ww-payer
+        id: 76caf6dd-0a27-919a-bbbd-353784ffb3c2
+        nurn: nurn:nu:infra:aws:aws-account/nu-ww-payer
+      environment:
+        alias: default
+        id: d0cae760-e9ef-bad4-6fb3-0aa3c9b514a1
+        nurn: nurn:nu:infra:environment/default
+    - account:
+        alias: nu-a74ad8d-sandbox
+        id: 00caf6dc-68df-a114-9706-08059057fb9f
+        nurn: nurn:nu:infra:aws:aws-account/nu-a74ad8d-sandbox
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ar
+        id: 58caf6dc-6bd0-ad8e-ab21-5eec1741186f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ar-payer
+        id: cccaf6dc-6a60-c679-6311-12e1adc4ba3e
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-br-prod
+        id: bccaf6dc-6d45-2091-8511-9324075558cc
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-br-staging
+        id: eecaf6dc-6e87-e3f6-60ca-df9a90d5ba5e
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-co-prod
+        id: 4acaf6dc-7002-1a5f-2001-830ed7e52cda
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-co-staging
+        id: 6acaf6dc-7181-ab99-d0f4-fc768284dd3d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-mx-prod
+        id: 0acaf6dc-72c0-43aa-65a0-e5f3a05f9a57
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-mx-staging
+        id: 26caf6dc-7441-1f2e-3b91-0cffab51e99c
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-ww-prod
+        id: 42caf6dc-75ab-6f2a-b02b-1cfc2dba343a
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-avax-ww-staging
+        id: aacaf6dc-7736-f0fa-5641-1af9466da55d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-backup
+        id: 8ecaf6dc-7871-bc8f-d68e-8e34779755c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-backup
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-banrep
+        id: 5ecaf6dc-79e6-7ea0-3aa4-4b7a492b06e0
+        nurn: nurn:nu:infra:aws:aws-account/nu-banrep
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-bip-ww-prod
+        id: 92caf6dc-7b55-6879-bb07-14424a62fc58
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-bip-ww-staging
+        id: e6caf6dc-7c92-bc4a-5d2f-3fe1c07df8c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-br
+        id: 78caf6dc-80e4-3787-2c7b-f28c384e9278
+        nurn: nurn:nu:infra:aws:aws-account/nu-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-br-payer
+        id: bccaf6dc-7e08-b26b-dc86-42b303ba51b5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-br-staging
+        id: 42caf6dc-7f71-5c3e-0195-94e1ca1a76c5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-c1c824c-staging
+        id: facaf6dc-8216-20e9-b45e-7d57096e58a7
+        nurn: nurn:nu:infra:aws:aws-account/nu-c1c824c-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-cri-br
+        id: 64caf6dc-838c-0efd-f57d-a57d1550bb93
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-cri-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a0-br
+        id: e2caf6dc-8507-7705-383c-c32413ac15f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a0-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a1-br
+        id: 24caf6dc-865d-f336-1fd5-8ee34747d288
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a1-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a10-br
+        id: 36caf6dc-87d9-7609-a582-a9d356141e1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a10-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a11-br
+        id: e6caf6dc-8952-c120-221c-78a27f0d3da7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a11-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a12-br
+        id: 24caf6dc-8ad8-8445-1201-d4cdbaa9cb3b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a12-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a13-br
+        id: facaf6dc-8c2e-92e0-d3a6-d937c9baeaec
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a13-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a14-br
+        id: dccaf6dc-8db8-4e8d-f632-cfc729c980af
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a14-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a15-br
+        id: b6caf6dc-8f30-66fd-da36-620da4b27d2b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a15-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a2-br
+        id: 90caf6dc-90ad-5124-aa27-de6566643224
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a2-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a3-br
+        id: 40caf6dc-91f3-081a-abdb-6871d60e7679
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a3-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a4-br
+        id: 60caf6dc-9383-18ed-6db2-78dbf934ecd4
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a4-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a5-br
+        id: bacaf6dc-94f2-efbf-2d63-d12ba32384d5
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a5-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a6-br
+        id: 6acaf6dc-969b-6a58-deeb-be59e8312b2f
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a6-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a7-br
+        id: f6caf6dc-97e5-d90e-d623-69455be2fab2
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a7-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a8-br
+        id: 58caf6dc-9961-f113-4033-9de61e7e9e22
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a8-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cfm-csp-a9-br
+        id: 2acaf6dc-9adb-bb4a-add8-b3b61eb2820d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a9-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ch-payer
+        id: 3ecaf6dc-9c54-7f47-d724-a9068ecc2de9
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ch-prod
+        id: e0caf6dc-9d9d-7369-a9f0-c993b8b7ce39
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ch-staging
+        id: 5acaf6dc-9f04-0da7-b678-fd4c21ca9d5f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cicd
+        id: 14caf6dc-a078-1f0c-2d74-833baee47e35
+        nurn: nurn:nu:infra:aws:aws-account/nu-cicd
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-cloud-provisioning-test-staging
+        id: fecaf6dc-a227-eaff-d572-c4398ac25c97
+        nurn: nurn:nu:infra:aws:aws-account/nu-cloud-provisioning-test-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-co
+        id: 38caf6dc-a4db-ced7-3460-8693ae8d9d71
+        nurn: nurn:nu:infra:aws:aws-account/nu-co
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-co-payer
+        id: b6caf6dc-a369-a8b7-8e70-daec99190c6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-co-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-control
+        id: c8caf6dc-a671-b0e9-956e-bb95b4a01389
+        nurn: nurn:nu:infra:aws:aws-account/nu-control
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-data
+        id: d2caf6dc-a7da-8aa9-bcaf-3d909ea25270
+        nurn: nurn:nu:infra:aws:aws-account/nu-data
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-databricks
+        id: cccaf6dc-a916-2fab-25a1-4127c759caec
+        nurn: nurn:nu:infra:aws:aws-account/nu-databricks
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-dev
+        id: a6caf6dc-abf9-b261-8446-93ab7b068290
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-dev-databricks
+        id: 4ccaf6dc-aa84-42ad-1a3f-786c1e99784d
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev-databricks
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-fsn-br-prod
+        id: 16caf6dc-ad2e-4302-a63b-0c103c6f9eb0
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-br-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-fsn-ch
+        id: 50caf6dc-ae9b-ac0f-533c-367028319993
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-ch
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-fsn-us
+        id: 90caf6dc-b014-afec-06bc-c6f5fa200a2c
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-us
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-incode
+        id: bacaf6dc-b223-315c-1821-38247129b1a6
+        nurn: nurn:nu:infra:aws:aws-account/nu-incode
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-infra-mgmt
+        id: 18caf6dc-b394-fbf5-9447-fb25439e0b8e
+        nurn: nurn:nu:infra:aws:aws-account/nu-infra-mgmt
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-invest-data-br-prod
+        id: 1ecaf6dc-b4e2-ae1c-1f31-f85033d4637e
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-invest-data-br-staging
+        id: e8caf6dc-b629-6997-f747-d34a561a9762
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-investbr
+        id: 72caf6dc-b776-d63a-cf12-3a1e98319cf9
+        nurn: nurn:nu:infra:aws:aws-account/nu-investbr
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-investnews
+        id: becaf6dc-b8ca-c7f0-89a7-1047af6420a4
+        nurn: nurn:nu:infra:aws:aws-account/nu-investnews
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-br-prod
+        id: dacaf6dc-ba16-c097-d17d-a33622ed460e
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-br-staging
+        id: cecaf6dc-bb8d-b9dd-e4ed-a9e149424992
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-ch-prod
+        id: eacaf6dc-bcc3-9fe3-fb94-46a36affe941
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-ch-staging
+        id: a2caf6dc-be07-f8a7-cfc7-e162f0c2fd19
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-co-prod
+        id: e2caf6dc-bf6a-77df-43dc-38a335cb9f81
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-co-staging
+        id: 06caf6dc-c0a9-7ae9-a3ce-e36e58949e30
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-data-prod
+        id: 20caf6dc-c22d-e92d-cb54-08ae774eb27c
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-data-staging
+        id: b0caf6dc-c392-0f9d-bf60-42114054c7ef
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-ist-prod
+        id: eecaf6dc-c4e8-822a-09a6-496690cccbb5
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-ist-staging
+        id: 58caf6dc-c62f-7e2f-c6d2-c18a762acb61
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-mx-prod
+        id: 3ccaf6dc-c760-76df-518e-ecb5511a77e1
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-mx-staging
+        id: c0caf6dc-c8d9-0bd5-6789-c292b02ac434
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-sandbox-staging
+        id: 0ecaf6dc-ca0d-ff21-25be-31b593369610
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-sandbox-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-us-prod
+        id: 92caf6dc-cb5c-4301-4574-86e52483702f
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-isc-us-staging
+        id: 3ecaf6dc-cca6-db20-ffa3-5d461ab7c6ad
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ist
+        id: b2caf6dc-cf4a-75eb-a3c0-7c64916d23c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ist-staging
+        id: fccaf6dc-cdf5-a7fe-f72a-847503486e51
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-logs
+        id: 22caf6dc-d0d3-5b76-f76f-acdc52d7a6dc
+        nurn: nurn:nu:infra:aws:aws-account/nu-logs
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-mx
+        id: a4caf6dc-d35f-2359-7589-95ec01def28c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-mx-payer
+        id: c4caf6dc-d20a-046b-0a28-17ff2ee0fa6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-network
+        id: bacaf6dc-dbd2-69ed-5056-1d87d84a07c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-network
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-network-br
+        id: b0caf6dc-d4a6-64c3-5d0d-6347b1c93fbb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-br
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-network-ch
+        id: a8caf6dc-d5da-2213-2fa0-f5c3aec79313
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-ch
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-network-co
+        id: 12caf6dc-d724-8fdd-5630-65121ec8f941
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-co
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-network-mx
+        id: 8ecaf6dc-d888-e31f-0da1-de317d7795cb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-mx
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-network-us
+        id: fccaf6dc-d9db-5af5-05be-cce538a7a144
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-us
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-nupay-br-prod
+        id: 2acaf6dc-dd15-b906-2cff-a1f364c2a604
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-nupay-br-staging
+        id: c2caf6dc-de79-6f42-de9a-c42f39f01ac2
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-o11y-ww-prod
+        id: d4caf6dc-dfd8-6729-3226-805234b1e768
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-o11y-ww-staging
+        id: 10caf6dc-e140-5427-65bd-a9da2aaf4ef0
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-offensive
+        id: 92caf6dc-e2cb-d336-a386-d0c84f58928e
+        nurn: nurn:nu:infra:aws:aws-account/nu-offensive
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-pinot-ww-prod
+        id: bacaf6dc-e445-9313-577d-54abdf96a706
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-pinot-ww-staging
+        id: 96caf6dc-e5d1-ee9f-481f-7d44ef0eb5ec
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-playbooks-validation
+        id: 16caf6dc-e774-b96c-9664-7be3fd719c1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-playbooks-validation
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-resilience-ww-prod
+        id: 4ecaf6dc-e906-11ec-87f3-e8ad533a4f71
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-resilience-ww-staging
+        id: a8caf6dc-eaa0-394b-d2c6-2cec3dd02d1e
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-sandbox-cyberintel
+        id: f8caf6dc-ec2c-25e2-cea2-546bff02271b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-cyberintel
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-sandbox-ephemeral-a0
+        id: b0caf6dc-ed61-0dca-a84c-1f1f8ea1f9d3
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-ephemeral-a0
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-sandbox-network
+        id: 40caf6dc-ef15-98d9-ff95-e1cb39fdb848
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-network
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-sandbox-nufuturo
+        id: 7ecaf6dc-f09d-c616-7d8b-e0b04c1f1086
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-nufuturo
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-sandbox-payer
+        id: 20caf6dc-f240-4f7d-6bc4-ca1b38813833
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-sec
+        id: 64caf6dc-f38e-57f7-d1be-0cddda98589b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sec
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-shekel-prod
+        id: b4caf6dc-f519-ca83-4f97-c1dc071c32b3
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-shekel-staging
+        id: 80caf6dc-f6b1-bb87-d90d-3748551c41f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-signals-admin
+        id: a0caf6dc-f83f-454e-0a35-99f392330d82
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-admin
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-signals-data
+        id: 9acaf6dc-f992-3803-d6ad-7b2c3b417197
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-data
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-signals-dev
+        id: eacaf6dc-fb0b-67d7-ec4b-ad29eac92d99
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-dev
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-signals-prd
+        id: d6caf6dc-fc6f-c61f-8112-7e820cf6400a
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-prd
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-storage-0a-br-prod
+        id: decaf6dc-fde4-62f7-437e-03f24e239b16
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-storage-0a-br-staging
+        id: 2ccaf6dd-01a3-1f02-2c62-c37e16f16857
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-t5
+        id: 28caf6dd-0305-34db-cd43-fe8c184ad13d
+        nurn: nurn:nu:infra:aws:aws-account/nu-t5
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-taktile-ww-prod
+        id: 26caf6dd-0471-b2e5-8456-5c60606f5626
+        nurn: nurn:nu:infra:aws:aws-account/nu-taktile-ww-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-us-payer
+        id: 64caf6dd-05d5-7ce7-9630-baa5e62bbe8f
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-us-prod
+        id: 2acaf6dd-0720-8219-8641-66962049f8e7
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-prod
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-us-staging
+        id: c2caf6dd-0896-c865-b4cf-fc8a4618c763
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-staging
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-ww-payer
+        id: 76caf6dd-0a27-919a-bbbd-353784ffb3c2
+        nurn: nurn:nu:infra:aws:aws-account/nu-ww-payer
+      environment:
+        alias: prod
+        id: e2c9f050-dec8-4b82-499e-4fbc22864d9e
+        nurn: nurn:nu:infra:environment/prod
+    - account:
+        alias: nu-a74ad8d-sandbox
+        id: 00caf6dc-68df-a114-9706-08059057fb9f
+        nurn: nurn:nu:infra:aws:aws-account/nu-a74ad8d-sandbox
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ar
+        id: 58caf6dc-6bd0-ad8e-ab21-5eec1741186f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ar-payer
+        id: cccaf6dc-6a60-c679-6311-12e1adc4ba3e
+        nurn: nurn:nu:infra:aws:aws-account/nu-ar-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-br-prod
+        id: bccaf6dc-6d45-2091-8511-9324075558cc
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-br-staging
+        id: eecaf6dc-6e87-e3f6-60ca-df9a90d5ba5e
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-br-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-co-prod
+        id: 4acaf6dc-7002-1a5f-2001-830ed7e52cda
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-co-staging
+        id: 6acaf6dc-7181-ab99-d0f4-fc768284dd3d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-co-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-mx-prod
+        id: 0acaf6dc-72c0-43aa-65a0-e5f3a05f9a57
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-mx-staging
+        id: 26caf6dc-7441-1f2e-3b91-0cffab51e99c
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-mx-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-ww-prod
+        id: 42caf6dc-75ab-6f2a-b02b-1cfc2dba343a
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-avax-ww-staging
+        id: aacaf6dc-7736-f0fa-5641-1af9466da55d
+        nurn: nurn:nu:infra:aws:aws-account/nu-avax-ww-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-backup
+        id: 8ecaf6dc-7871-bc8f-d68e-8e34779755c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-backup
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-banrep
+        id: 5ecaf6dc-79e6-7ea0-3aa4-4b7a492b06e0
+        nurn: nurn:nu:infra:aws:aws-account/nu-banrep
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-bip-ww-prod
+        id: 92caf6dc-7b55-6879-bb07-14424a62fc58
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-bip-ww-staging
+        id: e6caf6dc-7c92-bc4a-5d2f-3fe1c07df8c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-bip-ww-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-br
+        id: 78caf6dc-80e4-3787-2c7b-f28c384e9278
+        nurn: nurn:nu:infra:aws:aws-account/nu-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-br-payer
+        id: bccaf6dc-7e08-b26b-dc86-42b303ba51b5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-br-staging
+        id: 42caf6dc-7f71-5c3e-0195-94e1ca1a76c5
+        nurn: nurn:nu:infra:aws:aws-account/nu-br-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-c1c824c-staging
+        id: facaf6dc-8216-20e9-b45e-7d57096e58a7
+        nurn: nurn:nu:infra:aws:aws-account/nu-c1c824c-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-cri-br
+        id: 64caf6dc-838c-0efd-f57d-a57d1550bb93
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-cri-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a0-br
+        id: e2caf6dc-8507-7705-383c-c32413ac15f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a0-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a1-br
+        id: 24caf6dc-865d-f336-1fd5-8ee34747d288
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a1-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a10-br
+        id: 36caf6dc-87d9-7609-a582-a9d356141e1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a10-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a11-br
+        id: e6caf6dc-8952-c120-221c-78a27f0d3da7
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a11-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a12-br
+        id: 24caf6dc-8ad8-8445-1201-d4cdbaa9cb3b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a12-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a13-br
+        id: facaf6dc-8c2e-92e0-d3a6-d937c9baeaec
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a13-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a14-br
+        id: dccaf6dc-8db8-4e8d-f632-cfc729c980af
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a14-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a15-br
+        id: b6caf6dc-8f30-66fd-da36-620da4b27d2b
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a15-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a2-br
+        id: 90caf6dc-90ad-5124-aa27-de6566643224
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a2-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a3-br
+        id: 40caf6dc-91f3-081a-abdb-6871d60e7679
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a3-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a4-br
+        id: 60caf6dc-9383-18ed-6db2-78dbf934ecd4
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a4-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a5-br
+        id: bacaf6dc-94f2-efbf-2d63-d12ba32384d5
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a5-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a6-br
+        id: 6acaf6dc-969b-6a58-deeb-be59e8312b2f
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a6-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a7-br
+        id: f6caf6dc-97e5-d90e-d623-69455be2fab2
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a7-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a8-br
+        id: 58caf6dc-9961-f113-4033-9de61e7e9e22
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a8-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cfm-csp-a9-br
+        id: 2acaf6dc-9adb-bb4a-add8-b3b61eb2820d
+        nurn: nurn:nu:infra:aws:aws-account/nu-cfm-csp-a9-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ch-payer
+        id: 3ecaf6dc-9c54-7f47-d724-a9068ecc2de9
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ch-prod
+        id: e0caf6dc-9d9d-7369-a9f0-c993b8b7ce39
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ch-staging
+        id: 5acaf6dc-9f04-0da7-b678-fd4c21ca9d5f
+        nurn: nurn:nu:infra:aws:aws-account/nu-ch-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cicd
+        id: 14caf6dc-a078-1f0c-2d74-833baee47e35
+        nurn: nurn:nu:infra:aws:aws-account/nu-cicd
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-cloud-provisioning-test-staging
+        id: fecaf6dc-a227-eaff-d572-c4398ac25c97
+        nurn: nurn:nu:infra:aws:aws-account/nu-cloud-provisioning-test-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-co
+        id: 38caf6dc-a4db-ced7-3460-8693ae8d9d71
+        nurn: nurn:nu:infra:aws:aws-account/nu-co
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-co-payer
+        id: b6caf6dc-a369-a8b7-8e70-daec99190c6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-co-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-control
+        id: c8caf6dc-a671-b0e9-956e-bb95b4a01389
+        nurn: nurn:nu:infra:aws:aws-account/nu-control
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-data
+        id: d2caf6dc-a7da-8aa9-bcaf-3d909ea25270
+        nurn: nurn:nu:infra:aws:aws-account/nu-data
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-databricks
+        id: cccaf6dc-a916-2fab-25a1-4127c759caec
+        nurn: nurn:nu:infra:aws:aws-account/nu-databricks
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-dev
+        id: a6caf6dc-abf9-b261-8446-93ab7b068290
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-dev-databricks
+        id: 4ccaf6dc-aa84-42ad-1a3f-786c1e99784d
+        nurn: nurn:nu:infra:aws:aws-account/nu-dev-databricks
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-fsn-br-prod
+        id: 16caf6dc-ad2e-4302-a63b-0c103c6f9eb0
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-br-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-fsn-ch
+        id: 50caf6dc-ae9b-ac0f-533c-367028319993
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-ch
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-fsn-us
+        id: 90caf6dc-b014-afec-06bc-c6f5fa200a2c
+        nurn: nurn:nu:infra:aws:aws-account/nu-fsn-us
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-incode
+        id: bacaf6dc-b223-315c-1821-38247129b1a6
+        nurn: nurn:nu:infra:aws:aws-account/nu-incode
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-infra-mgmt
+        id: 18caf6dc-b394-fbf5-9447-fb25439e0b8e
+        nurn: nurn:nu:infra:aws:aws-account/nu-infra-mgmt
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-invest-data-br-prod
+        id: 1ecaf6dc-b4e2-ae1c-1f31-f85033d4637e
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-invest-data-br-staging
+        id: e8caf6dc-b629-6997-f747-d34a561a9762
+        nurn: nurn:nu:infra:aws:aws-account/nu-invest-data-br-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-investbr
+        id: 72caf6dc-b776-d63a-cf12-3a1e98319cf9
+        nurn: nurn:nu:infra:aws:aws-account/nu-investbr
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-investnews
+        id: becaf6dc-b8ca-c7f0-89a7-1047af6420a4
+        nurn: nurn:nu:infra:aws:aws-account/nu-investnews
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-br-prod
+        id: dacaf6dc-ba16-c097-d17d-a33622ed460e
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-br-staging
+        id: cecaf6dc-bb8d-b9dd-e4ed-a9e149424992
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-br-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-ch-prod
+        id: eacaf6dc-bcc3-9fe3-fb94-46a36affe941
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-ch-staging
+        id: a2caf6dc-be07-f8a7-cfc7-e162f0c2fd19
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ch-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-co-prod
+        id: e2caf6dc-bf6a-77df-43dc-38a335cb9f81
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-co-staging
+        id: 06caf6dc-c0a9-7ae9-a3ce-e36e58949e30
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-co-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-data-prod
+        id: 20caf6dc-c22d-e92d-cb54-08ae774eb27c
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-data-staging
+        id: b0caf6dc-c392-0f9d-bf60-42114054c7ef
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-data-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-ist-prod
+        id: eecaf6dc-c4e8-822a-09a6-496690cccbb5
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-ist-staging
+        id: 58caf6dc-c62f-7e2f-c6d2-c18a762acb61
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-ist-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-mx-prod
+        id: 3ccaf6dc-c760-76df-518e-ecb5511a77e1
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-mx-staging
+        id: c0caf6dc-c8d9-0bd5-6789-c292b02ac434
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-mx-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-sandbox-staging
+        id: 0ecaf6dc-ca0d-ff21-25be-31b593369610
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-sandbox-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-us-prod
+        id: 92caf6dc-cb5c-4301-4574-86e52483702f
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-isc-us-staging
+        id: 3ecaf6dc-cca6-db20-ffa3-5d461ab7c6ad
+        nurn: nurn:nu:infra:aws:aws-account/nu-isc-us-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ist
+        id: b2caf6dc-cf4a-75eb-a3c0-7c64916d23c7
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ist-staging
+        id: fccaf6dc-cdf5-a7fe-f72a-847503486e51
+        nurn: nurn:nu:infra:aws:aws-account/nu-ist-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-logs
+        id: 22caf6dc-d0d3-5b76-f76f-acdc52d7a6dc
+        nurn: nurn:nu:infra:aws:aws-account/nu-logs
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-mx
+        id: a4caf6dc-d35f-2359-7589-95ec01def28c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-mx-payer
+        id: c4caf6dc-d20a-046b-0a28-17ff2ee0fa6c
+        nurn: nurn:nu:infra:aws:aws-account/nu-mx-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-network
+        id: bacaf6dc-dbd2-69ed-5056-1d87d84a07c0
+        nurn: nurn:nu:infra:aws:aws-account/nu-network
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-network-br
+        id: b0caf6dc-d4a6-64c3-5d0d-6347b1c93fbb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-br
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-network-ch
+        id: a8caf6dc-d5da-2213-2fa0-f5c3aec79313
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-ch
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-network-co
+        id: 12caf6dc-d724-8fdd-5630-65121ec8f941
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-co
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-network-mx
+        id: 8ecaf6dc-d888-e31f-0da1-de317d7795cb
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-mx
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-network-us
+        id: fccaf6dc-d9db-5af5-05be-cce538a7a144
+        nurn: nurn:nu:infra:aws:aws-account/nu-network-us
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-nupay-br-prod
+        id: 2acaf6dc-dd15-b906-2cff-a1f364c2a604
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-nupay-br-staging
+        id: c2caf6dc-de79-6f42-de9a-c42f39f01ac2
+        nurn: nurn:nu:infra:aws:aws-account/nu-nupay-br-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-o11y-ww-prod
+        id: d4caf6dc-dfd8-6729-3226-805234b1e768
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-o11y-ww-staging
+        id: 10caf6dc-e140-5427-65bd-a9da2aaf4ef0
+        nurn: nurn:nu:infra:aws:aws-account/nu-o11y-ww-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-offensive
+        id: 92caf6dc-e2cb-d336-a386-d0c84f58928e
+        nurn: nurn:nu:infra:aws:aws-account/nu-offensive
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-pinot-ww-prod
+        id: bacaf6dc-e445-9313-577d-54abdf96a706
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-pinot-ww-staging
+        id: 96caf6dc-e5d1-ee9f-481f-7d44ef0eb5ec
+        nurn: nurn:nu:infra:aws:aws-account/nu-pinot-ww-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-playbooks-validation
+        id: 16caf6dc-e774-b96c-9664-7be3fd719c1d
+        nurn: nurn:nu:infra:aws:aws-account/nu-playbooks-validation
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-resilience-ww-prod
+        id: 4ecaf6dc-e906-11ec-87f3-e8ad533a4f71
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-resilience-ww-staging
+        id: a8caf6dc-eaa0-394b-d2c6-2cec3dd02d1e
+        nurn: nurn:nu:infra:aws:aws-account/nu-resilience-ww-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-sandbox-cyberintel
+        id: f8caf6dc-ec2c-25e2-cea2-546bff02271b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-cyberintel
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-sandbox-ephemeral-a0
+        id: b0caf6dc-ed61-0dca-a84c-1f1f8ea1f9d3
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-ephemeral-a0
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-sandbox-network
+        id: 40caf6dc-ef15-98d9-ff95-e1cb39fdb848
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-network
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-sandbox-nufuturo
+        id: 7ecaf6dc-f09d-c616-7d8b-e0b04c1f1086
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-nufuturo
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-sandbox-payer
+        id: 20caf6dc-f240-4f7d-6bc4-ca1b38813833
+        nurn: nurn:nu:infra:aws:aws-account/nu-sandbox-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-sec
+        id: 64caf6dc-f38e-57f7-d1be-0cddda98589b
+        nurn: nurn:nu:infra:aws:aws-account/nu-sec
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-shekel-prod
+        id: b4caf6dc-f519-ca83-4f97-c1dc071c32b3
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-shekel-staging
+        id: 80caf6dc-f6b1-bb87-d90d-3748551c41f7
+        nurn: nurn:nu:infra:aws:aws-account/nu-shekel-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-signals-admin
+        id: a0caf6dc-f83f-454e-0a35-99f392330d82
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-admin
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-signals-data
+        id: 9acaf6dc-f992-3803-d6ad-7b2c3b417197
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-data
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-signals-dev
+        id: eacaf6dc-fb0b-67d7-ec4b-ad29eac92d99
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-dev
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-signals-prd
+        id: d6caf6dc-fc6f-c61f-8112-7e820cf6400a
+        nurn: nurn:nu:infra:aws:aws-account/nu-signals-prd
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-storage-0a-br-prod
+        id: decaf6dc-fde4-62f7-437e-03f24e239b16
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-storage-0a-br-staging
+        id: 2ccaf6dd-01a3-1f02-2c62-c37e16f16857
+        nurn: nurn:nu:infra:aws:aws-account/nu-storage-0a-br-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-t5
+        id: 28caf6dd-0305-34db-cd43-fe8c184ad13d
+        nurn: nurn:nu:infra:aws:aws-account/nu-t5
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-taktile-ww-prod
+        id: 26caf6dd-0471-b2e5-8456-5c60606f5626
+        nurn: nurn:nu:infra:aws:aws-account/nu-taktile-ww-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-us-payer
+        id: 64caf6dd-05d5-7ce7-9630-baa5e62bbe8f
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-us-prod
+        id: 2acaf6dd-0720-8219-8641-66962049f8e7
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-prod
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-us-staging
+        id: c2caf6dd-0896-c865-b4cf-fc8a4618c763
+        nurn: nurn:nu:infra:aws:aws-account/nu-us-staging
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging
+    - account:
+        alias: nu-ww-payer
+        id: 76caf6dd-0a27-919a-bbbd-353784ffb3c2
+        nurn: nurn:nu:infra:aws:aws-account/nu-ww-payer
+      environment:
+        alias: staging
+        id: b8c9f050-def7-3952-cdf2-e0a83d0c6a49
+        nurn: nurn:nu:infra:environment/staging

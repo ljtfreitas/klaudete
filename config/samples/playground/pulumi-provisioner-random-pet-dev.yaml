@@ -1,0 +1,17 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: PulumiProvisioner
+metadata:
+  name: random-pet-dev
+  namespace: playground
+  labels:
+    hello: "hellooo"
+spec:
+  namespace: playground
+  project: random-pet
+  stack: dev
+  repo:
+    url: https://github.com/ljtfreitas/iac-experiments
+    dir: pulumi/random-pet-yaml
+    branch: just-ideas
+  config:
+    prefix: ola

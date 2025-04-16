@@ -1,0 +1,8 @@
+apiVersion: klaudete.nubank.com.br/v1alpha1
+kind: RandomPet
+metadata:
+  name: random-pet
+  namespace: default
+spec:
+  name: random-pet
+  description: I'm just a random Pet

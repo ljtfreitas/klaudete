@@ -18,28 +18,28 @@ package controller
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
-	"github.com/gobuffalo/flect"
-	kro "github.com/kro-run/kro/api/v1alpha1"
-	kroSchema "github.com/kro-run/kro/pkg/simpleschema"
-	extv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/meta"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	api "github.com/nubank/klaudete/api/v1alpha1"
+	"github.com/nubank/klaudete/internal/inventory"
+	inventoryv1alpha1 "github.com/nubank/nu-infra-inventory/api/gen/net/nuinfra/inventory/v1alpha1"
 )
 
 // ResourceTypeReconciler reconciles a ResourceType object
 type ResourceTypeReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme          *runtime.Scheme
+	InventoryClient *inventory.InventoryClient
 }
 
 // +kubebuilder:rbac:groups=klaudete.nubank.com.br,resources=resourcetypes,verbs=get;list;watch;create;update;patch;delete
@@ -55,82 +55,72 @@ type ResourceTypeReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.19.0/pkg/reconcile
-func (r *ResourceTypeReconciler) Reconcile(ctx context.Context, resourceType *api.ResourceType) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+func (reconciler *ResourceTypeReconciler) Reconcile(ctx context.Context, resourceType *api.ResourceType) (ctrl.Result, error) {
+	log := log.FromContext(ctx)
 
-	kroResourceGraphDefinition := kro.ResourceGraphDefinition{}
-	if err := r.Get(ctx, types.NamespacedName{Name: resourceType.Name}, &kroResourceGraphDefinition); err != nil {
-		if !apierrors.IsNotFound(err) {
-			return ctrl.Result{}, fmt.Errorf("failure to find Kro's ResourceGraphDefinition from ResourceType %s: %w", resourceType.Name, err)
-		}
-
-		resourceName := flect.Pascalize(newResourceName(resourceType.Spec.Name, resourceType.Name))
-		resourceSpec, err := newResourceSpec()
+	if resourceType.Status.Status == "" || len(resourceType.Status.Conditions) == 0 {
+		resourceType.Status.Status = api.ResourceTypeStatusPending
+		resourceTypeWithCondition, err := reconciler.newResourceTypeCondition(ctx, resourceType, &metav1.Condition{
+			Type:    string(api.ConditionTypePending),
+			Status:  metav1.ConditionUnknown,
+			Reason:  string(api.ConditionReasonPending),
+			Message: "Starting reconciling...",
+		})
 		if err != nil {
-			fmt.Errorf("failure to generate a custom schema from ResourceType %s: %w", resourceType.Name, err)
+			return ctrl.Result{}, fmt.Errorf("failure to update resource type status: %w", err)
 		}
-		resources := newResources()
-
-		kroResourceGraphDefinition = kro.ResourceGraphDefinition{
-			Spec: kro.ResourceGraphDefinitionSpec{
-				Schema: &kro.Schema{
-					Kind:       resourceName,
-					APIVersion: resourceType.APIVersion,
-					Spec:       *resourceSpec,
-				},
-				Resources: resources,
-			},
-		}
+		resourceType = resourceTypeWithCondition
 	}
+
+	// TODO: update inventory...
+	resourceTypeFromInventory, err := reconciler.InventoryClient.UpsertResourceType(ctx, &inventoryv1alpha1.ResourceType{
+		Name:        resourceType.Spec.Name,
+		Description: resourceType.Spec.Description,
+	})
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failure to upsert resource type %s in Inventory: %w", resourceType.Name, err)
+	}
+
+	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		if reconciler.Get(ctx, types.NamespacedName{Namespace: resourceType.Namespace, Name: resourceType.Name}, resourceType); err != nil {
+			return fmt.Errorf("failure to refresh ResourceType instance: %w", err)
+		}
+		resourceType.Status.Status = api.ResourceTypeStatusInSync
+		resourceType.Status.Inventory = api.ResourceTypeStatusInventory{
+			Id: resourceTypeFromInventory.Id,
+		}
+		_, err = reconciler.newResourceTypeCondition(ctx, resourceType, &metav1.Condition{
+			Type:    string(api.ConditionTypeInSync),
+			Status:  metav1.ConditionTrue,
+			Reason:  string(api.ConditionReasonInSync),
+			Message: "Reconciling done. In-Sync.",
+		})
+		return err
+	})
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failure to update resource type status: %w", err)
+	}
+
+	log.Info("ResourceType was successfuly created and synced with Inventory.")
 
 	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ResourceTypeReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (reconciler *ResourceTypeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&api.ResourceType{}).
-		Complete(reconcile.AsReconciler(mgr.GetClient(), r))
+		WithEventFilter(checkObjectGenerationPredicate()).
+		Complete(reconcile.AsReconciler(mgr.GetClient(), reconciler))
 }
 
-func newResourceName(name *string, resourceTypeName string) string {
-	if name != nil {
-		return *name
-	}
-	return resourceTypeName
-}
-
-func newResourceSpec() (*runtime.RawExtension, error) {
-	jsonSchemaProps := &extv1.JSONSchemaProps{
-		Type: "object",
-		Required: []string{
-			"name",
-		},
-		Properties: map[string]extv1.JSONSchemaProps{
-			"name": {
-				Type: "string",
-			},
-			"description": {
-				Type: "string",
-			},
-		},
-	}
-
-	simpleSchema, err := kroSchema.FromOpenAPISpec(jsonSchemaProps)
-	if err != nil {
+func (reconciler *ResourceTypeReconciler) newResourceTypeCondition(ctx context.Context, resourceType *api.ResourceType, newCondition *metav1.Condition) (*api.ResourceType, error) {
+	meta.SetStatusCondition(&resourceType.Status.Conditions, *newCondition)
+	if err := reconciler.Status().Update(ctx, resourceType); err != nil {
 		return nil, err
 	}
-
-	simpleSchemaAsBytes, err := json.Marshal(simpleSchema)
-	if err != nil {
+	if err := reconciler.Get(ctx, types.NamespacedName{Name: resourceType.Name}, resourceType); err != nil {
 		return nil, err
 	}
-
-	rawExtension := &runtime.RawExtension{Raw: simpleSchemaAsBytes}
-
-	return rawExtension, nil
-}
-
-func newResources() []*kro.Resource {
-	return make([]*kro.Resource, 0)
+	return resourceType, nil
 }
