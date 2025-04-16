@@ -37,17 +37,20 @@ import (
 
 	api "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/dag"
+	"github.com/nubank/klaudete/internal/inventory"
 	"github.com/nubank/klaudete/internal/patches"
 	"github.com/nubank/klaudete/internal/provisioning"
 	"github.com/nubank/klaudete/internal/serde"
+	inventoryv1alpha1 "github.com/nubank/nu-infra-inventory/api/gen/net/nuinfra/inventory/v1alpha1"
 )
 
 // ResourceReconciler reconciles a Resource object
 type ResourceReconciler struct {
 	client.Client
-	DynamicClient *dynamic.DynamicClient
-	Scheme        *runtime.Scheme
-	Recorder      record.EventRecorder
+	DynamicClient   *dynamic.DynamicClient
+	Scheme          *runtime.Scheme
+	Recorder        record.EventRecorder
+	InventoryClient *inventory.InventoryClient
 }
 
 // +kubebuilder:rbac:groups=klaudete.nubank.com.br,resources=resources,verbs=get;list;watch;create;update;patch;delete
@@ -84,7 +87,8 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 	}
 
 	// check resource.resourceType; should be a valid ref
-	if err := reconciler.Get(ctx, types.NamespacedName{Name: resource.Spec.ResourceTypeRef}, &api.ResourceType{}); err != nil {
+	resourceType := &api.ResourceType{}
+	if err := reconciler.Get(ctx, types.NamespacedName{Name: resource.Spec.ResourceTypeRef}, resourceType); err != nil {
 		log.Error(fmt.Errorf("unable to find resourceType %s: %w", resource.Spec.ResourceTypeRef, err), "unable to find resourceType")
 
 		// just update status and stop reconciling; invalid spec
@@ -101,8 +105,139 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 		}
 		return ctrl.Result{}, nil
 	}
+	// resource type must be in sync with Inventory
+	if resourceType.Status.Status != api.ResourceTypeStatusInSync {
+		// try later...
+		log.Info("ResourceType %s is not in-sync with inventory...", resourceType.Name)
+		return ctrl.Result{RequeueAfter: time.Second * 10}, nil
+	}
 
 	// TODO: step 1 => update inventory...
+	inventoryClient := reconciler.InventoryClient
+
+	resourceTypeFromInventory, err := inventoryClient.GetResourceType(ctx, resourceType.Spec.Name)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failure to get resource type %s from Inventory: %w", resourceType.Spec.Name, err)
+	}
+
+	nurn := ""
+	if resourceTypeFromInventory.GenerateNurn != nil {
+		nurn = inventory.GenerateNurn(*resourceTypeFromInventory.GenerateNurn, resource.Spec.Name)
+	} else {
+		nurn = inventory.GenerateNurnFrom(resourceTypeFromInventory.Name, resource.Spec.Name)
+	}
+
+	resourcePropertiesAsMap, err := serde.ToMap(resource.Spec.Properties)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("failure to serialize resource properties: %w", err)
+	}
+
+	resourceToInventoryProperties := map[string]*inventoryv1alpha1.PropertyValue{}
+	for name, value := range resourcePropertiesAsMap {
+		resourceToInventoryProperties[name] = &inventoryv1alpha1.PropertyValue{
+			Value: &inventoryv1alpha1.PropertyValue_StringValue{
+				StringValue: fmt.Sprint(value),
+			},
+		}
+	}
+
+	var resourceFromInventory *inventoryv1alpha1.Resource
+	if resource.Status.Inventory == nil {
+		// we suppose this resource does not exist in Inventory yet; try to insert
+		resourceFromInventory, err = inventoryClient.CreateResource(ctx, &inventoryv1alpha1.Resource{
+			Metadata: &inventoryv1alpha1.Metadata{
+				Nurn:        nurn,
+				Alias:       resource.Spec.Alias,
+				Description: resource.Spec.Description,
+				Properties:  resourceToInventoryProperties,
+			},
+			ResourceType: resourceTypeFromInventory,
+		})
+		if err != nil {
+			return ctrl.Result{}, fmt.Errorf("failure to create resource type %s in Inventory: %w", resourceType.Name, err)
+		}
+
+		// update status
+		err = retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+			if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
+				return fmt.Errorf("failure to refresh resource instance: %w", err)
+			}
+			resource.Status.Inventory = &api.ResourceStatusInventory{
+				Id:   resourceFromInventory.Id,
+				Nurn: resourceFromInventory.Metadata.Nurn,
+			}
+			return reconciler.Status().Update(ctx, resource)
+		})
+		if err != nil {
+			log.Error(err, fmt.Sprintf("failure to update resource %s with Inventory data. Rescheduling...", resourceType.Name))
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+		}
+	} else {
+		// resource already exists in inventory; load and update alias, description, and properties map
+		resourceFromInventory, err = inventoryClient.UpdateResource(ctx, &inventoryv1alpha1.Resource{
+			Metadata: &inventoryv1alpha1.Metadata{
+				Nurn:        resource.Status.Inventory.Nurn,
+				Alias:       resource.Spec.Alias,
+				Description: resource.Spec.Description,
+				Properties:  resourceToInventoryProperties,
+			},
+			ResourceType: resourceTypeFromInventory,
+		})
+		if err != nil {
+			return ctrl.Result{}, fmt.Errorf("failure to update resource type %s in Inventory: %w", resourceType.Name, err)
+		}
+	}
+
+	// here we know the resource exists in inventory, we can generate connections
+	for _, connection := range resource.Spec.Connections {
+		var targetNurn string
+
+		target := connection.Target
+		if targetRef := target.Ref; targetRef != nil {
+			namespace := targetRef.Namespace
+			if namespace == "" {
+				namespace = resource.Namespace
+			}
+			targetResource := &api.Resource{}
+			if reconciler.Get(ctx, types.NamespacedName{Namespace: namespace, Name: targetRef.Name}, targetResource); err != nil {
+				log.Error(err, fmt.Sprintf("failure to get target resource %s to build a connnection with resource %s. Rescheduling...", targetRef.Name, resource.Name))
+				return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+			}
+			if targetResource.Status.Inventory == nil {
+				log.Info(fmt.Sprintf("target resource %s isn't in-sync with Inventory. Rescheduling...", targetRef.Name))
+				return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+			}
+			targetNurn = targetResource.Status.Inventory.Nurn
+		} else if target.Nurn != nil {
+			targetNurn = target.Nurn.Value
+
+		} else {
+			// invalid connection; mark resource as failed and stop reconcilation
+			log.Error(fmt.Errorf("invalid connection spec; target.Ref or target.Nurn are required"), "invalid connection spec")
+
+			// just update status and stop reconciling; invalid spec
+			resource.Status.Phase = api.ResourceStatusFailed
+			_, err := reconciler.newResourceCondition(ctx, resource, &metav1.Condition{
+				Type:    string(api.ConditionTypeFailure),
+				Status:  metav1.ConditionFalse,
+				Reason:  "InvalidResourceTypeRef",
+				Message: "Invalid connection spec; target.Ref or target.Nurn are required",
+			})
+			if err != nil {
+				log.Error(err, "failure to update resource status to Failure. Rescheduling...")
+				return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+			}
+			return ctrl.Result{}, nil
+		}
+		err = inventoryClient.Connect(ctx, resourceFromInventory.Metadata.Nurn, &inventory.ConnectionTarget{
+			Via:        connection.Via,
+			TargetNurn: targetNurn,
+		})
+		if err != nil {
+			log.Error(err, fmt.Sprintf("failure to create connection with target resource %s. Rescheduling...", targetNurn))
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+		}
+	}
 
 	// TODO: step 2 => provision resource
 	resourceProvisioner := resource.Spec.Provisioner
@@ -278,13 +413,33 @@ func (reconciler *ResourceReconciler) Reconcile(ctx context.Context, resource *a
 					log.Error(err, "failure to update resource status after calculate patches. Rescheduling...")
 					return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 				}
-			}
 
+				// update Inventory with new properties after patches
+				if resource.Status.Inventory != nil && resource.Status.Inventory.Properties != nil {
+					inventoryPropertiesAsMap, err := serde.ToMap(resource.Status.Inventory.Properties)
+					if err != nil {
+						return ctrl.Result{}, fmt.Errorf("failure to serialize properties to be sent to inventory: %w", err)
+					}
+
+					for name, value := range inventoryPropertiesAsMap {
+						resourceToInventoryProperties[name] = &inventoryv1alpha1.PropertyValue{
+							Value: &inventoryv1alpha1.PropertyValue_StringValue{
+								StringValue: fmt.Sprint(value),
+							},
+						}
+					}
+					resourceFromInventory.Metadata.Properties = resourceToInventoryProperties
+					resourceFromInventory, err = inventoryClient.UpdateResource(ctx, resourceFromInventory)
+					if err != nil {
+						return ctrl.Result{}, fmt.Errorf("failure to update resource type %s in Inventory: %w", resourceType.Name, err)
+					}
+				}
+			}
 		}
 	}
 
 	// TODO step 5: resource is done.
-	err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		if err := reconciler.Get(ctx, types.NamespacedName{Namespace: resource.Namespace, Name: resource.Name}, resource); err != nil {
 			return fmt.Errorf("failure to refresh resource instance: %w", err)
 		}

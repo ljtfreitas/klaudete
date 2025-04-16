@@ -27,7 +27,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
-	clientv1alpha1 "github.com/nubank/nu-infra-inventory/sdk/pkg/client"
+	"github.com/nubank/klaudete/internal/inventory"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -44,7 +44,7 @@ import (
 var cfg *rest.Config
 var k8sClient client.Client
 var dynamicK8sClient *dynamic.DynamicClient
-var inventoryClient clientv1alpha1.Client
+var inventoryClient *inventory.InventoryClient
 var testEnv *envtest.Environment
 var ctx context.Context
 var cancel context.CancelFunc
@@ -93,7 +93,7 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
 
-	inventoryClient, err = clientv1alpha1.New(ctx)
+	inventoryClient, err = inventory.NewInventoryClient()
 	Expect(err).NotTo(HaveOccurred())
 	Expect(inventoryClient).NotTo(BeNil())
 })

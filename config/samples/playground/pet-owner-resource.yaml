@@ -8,5 +8,3 @@ spec:
   alias: tiago
   description: I'm Tiago, a pet owner
   resourceTypeRef: pet-owner
-
-  

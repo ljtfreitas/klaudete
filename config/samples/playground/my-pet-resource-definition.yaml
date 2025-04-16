@@ -1,12 +1,12 @@
 apiVersion: klaudete.nubank.com.br/v1alpha1
 kind: ResourceDefinition
 metadata:
-  name: random-pet
+  name: my-pet-definition
   namespace: playground
 spec:
   generator:
     inventory:
-      name: environments
+      name: environment
       kcl:
         path: environments
         content: |-
@@ -17,19 +17,19 @@ spec:
           environments = [{id: e.id, nurn: e.metadata.nurn, alias: e.metadata.alias} for e in _environments]
   resource:
     metadata:
-      name: random-pet-${generator.environments.alias}
+      name: my-pet-${generator.environment.alias}
     spec:
-      name: random-pet-${generator.environments.alias}
-      alias: random-pet-${generator.environments.alias}
-      description: I'm just a random pet, and my environment is ${generator.environments.alias}.
+      name: my-pet-${generator.environment.alias}
+      alias: my-pet-${generator.environment.alias}
+      description: I'm just a pet. My environment is ${generator.environment.alias}.
       resourceTypeRef: pet
       properties:
-        prefix: env-${generator.environments.alias}
+        prefix: doguinho-${generator.environment.alias}
       connections:
-        - via: belongs-to
+        - via: has-env
           target:
             nurn:
-              value: ${generator.environments.nurn}
+              value: ${generator.environment.nurn}
         - via: belongs-to
           target:
             ref:
@@ -41,11 +41,11 @@ spec:
               apiVersion: pulumi.com/v1
               kind: Stack
               metadata:
-                name: ${resource.metadata.name}-dev
+                name: ${resource.metadata.name}
               spec:
                 config:
                   prefix: ${resource.spec.properties.prefix}
-                stack: dev
+                stack: ${generator.environment.alias}
                 projectRepo: https://github.com/ljtfreitas/iac-experiments
                 repoDir: pulumi/random-pet-yaml
                 branch: just-ideas
@@ -59,4 +59,9 @@ spec:
             outputs: ${provisioner.resources.pulumiStack.status.outputs}
       patches:
         - from: ${provisioner.resources.pulumiStack.status.outputs.name}
-          to: status.inventory.properties.petName
+          to: status.inventory.properties.name
+
+# // gerar 2 resources no inventario
+# // pet-staging, pet-prod
+# // 2 stacks do pulumi
+# // inventario atualizado dos 2 resources

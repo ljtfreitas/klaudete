@@ -30,6 +30,9 @@ spec:
     - jsonPath: .status.phase
       name: Phase
       type: string
+    - jsonPath: .status.inventory.nurn
+      name: Nurn
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -72,6 +75,8 @@ spec:
                         ref:
                           properties:
                             name:
+                              type: string
+                            namespace:
                               type: string
                           required:
                           - name
@@ -217,12 +222,15 @@ spec:
                 type: array
               inventory:
                 properties:
+                  id:
+                    type: string
                   nurn:
                     type: string
                   properties:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                 required:
+                - id
                 - nurn
                 type: object
               phase:

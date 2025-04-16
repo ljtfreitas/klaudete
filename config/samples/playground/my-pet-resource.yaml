@@ -1,21 +1,19 @@
 apiVersion: klaudete.nubank.com.br/v1alpha1
 kind: Resource
 metadata:
-  name: random-pet
+  name: my-pet
   namespace: playground
 spec:
-  name: random-pet
-  alias: random-pet
-  description: I'm just a random pet.
+  name: my-pet
+  alias: my-pet
+  description: I'm just a pet.
   resourceTypeRef: pet
   properties:
-    prefix: whatever4
+    prefix: i-am-a-doguinho
   connections:
     - via: belongs-to
       target:
         ref:
-          apiVersion: klaudete.nubank.com.br/v1alpha1
-          kind: Resource
           name: tiago-pet-owner
   provisioner:
     resources:
@@ -24,12 +22,14 @@ spec:
           apiVersion: pulumi.com/v1
           kind: Stack
           metadata:
-            name: ${resource.metadata.name}-dev
+            name: ${resource.spec.name}-dev
           spec:
             stack: dev
             projectRepo: https://github.com/ljtfreitas/iac-experiments
             repoDir: pulumi/random-pet-yaml
             branch: just-ideas
+            config:
+              prefix: ${resource.spec.properties.prefix}
             envRefs:
               PULUMI_CONFIG_PASSPHRASE:
                 type: Literal
@@ -40,4 +40,8 @@ spec:
         outputs: ${provisioner.resources.pulumiStack.status.outputs}
   patches:
     - from: ${provisioner.resources.pulumiStack.status.outputs.name}
-      to: status.inventory.properties.petName
+      to: status.inventory.properties.name
+
+# // gerar um Resource no inventario
+# // provisionar o resource usando Pulumi
+# // atualizar o inventario com o resultado do provisionamento

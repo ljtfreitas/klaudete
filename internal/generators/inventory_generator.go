@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/nubank/klaudete/internal/generators/inventory"
-	clientv1alpha1 "github.com/nubank/nu-infra-inventory/sdk/pkg/client"
+	"github.com/nubank/klaudete/internal/inventory"
 )
 
 const (
@@ -13,12 +12,12 @@ const (
 )
 
 type InventoryGenerator struct {
-	client clientv1alpha1.Client
+	inventory *inventory.InventoryClient
 }
 
-func NewInventoryGenerator(client clientv1alpha1.Client) *InventoryGenerator {
+func NewInventoryGenerator(inventory *inventory.InventoryClient) *InventoryGenerator {
 	return &InventoryGenerator{
-		client: client,
+		inventory: inventory,
 	}
 }
 
@@ -27,7 +26,7 @@ func (g *InventoryGenerator) Resolve(ctx context.Context, spec GeneratorSpec) (s
 	if err != nil {
 		return "", nil, err
 	}
-	output, err := inventory.RunKcl(ctx, g.client, inventoryGeneratorSpec.Kcl.Content)
+	output, err := g.inventory.RunKcl(ctx, inventoryGeneratorSpec.Kcl.Content)
 	if err != nil {
 		return "", nil, fmt.Errorf("failure to generate values from Inventory using a kcl program: %w", err)
 	}

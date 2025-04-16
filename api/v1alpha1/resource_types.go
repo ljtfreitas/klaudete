@@ -74,7 +74,8 @@ type ResourceConnectionTarget struct {
 }
 
 type ResourceConnectionTargetRef struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 type ResourceConnectionTargetNurn struct {
@@ -95,11 +96,12 @@ type ResourceStatus struct {
 
 	Phase         ResourceStatusPhaseDescription `json:"phase"`
 	AtProvisioner ResourceStatusProvisioner      `json:"atProvisioner,omitempty"`
-	Inventory     ResourceStatusInventory        `json:"inventory,omitempty"`
+	Inventory     *ResourceStatusInventory       `json:"inventory,omitempty"`
 	Conditions    []metav1.Condition             `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
 type ResourceStatusInventory struct {
+	Id         string                `json:"id"`
 	Nurn       string                `json:"nurn"`
 	Properties *runtime.RawExtension `json:"properties,omitempty"`
 }
@@ -134,6 +136,7 @@ const (
 //+kubebuilder:printcolumn:name="Alias",type="string",JSONPath=`.spec.alias`
 //+kubebuilder:printcolumn:name="Description",type="string",JSONPath=`.spec.description`
 //+kubebuilder:printcolumn:name="Phase",type="string",JSONPath=`.status.phase`
+//+kubebuilder:printcolumn:name="Nurn",type="string",JSONPath=`.status.inventory.nurn`
 
 // Resource is the Schema for the resources API
 type Resource struct {

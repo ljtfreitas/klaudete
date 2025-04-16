@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	clientv1alpha1 "github.com/nubank/nu-infra-inventory/sdk/pkg/client"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,10 +13,10 @@ environments = inventory.list_resources("environment")
 `
 	ctx := context.TODO()
 
-	client, err := clientv1alpha1.New(ctx)
+	inventory, err := NewInventoryClient()
 	assert.NoError(t, err)
 
-	output, err := RunKcl(ctx, client, kcl)
+	output, err := inventory.RunKcl(ctx, kcl)
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, output)

@@ -1,7 +1,7 @@
 apiVersion: klaudete.nubank.com.br/v1alpha1
 kind: ResourceGroup
 metadata:
-  name: random-pet-family
+  name: my-pet-family
   namespace: playground
 spec:
   resources:
@@ -11,10 +11,10 @@ spec:
       spec:
         name: first-pet
         alias: first-pet
-        description: I'm just a pet, the first one.
+        description: I'm just a pet. I'm the first one.
         resourceTypeRef: pet
         properties:
-          prefix: first
+          prefix: first-doguinho
         connections:
           - via: belongs-to
             target:
@@ -45,17 +45,17 @@ spec:
               outputs: ${provisioner.resources.pulumiStack.status.outputs}
         patches:
           - from: ${provisioner.resources.pulumiStack.status.outputs.name}
-            to: status.inventory.properties.petName
+            to: status.inventory.properties.name
     - name: secondPet
       metadata:
         name: second-pet
       spec:
         name: second-pet
         alias: second-pet
-        description: I'm just a pet, the second one. Brother of ${resources.firstPet.spec.name}
+        description: I'm just a pet. I'm the second one. I'm a brother of ${resources.firstPet.spec.name}
         resourceTypeRef: pet
         properties:
-          prefix: second-brother-of-${resources.firstPet.spec.name}
+          prefix: second-doguinho
         connections:
           - via: belongs-to
             target:
@@ -90,4 +90,10 @@ spec:
               outputs: ${provisioner.resources.pulumiStack.status.outputs}
         patches:
           - from: ${provisioner.resources.pulumiStack.status.outputs.name}
-            to: status.inventory.properties.petName
+            to: status.inventory.properties.name
+
+# // ResourceGroup
+# // 2 resources - 1pet and 2pet
+# // 2 stacks do Pulumi
+# // 2 resources atualizados no inventario
+# // secondPet precisa ter uma connection com o firstPet

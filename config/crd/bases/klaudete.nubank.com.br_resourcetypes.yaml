@@ -21,6 +21,9 @@ spec:
     - jsonPath: .status.status
       name: Status
       type: string
+    - jsonPath: .status.inventory.id
+      name: Inventory Id
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -110,6 +113,13 @@ spec:
                   - type
                   type: object
                 type: array
+              inventory:
+                properties:
+                  id:
+                    type: string
+                required:
+                - id
+                type: object
               status:
                 type: string
             required:

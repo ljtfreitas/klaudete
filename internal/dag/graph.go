@@ -38,10 +38,10 @@ func (r *Element[T]) NameAsKebabCase() string {
 	return flect.Dasherize(r.Name)
 }
 
-func (r *Element[T]) Evaluate(args *Args) (ExpandedProperties, error) {
+func (r *Element[T]) Evaluate(args *Args, opts ...any) (ExpandedProperties, error) {
 	newProperties := make(map[string]any)
 	for name, property := range r.properties.all {
-		expanded, err := property.Evaluate(args)
+		expanded, err := property.Evaluate(args, opts...)
 		if err != nil {
 			return nil, err
 		}

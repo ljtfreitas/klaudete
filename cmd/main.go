@@ -17,7 +17,6 @@ limitations under the License.
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"flag"
 	"os"
@@ -41,10 +40,8 @@ import (
 	klaudetev1alpha1 "github.com/nubank/klaudete/api/v1alpha1"
 	"github.com/nubank/klaudete/internal/controller"
 	"github.com/nubank/klaudete/internal/generators"
-
+	"github.com/nubank/klaudete/internal/inventory"
 	// +kubebuilder:scaffold:imports
-
-	inventoryClientv1alpha1 "github.com/nubank/nu-infra-inventory/sdk/pkg/client"
 )
 
 var (
@@ -129,9 +126,9 @@ func main() {
 		metricsServerOptions.FilterProvider = filters.WithAuthenticationAndAuthorization
 	}
 
-	inventoryClient, err := inventoryClientv1alpha1.New(context.Background())
+	inventoryClient, err := inventory.NewInventoryClient()
 	if err != nil {
-		setupLog.Error(err, "unable to initialize the Inventory client.")
+		setupLog.Error(err, "unable to initialize Inventory.")
 		os.Exit(1)
 	}
 	generators.Register(generators.InventoryGeneratorType, generators.NewInventoryGenerator(inventoryClient))
@@ -161,8 +158,9 @@ func main() {
 	}
 
 	resourceTypeReconciler := &controller.ResourceTypeReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		InventoryClient: inventoryClient,
 	}
 	if err = resourceTypeReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceType")
@@ -170,10 +168,11 @@ func main() {
 	}
 
 	resourceReconciler := &controller.ResourceReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		DynamicClient: dynamic.NewForConfigOrDie(mgr.GetConfig()),
-		Recorder:      mgr.GetEventRecorderFor("resource-controller"),
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		DynamicClient:   dynamic.NewForConfigOrDie(mgr.GetConfig()),
+		Recorder:        mgr.GetEventRecorderFor("resource-controller"),
+		InventoryClient: inventoryClient,
 	}
 	if err = resourceReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Resource")
